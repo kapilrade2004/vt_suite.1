@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { LandingHeader } from '@/components/layout/LandingHeader';
 import { LandingFooter } from '@/components/layout/LandingFooter';
 import { 
-  ArrowRight, Sparkles, ChevronRight
+  ArrowRight, Sparkles, ChevronRight, Users, UserCheck, Briefcase, DollarSign, MessageSquare, BarChart3, CheckCircle2
 } from 'lucide-react';
 
 export default function Home() {
@@ -91,6 +91,51 @@ export default function Home() {
         "Company hardware & software asset inventory"
       ]
     }
+  ];
+
+  const featuresList = [
+    {
+      icon: Users,
+      count: "20+ Features",
+      title: "CRM & Sales",
+      bullets: ["Lead Capture & Pipeline", "Interactive Kanban", "Client Accounts", "Proposals & Pricing"]
+    },
+    {
+      icon: UserCheck,
+      count: "70+ Features",
+      title: "HR & Payroll",
+      bullets: ["Employee Directory", "GPS Attendance Log", "Leave Approval Workflow", "Automated PDF Payslips"]
+    },
+    {
+      icon: Briefcase,
+      count: "35+ Features",
+      title: "Project Management",
+      bullets: ["Kanban & List Tasks", "Visual Gantt Timelines", "Timesheet Approvals", "Client Portals"]
+    },
+    {
+      icon: DollarSign,
+      count: "35+ Features",
+      title: "Finance & Invoicing",
+      bullets: ["Tax Invoice Generator", "Printable PDF Invoices", "Expense Claim Log", "Profit & Loss Reports"]
+    },
+    {
+      icon: MessageSquare,
+      count: "30+ Features",
+      title: "Team Workspace",
+      bullets: ["Real-time Channels", "Support Ticket Desk", "Shared Calendar", "Company Announcements"]
+    },
+    {
+      icon: BarChart3,
+      count: "15+ Reports",
+      title: "Reports & Analytics",
+      bullets: ["Executive Dashboards", "Cross-Module Insights", "Exportable PDF Summary", "Custom Date Filters"]
+    }
+  ];
+
+  const capabilities = [
+    "REST API Integration", "Role-Based Permissions", "WhatsApp Direct Links",
+    "Email Notifications", "Google Calendar Sync", "Mobile Responsive UI",
+    "Custom Tax Rates", "White-Label Option", "Export to CSV/PDF"
   ];
 
   const faqs = [
@@ -308,6 +353,59 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Feature Grid Section */}
+      <section id="features" style={{ padding: '80px 0', background: 'var(--bg-soft)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+        <div className="wrap">
+          <div style={{ maxWidth: '600px', margin: '0 auto 48px', textAlign: 'center' }}>
+            <span className="eyebrow">Enterprise Capabilities</span>
+            <h2 style={{ fontSize: 'clamp(28px, 3.4vw, 38px)', margin: '14px 0 10px' }}>Built for high-velocity teams.</h2>
+            <p style={{ color: 'var(--text-dim)', fontSize: '15.5px' }}>Every feature is natively integrated with zero third-party plugin clutter.</p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+            {featuresList.map((feat, idx) => {
+              const Icon = feat.icon;
+              return (
+                <div key={idx} className="vt-card" style={{ background: '#fff', borderRadius: '14px', padding: '26px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                    <div style={{
+                      width: '40px', height: '40px', borderRadius: '10px',
+                      background: 'var(--green-tint)', border: '1px solid var(--green-tint-2)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--green-dark)'
+                    }}>
+                      <Icon size={20} />
+                    </div>
+                    <span className="badge badge-green">{feat.count}</span>
+                  </div>
+                  <h3 style={{ fontSize: '18px', marginBottom: '12px', color: 'var(--ink)' }}>{feat.title}</h3>
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', listStyle: 'none' }}>
+                    {feat.bullets.map((b, bIdx) => (
+                      <li key={bIdx} style={{ fontSize: '13.5px', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <CheckCircle2 size={15} color="var(--green)" /> {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Capability Pill Tags */}
+      <section style={{ padding: '40px 0', background: '#fff', borderBottom: '1px solid var(--border)' }}>
+        <div className="wrap" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '8px' }}>
+            PLATFORM CAPABILITIES:
+          </span>
+          {capabilities.map((cap, cIdx) => (
+            <span key={cIdx} className="badge badge-green" style={{ padding: '6px 14px', fontSize: '13px', borderRadius: '20px' }}>
+              {cap}
+            </span>
+          ))}
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section id="pricing" style={{ padding: '96px 0', background: 'var(--bg-soft)' }}>
         <div className="wrap" style={{ display: 'grid', gridTemplateColumns: '0.9fr 1.1fr', gap: '60px', alignItems: 'center' }}>
@@ -345,7 +443,7 @@ export default function Home() {
               <span style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>/ month, billed {isAnnual ? 'annually' : 'monthly'}</span>
             </div>
             <div style={{ padding: '10px 32px 28px' }}>
-              <ul style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '11px 20px' }}>
+              <ul style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '11px 20px', listStyle: 'none' }}>
                 <li style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>✓ CRM & sales pipeline</li>
                 <li style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>✓ HR & payroll suite</li>
                 <li style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>✓ Project management</li>
@@ -364,7 +462,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Large Final CTA Banner */}
+      <section style={{ padding: '80px 0', background: 'linear-gradient(135deg, var(--green-deep) 0%, var(--green-dark) 100%)', color: '#fff', textAlign: 'center' }}>
+        <div className="wrap" style={{ maxWidth: '720px' }}>
+          <h2 style={{ fontSize: 'clamp(30px, 4vw, 44px)', color: '#fff', marginBottom: '16px' }}>Run your entire business from one place.</h2>
+          <p style={{ fontSize: '17px', color: '#dcf3e2', marginBottom: '32px' }}>
+            CRM, HR, Projects, Finance, and Workspace — seamlessly connected through green & white VasifyTech aesthetics.
+          </p>
+          <button onClick={() => router.push('/app/crm')} className="btn btn-lg" style={{ background: '#fff', color: 'var(--green-dark)', fontWeight: 700 }}>
+            Start Free 14-Day Trial <ArrowRight size={18} />
+          </button>
+        </div>
+      </section>
+
+      {/* FAQ Accordion */}
       <section id="faq" style={{ padding: '96px 0' }}>
         <div className="wrap">
           <div style={{ maxWidth: '600px', margin: '0 auto 52px', textAlign: 'center' }}>
