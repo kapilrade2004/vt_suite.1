@@ -220,7 +220,7 @@ export default function Home() {
 
             {/* Action Buttons */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', marginBottom: '32px' }}>
-              <button onClick={() => router.push('/app/crm')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '12px', fontSize: '16px', fontWeight: 700 }}>
+              <button onClick={() => router.push('/signup')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '12px', fontSize: '16px', fontWeight: 700 }}>
                 Start Free Trial <ArrowRight size={18} />
               </button>
               <Link href="/features" className="btn btn-secondary btn-lg" style={{ borderRadius: '12px', fontSize: '15px', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -832,7 +832,7 @@ export default function Home() {
           <p style={{ fontSize: '17px', color: '#dcf3e2', marginBottom: '24px' }}>
             HR, CRM, Projects, Finance, Team Workspace — everything your business needs in one platform. 7-day free trial. No credit card required.
           </p>
-          <button onClick={() => router.push('/app/crm')} className="btn btn-lg" style={{ background: '#ffffff', color: 'var(--green-dark)', fontWeight: 800, borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.15)' }}>
+          <button onClick={() => router.push('/signup')} className="btn btn-lg" style={{ background: '#ffffff', color: 'var(--green-dark)', fontWeight: 800, borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.15)' }}>
             Start Free Trial →
           </button>
         </div>
@@ -914,7 +914,7 @@ export default function Home() {
                   </li>
                 </ul>
 
-                <button onClick={() => router.push('/app/crm')} className="btn btn-brass" style={{ borderRadius: '10px' }}>
+                <button onClick={() => router.push('/signup')} className="btn btn-brass" style={{ borderRadius: '10px' }}>
                   Launch {screenshotTabs.find(t => t.id === activeTab)?.label} Demo →
                 </button>
               </div>
@@ -1008,7 +1008,7 @@ export default function Home() {
             <p style={{ fontSize: '20px', color: '#334155', marginBottom: '16px' }}>
               Or get all 5 modules in VasifyTech Suite for <strong style={{ color: 'var(--green)', fontSize: '26px' }}>$39/mo</strong>. Cancel anytime.
             </p>
-            <button onClick={() => router.push('/app/crm')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '12px' }}>
+            <button onClick={() => router.push('/signup')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '12px' }}>
               Start Free Trial →
             </button>
           </div>

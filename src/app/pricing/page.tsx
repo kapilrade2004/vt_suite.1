@@ -158,7 +158,7 @@ export default function PricingPage() {
                 </li>
               </ul>
 
-              <button onClick={() => router.push('/app/crm')} className="btn btn-secondary btn-block" style={{ borderRadius: '12px', padding: '14px', fontWeight: 700 }}>
+              <button onClick={() => router.push('/signup')} className="btn btn-secondary btn-block" style={{ borderRadius: '12px', padding: '14px', fontWeight: 700 }}>
                 Get Started Free
               </button>
             </div>
@@ -380,13 +380,13 @@ export default function PricingPage() {
                 <tr style={{ background: '#f8fafc', borderTop: '2px solid #e2e8f0' }}>
                   <td style={{ padding: '20px 24px' }}></td>
                   <td style={{ padding: '20px 16px', textAlign: 'center' }}>
-                    <button onClick={() => router.push('/app/crm')} className="btn btn-secondary btn-sm" style={{ borderRadius: '8px' }}>Get Started</button>
+                    <button onClick={() => router.push('/signup')} className="btn btn-secondary btn-sm" style={{ borderRadius: '8px' }}>Get Started</button>
                   </td>
                   <td style={{ padding: '20px 16px', textAlign: 'center', background: 'var(--green-tint)' }}>
-                    <button onClick={() => router.push('/app/crm')} className="btn btn-brass btn-sm" style={{ borderRadius: '8px', fontWeight: 700 }}>Start Free Trial</button>
+                    <button onClick={() => router.push('/signup')} className="btn btn-brass btn-sm" style={{ borderRadius: '8px', fontWeight: 700 }}>Start Free Trial</button>
                   </td>
                   <td style={{ padding: '20px 16px', textAlign: 'center' }}>
-                    <button onClick={() => router.push('/app/crm')} className="btn btn-secondary btn-sm" style={{ borderRadius: '8px' }}>Start Free Trial</button>
+                    <button onClick={() => router.push('/signup')} className="btn btn-secondary btn-sm" style={{ borderRadius: '8px' }}>Start Free Trial</button>
                   </td>
                 </tr>
               </tfoot>
