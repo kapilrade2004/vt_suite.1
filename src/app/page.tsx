@@ -505,16 +505,16 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Column: Live Mockup Card */}
+            {/* Right Column: Live Mockup Dashboard Image */}
             <div style={{
               background: '#0f172a',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
               borderRadius: '20px',
               overflow: 'hidden',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)'
             }}>
               {/* Browser Window Header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px', background: '#1e293b', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px', background: '#1e293b', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
                 <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }}></span>
                 <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#eab308' }}></span>
                 <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22c55e' }}></span>
@@ -523,36 +523,18 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Workspace Inner View */}
-              <div style={{ padding: '24px', background: '#0f172a', color: '#ffffff' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '20px' }}>
-                  <div style={{ background: 'rgba(30, 41, 59, 0.7)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '14px' }}>
-                    <div style={{ fontSize: '11.5px', color: '#94a3b8', marginBottom: '4px' }}>Total Revenue</div>
-                    <div style={{ fontSize: '20px', fontWeight: 800, color: '#34d399' }}>
-                      {activeTab === 'sales' ? '$428,450' : activeTab === 'finance' ? '$215,420' : '$687,430'}
-                    </div>
-                  </div>
-                  <div style={{ background: 'rgba(30, 41, 59, 0.7)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '14px' }}>
-                    <div style={{ fontSize: '11.5px', color: '#94a3b8', marginBottom: '4px' }}>Active Employees</div>
-                    <div style={{ fontSize: '20px', fontWeight: 800, color: '#38bdf8' }}>62 staff</div>
-                  </div>
-                  <div style={{ background: 'rgba(30, 41, 59, 0.7)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '14px' }}>
-                    <div style={{ fontSize: '11.5px', color: '#94a3b8', marginBottom: '4px' }}>Team Health</div>
-                    <div style={{ fontSize: '20px', fontWeight: 800, color: '#a78bfa' }}>78% Good</div>
-                  </div>
-                </div>
-
-                {/* Live Module Card Preview Row */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginBottom: '16px' }}>
-                  <div style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '14px' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#f8fafc', marginBottom: '6px' }}>Modules Connected</div>
-                    <div style={{ fontSize: '12px', color: '#94a3b8' }}>CRM · HR · Projects · Finance · Workspace</div>
-                  </div>
-                  <div style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '14px' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#34d399', marginBottom: '6px' }}>✓ Live Sync Active</div>
-                    <div style={{ fontSize: '12px', color: '#94a3b8' }}>Real-time database auto-update</div>
-                  </div>
-                </div>
+              {/* Workspace Dashboard Screen Image */}
+              <div style={{ background: '#0b1329', overflow: 'hidden' }}>
+                <img 
+                  src="/images/crm_dashboard_preview.png" 
+                  alt="VasifyTech Suite Dashboard" 
+                  style={{ 
+                    width: '100%', 
+                    height: 'auto', 
+                    display: 'block',
+                    borderRadius: '0 0 16px 16px' 
+                  }} 
+                />
               </div>
             </div>
           </div>
