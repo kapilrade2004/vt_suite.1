@@ -27,7 +27,9 @@ export const LandingHeader: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: '72px'
+        minHeight: '64px',
+        paddingTop: '10px',
+        paddingBottom: '10px'
       }}>
         {/* Brand Logo & Tag */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexShrink: 0 }}>
