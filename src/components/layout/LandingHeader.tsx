@@ -10,6 +10,7 @@ export const LandingHeader: React.FC = () => {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const isFeaturesPage = pathname === '/features';
+  const isPricingPage = pathname === '/pricing';
 
   return (
     <header style={{
@@ -82,6 +83,15 @@ export const LandingHeader: React.FC = () => {
               <Link href="/roadmap" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Roadmap</Link>
               <Link href="/contact" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Contact</Link>
             </>
+          ) : isPricingPage ? (
+            <>
+              <Link href="/" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Home</Link>
+              <Link href="/features" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Features</Link>
+              <Link href="/pricing" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Pricing</Link>
+              <Link href="/roadmap" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Roadmap</Link>
+              <Link href="/about" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>About</Link>
+              <Link href="/contact" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Contact</Link>
+            </>
           ) : (
             <>
               {!isHomePage && (
@@ -145,6 +155,15 @@ export const LandingHeader: React.FC = () => {
               <Link href="/features" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Features</Link>
               <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Pricing</Link>
               <Link href="/roadmap" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Roadmap</Link>
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Contact</Link>
+            </>
+          ) : isPricingPage ? (
+            <>
+              <Link href="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Home</Link>
+              <Link href="/features" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Features</Link>
+              <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Pricing</Link>
+              <Link href="/roadmap" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Roadmap</Link>
+              <Link href="/about" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>About</Link>
               <Link href="/contact" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Contact</Link>
             </>
           ) : (
