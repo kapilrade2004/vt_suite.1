@@ -57,7 +57,7 @@ export const LandingHeader: React.FC = () => {
             </span>
             VasifyTech <span style={{ color: 'var(--green)' }}>Suite</span>
           </Link>
-          <span style={{
+          <span className="vt-header-badge" style={{
             background: 'var(--green-tint)',
             border: '1px solid var(--green-tint-2)',
             color: 'var(--green-dark)',
@@ -71,7 +71,7 @@ export const LandingHeader: React.FC = () => {
         </div>
 
         {/* Desktop Nav Links */}
-        <div style={{
+        <div className="vt-desktop-nav" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '30px'
@@ -115,13 +115,14 @@ export const LandingHeader: React.FC = () => {
 
         {/* CTA Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Link href="/signin" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none' }}>Sign In</Link>
+          <Link href="/signin" className="vt-header-signin" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none' }}>Sign In</Link>
           <Link href="/signup" className="btn btn-sm btn-brass vt-pulse-cta" style={{ borderRadius: '50px', textDecoration: 'none' }}>
             Start Free Trial
           </Link>
 
           {/* Mobile Menu Button */}
           <button 
+            className="vt-mobile-menu-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             style={{
               background: '#f1f5f9',
@@ -129,8 +130,7 @@ export const LandingHeader: React.FC = () => {
               borderRadius: '8px',
               padding: '6px 10px',
               color: '#0f172a',
-              cursor: 'pointer',
-              display: 'none'
+              cursor: 'pointer'
             }}
             aria-label="Toggle menu"
           >

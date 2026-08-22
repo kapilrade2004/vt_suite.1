@@ -379,3 +379,35 @@ button[aria-label*="Next.js"],
   pointer-events: none !important;
 }
 
+/* Mobile Responsive Header & Layout Rules */
+.vt-mobile-menu-btn {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .vt-desktop-nav {
+    display: none !important;
+  }
+  .vt-header-badge {
+    display: none !important;
+  }
+  .vt-header-signin {
+    display: none !important;
+  }
+  .vt-mobile-menu-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw;
+}
+
+.wrap {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+

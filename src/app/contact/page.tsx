@@ -104,7 +104,7 @@ export default function ContactPage() {
       {/* ===== MAIN CONTACT SECTION (INFO LEFT, FORM RIGHT) ===== */}
       <section style={{ padding: '72px 0 88px', borderBottom: '1px solid #e2e8f0' }}>
         <div className="wrap" style={{ maxWidth: '1140px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', alignItems: 'start' }}>
             
             {/* LEFT COLUMN: CONTACT INFORMATION & QUICK LINKS */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
