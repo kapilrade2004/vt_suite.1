@@ -347,6 +347,218 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== SEE IT IN ACTION SECTION ===== */}
+      <section id="see-it" style={{ background: '#0b1329', padding: '88px 0', color: '#ffffff', borderBottom: '1px solid #1e293b' }}>
+        <div className="wrap" style={{ maxWidth: '1240px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+            <h2 style={{ fontSize: 'clamp(30px, 4vw, 44px)', fontWeight: 800, color: '#ffffff', marginBottom: '10px' }}>
+              See VasifyTech Suite in Action
+            </h2>
+            <p style={{ fontSize: '16.5px', color: '#94a3b8' }}>
+              Real screenshots from a live workspace — click any tab to preview
+            </p>
+          </div>
+
+          {/* Interactive Preview Category Tabs */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', marginBottom: '44px' }}>
+            {[
+              { id: 'dashboard', label: 'Dashboard', bg: '#6366f1' },
+              { id: 'sales', label: 'Sales', bg: '#059669' },
+              { id: 'projects', label: 'Projects', bg: '#7c3aed' },
+              { id: 'hr', label: 'HR', bg: '#e11d48' },
+              { id: 'finance', label: 'Finance', bg: '#d97706' },
+              { id: 'workspace', label: 'Workspace', bg: '#2563eb' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  padding: '9px 20px',
+                  borderRadius: '12px',
+                  fontSize: '13.5px',
+                  fontWeight: 700,
+                  border: 'none',
+                  background: activeTab === tab.id ? tab.bg : 'rgba(30, 41, 59, 0.8)',
+                  color: activeTab === tab.id ? '#ffffff' : '#cbd5e1',
+                  cursor: 'pointer',
+                  boxShadow: activeTab === tab.id ? `0 6px 18px ${tab.bg}66` : 'none',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+
+            <span style={{ color: 'rgba(255, 255, 255, 0.2)', padding: '0 4px', fontSize: '18px' }}>|</span>
+
+            {[
+              { id: 'employees', label: 'Employees' },
+              { id: 'attendance', label: 'Attendance' },
+              { id: 'leave', label: 'Leave' },
+              { id: 'project-list', label: 'Project List' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  padding: '9px 18px',
+                  borderRadius: '12px',
+                  fontSize: '13.5px',
+                  fontWeight: 700,
+                  border: activeTab === tab.id ? '1px solid #6366f1' : '1px solid rgba(255, 255, 255, 0.1)',
+                  background: activeTab === tab.id ? '#6366f1' : 'rgba(30, 41, 59, 0.5)',
+                  color: activeTab === tab.id ? '#ffffff' : '#94a3b8',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Interactive Content Display Box */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '36px', alignItems: 'center' }}>
+            {/* Left Column: Module Description */}
+            <div>
+              <div style={{
+                fontSize: '12.5px',
+                fontWeight: 800,
+                color: '#818cf8',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginBottom: '10px'
+              }}>
+                {activeTab === 'dashboard' && 'MAIN DASHBOARD'}
+                {activeTab === 'sales' && 'CRM & SALES PIPELINE'}
+                {activeTab === 'projects' && 'PROJECT MANAGEMENT'}
+                {activeTab === 'hr' && 'HR & PAYROLL'}
+                {activeTab === 'finance' && 'FINANCE & INVOICING'}
+                {activeTab === 'workspace' && 'TEAM WORKSPACE'}
+                {activeTab === 'employees' && 'EMPLOYEE DIRECTORY'}
+                {activeTab === 'attendance' && 'ATTENDANCE MONITOR'}
+                {activeTab === 'leave' && 'LEAVE MANAGEMENT'}
+                {activeTab === 'project-list' && 'PROJECT LIST VIEW'}
+              </div>
+
+              <h3 style={{ fontSize: 'clamp(24px, 3vw, 34px)', fontWeight: 800, color: '#ffffff', marginBottom: '20px', lineHeight: 1.25 }}>
+                {activeTab === 'dashboard' && 'Your Entire Business at a Glance'}
+                {activeTab === 'sales' && 'Close Deals Faster with Automated Pipelines'}
+                {activeTab === 'projects' && 'Track Tasks, Gantt Charts & Time Logs'}
+                {activeTab === 'hr' && 'Automate Payroll, Attendance & ATS Hiring'}
+                {activeTab === 'finance' && 'Invoices, Expenses & Profit Reports'}
+                {activeTab === 'workspace' && 'Unified Communication & Help Desk'}
+                {activeTab === 'employees' && 'Centralized Staff Directory & Org Chart'}
+                {activeTab === 'attendance' && 'Real-Time Clock-in Logs & Geofencing'}
+                {activeTab === 'leave' && 'Time Off Requests & Vacation Balances'}
+                {activeTab === 'project-list' && 'Spreadsheet-Style Multi-Project View'}
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '15.5px', color: '#cbd5e1' }}>
+                  <CheckCircle2 size={20} color="#34d399" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>
+                    {activeTab === 'dashboard' && '12 KPIs across all modules in Company Pulse'}
+                    {activeTab === 'sales' && 'Visual Kanban drag-and-drop lead stages'}
+                    {activeTab === 'projects' && 'Kanban, List, and Timeline Gantt views'}
+                    {activeTab === 'hr' && 'One-click multi-country payroll processing'}
+                    {activeTab === 'finance' && 'Recurring invoice automation with credit notes'}
+                    {activeTab === 'workspace' && 'Team chat channels with direct file attachments'}
+                    {activeTab === 'employees' && 'Complete employee profile records with document vault'}
+                    {activeTab === 'attendance' && 'Live geolocation map view for field staff'}
+                    {activeTab === 'leave' && 'Automated leave accrual calculation engine'}
+                    {activeTab === 'project-list' && 'High-density table list view with inline editing'}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '15.5px', color: '#cbd5e1' }}>
+                  <CheckCircle2 size={20} color="#34d399" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>
+                    {activeTab === 'dashboard' && 'Quick clock-in with live hours and weekly dots'}
+                    {activeTab === 'sales' && 'Instant estimate generator with live e-signatures'}
+                    {activeTab === 'projects' && 'Built-in time tracker linked to client invoices'}
+                    {activeTab === 'hr' && 'GPS geofenced mobile time clocking'}
+                    {activeTab === 'finance' && 'QuickBooks & Xero real-time sync status'}
+                    {activeTab === 'workspace' && 'Customer support ticket inbox with SLAs'}
+                    {activeTab === 'employees' && 'Interactive organizational hierarchy chart'}
+                    {activeTab === 'attendance' && 'Biometric & mobile kiosk integration'}
+                    {activeTab === 'leave' && 'One-click manager approval workflows'}
+                    {activeTab === 'project-list' && 'Filter by status, priority, owner, or budget'}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '15.5px', color: '#cbd5e1' }}>
+                  <CheckCircle2 size={20} color="#34d399" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>
+                    {activeTab === 'dashboard' && '5 module strips with mini charts and drill-down'}
+                    {activeTab === 'sales' && 'Automated lead follow-up drip sequences'}
+                    {activeTab === 'projects' && 'Resource allocation & team workload balancing'}
+                    {activeTab === 'hr' && 'Complete recruitment pipeline with applicant scoring'}
+                    {activeTab === 'finance' && 'Expense tracking with OCR receipt scanner'}
+                    {activeTab === 'workspace' && 'Integrated calendar sync with Google & Apple'}
+                    {activeTab === 'employees' && 'Role-based permission control across all modules'}
+                    {activeTab === 'attendance' && 'Automated overtime calculation for payroll'}
+                    {activeTab === 'leave' && 'Shared company holiday & absence calendar'}
+                    {activeTab === 'project-list' && 'Bulk status updates and Excel/CSV export'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Live Mockup Card */}
+            <div style={{
+              background: '#0f172a',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '20px',
+              overflow: 'hidden',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+            }}>
+              {/* Browser Window Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px', background: '#1e293b', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }}></span>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#eab308' }}></span>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22c55e' }}></span>
+                <div style={{ flex: 1, fontSize: '12px', color: '#94a3b8', background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '4px 12px', margin: '0 12px', textAlign: 'center' }}>
+                  app.vasifytechsuite.com/{activeTab}
+                </div>
+              </div>
+
+              {/* Workspace Inner View */}
+              <div style={{ padding: '24px', background: '#0f172a', color: '#ffffff' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '20px' }}>
+                  <div style={{ background: 'rgba(30, 41, 59, 0.7)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '14px' }}>
+                    <div style={{ fontSize: '11.5px', color: '#94a3b8', marginBottom: '4px' }}>Total Revenue</div>
+                    <div style={{ fontSize: '20px', fontWeight: 800, color: '#34d399' }}>
+                      {activeTab === 'sales' ? '$428,450' : activeTab === 'finance' ? '$215,420' : '$687,430'}
+                    </div>
+                  </div>
+                  <div style={{ background: 'rgba(30, 41, 59, 0.7)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '14px' }}>
+                    <div style={{ fontSize: '11.5px', color: '#94a3b8', marginBottom: '4px' }}>Active Employees</div>
+                    <div style={{ fontSize: '20px', fontWeight: 800, color: '#38bdf8' }}>62 staff</div>
+                  </div>
+                  <div style={{ background: 'rgba(30, 41, 59, 0.7)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '14px' }}>
+                    <div style={{ fontSize: '11.5px', color: '#94a3b8', marginBottom: '4px' }}>Team Health</div>
+                    <div style={{ fontSize: '20px', fontWeight: 800, color: '#a78bfa' }}>78% Good</div>
+                  </div>
+                </div>
+
+                {/* Live Module Card Preview Row */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginBottom: '16px' }}>
+                  <div style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '14px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#f8fafc', marginBottom: '6px' }}>Modules Connected</div>
+                    <div style={{ fontSize: '12px', color: '#94a3b8' }}>CRM · HR · Projects · Finance · Workspace</div>
+                  </div>
+                  <div style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '14px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#34d399', marginBottom: '6px' }}>✓ Live Sync Active</div>
+                    <div style={{ fontSize: '12px', color: '#94a3b8' }}>Real-time database auto-update</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ===== ONE PLATFORM REPLACES THEM ALL (WHITE & GREEN) ===== */}
       <section style={{ background: '#ffffff', padding: '80px 0', borderBottom: '1px solid #e2e8f0' }}>
         <div className="wrap" style={{ maxWidth: '980px' }}>
