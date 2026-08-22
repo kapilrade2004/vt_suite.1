@@ -161,7 +161,7 @@ export default function FeaturesPage() {
           </p>
 
           <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '48px' }}>
-            <button onClick={() => router.push('/app/crm')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '12px', fontSize: '16px', fontWeight: 700 }}>
+            <button onClick={() => router.push('/signup')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '12px', fontSize: '16px', fontWeight: 700 }}>
               Start Free Trial
             </button>
             <a href="#pricing" className="btn btn-secondary btn-lg" style={{ borderRadius: '12px', fontSize: '16px', fontWeight: 600 }}>
@@ -640,7 +640,7 @@ export default function FeaturesPage() {
           <p style={{ fontSize: '18px', color: '#dcf3e2', marginBottom: '32px' }}>
             Join 4,500+ businesses saving time and money with VasifyTech Suite. Start your free trial today — no credit card required.
           </p>
-          <button onClick={() => router.push('/app/crm')} className="btn btn-lg" style={{ background: '#ffffff', color: 'var(--green-dark)', fontWeight: 800, borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.15)' }}>
+          <button onClick={() => router.push('/signup')} className="btn btn-lg" style={{ background: '#ffffff', color: 'var(--green-dark)', fontWeight: 800, borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.15)' }}>
             Start Free Trial
           </button>
           <p style={{ fontSize: '13px', color: '#dcf3e2', marginTop: '14px' }}>

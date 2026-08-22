@@ -224,7 +224,7 @@ export default function PricingPage() {
                 </li>
               </ul>
 
-              <button onClick={() => router.push('/app/crm')} className="btn btn-brass btn-block vt-pulse-cta" style={{ borderRadius: '12px', padding: '14px', fontWeight: 800 }}>
+              <button onClick={() => router.push('/signup')} className="btn btn-brass btn-block vt-pulse-cta" style={{ borderRadius: '12px', padding: '14px', fontWeight: 800 }}>
                 Start Free Trial
               </button>
             </div>
@@ -271,7 +271,7 @@ export default function PricingPage() {
                 </li>
               </ul>
 
-              <button onClick={() => router.push('/app/crm')} className="btn btn-secondary btn-block" style={{ borderRadius: '12px', padding: '14px', fontWeight: 700 }}>
+              <button onClick={() => router.push('/signup')} className="btn btn-secondary btn-block" style={{ borderRadius: '12px', padding: '14px', fontWeight: 700 }}>
                 Start Free Trial
               </button>
             </div>
@@ -478,10 +478,10 @@ export default function PricingPage() {
             Join 4,500+ businesses already using VasifyTech Suite to manage their entire business in one place.
           </p>
           <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => router.push('/app/crm')} className="btn btn-lg" style={{ background: '#ffffff', color: 'var(--green-dark)', fontWeight: 800, borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.15)' }}>
+            <button onClick={() => router.push('/signup')} className="btn btn-lg" style={{ background: '#ffffff', color: 'var(--green-dark)', fontWeight: 800, borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.15)' }}>
               Start Your Free Trial
             </button>
-            <button onClick={() => router.push('/app/crm')} className="btn btn-secondary btn-lg" style={{ background: 'rgba(255, 255, 255, 0.15)', color: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.4)', borderRadius: '12px' }}>
+            <button onClick={() => router.push('/contact')} className="btn btn-secondary btn-lg" style={{ background: 'rgba(255, 255, 255, 0.15)', color: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.4)', borderRadius: '12px' }}>
               Talk to Sales
             </button>
           </div>

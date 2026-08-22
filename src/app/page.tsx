@@ -908,7 +908,7 @@ export default function Home() {
                 <li>✓ Email support</li>
                 <li>✓ 7-day free trial</li>
               </ul>
-              <button onClick={() => router.push('/app/crm')} className="btn btn-secondary" style={{ width: '100%', borderRadius: '12px', fontWeight: 700 }}>
+              <button onClick={() => router.push('/signup')} className="btn btn-secondary" style={{ width: '100%', borderRadius: '12px', fontWeight: 700 }}>
                 Start Free Trial
               </button>
             </div>
@@ -933,7 +933,7 @@ export default function Home() {
                 <li>✓ Priority 24/7 support</li>
                 <li>✓ 7-day free trial</li>
               </ul>
-              <button onClick={() => router.push('/app/crm')} className="btn btn-brass vt-pulse-cta" style={{ width: '100%', borderRadius: '12px', fontWeight: 800 }}>
+              <button onClick={() => router.push('/signup')} className="btn btn-brass vt-pulse-cta" style={{ width: '100%', borderRadius: '12px', fontWeight: 800 }}>
                 Start Free Trial
               </button>
               <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--green-dark)', fontWeight: 600, marginTop: '12px' }}>30-day money-back guarantee</p>
