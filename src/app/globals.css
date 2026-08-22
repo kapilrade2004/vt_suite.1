@@ -44,6 +44,70 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Custom Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+  /* Horizontal Kanban Board Scrollbar - Large, Thick & Prominent */
+  .custom-scrollbar {
+    scrollbar-width: auto;
+    scrollbar-color: var(--green-dark) #e2e8f0;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 14px;
+    width: 14px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #e2e8f0;
+    border-radius: 10px;
+    border: 2px solid #f8fafc;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--green-dark);
+    border-radius: 10px;
+    border: 2px solid #f8fafc;
+    box-shadow: 0 2px 6px rgba(29, 168, 81, 0.3);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+  .custom-kanban-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--green-dark) #f1f5f9;
+    max-height: 780px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .custom-kanban-scroll::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  .custom-kanban-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 6px;
+  }
+  .custom-kanban-scroll::-webkit-scrollbar-thumb {
+    background: var(--green-dark);
+    border-radius: 6px;
+  }
+  .custom-kanban-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--display);
     font-weight: 700;
@@ -268,3 +332,50 @@
   max-height: 90vh;
   overflow-y: auto;
 }
+
+/* Animations matching PMSuite layout with VasifyTech theme */
+@keyframes vt-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.vt-marquee-track {
+  display: flex;
+  gap: 2.5rem;
+  animation: vt-marquee 35s linear infinite;
+  width: max-content;
+}
+
+.vt-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes vt-pulse-cta {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(29, 168, 81, 0.4); }
+  50% { box-shadow: 0 0 0 16px rgba(29, 168, 81, 0); }
+}
+
+.vt-pulse-cta {
+  animation: vt-pulse-cta 2s infinite;
+}
+
+.table-scroll-wrapper {
+  position: relative;
+}
+
+/* Hide Next.js Dev Indicator Logo Overlay Badge */
+next-route-announcer,
+[data-nextjs-toast],
+[data-nextjs-dialog-overlay],
+div[class*="nextjs-toast"],
+div[class*="nextjs-portal"],
+#next-logo,
+button[aria-label*="Next.js"],
+[data-nextjs-dev-tools-button],
+[data-next-badge] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+

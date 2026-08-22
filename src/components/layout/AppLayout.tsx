@@ -153,7 +153,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                         <Icon size={18} color={isActive ? 'var(--green-dark)' : 'var(--text-dim)'} />
                         <span>{item.name}</span>
                       </div>
-                      {item.badge && (
+                      {('badge' in item && item.badge) ? (
                         <span style={{
                           fontSize: '11px',
                           fontWeight: 600,
@@ -165,7 +165,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                         }}>
                           {item.badge}
                         </span>
-                      )}
+                      ) : null}
                     </Link>
                   );
                 })}

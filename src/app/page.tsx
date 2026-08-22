@@ -6,275 +6,322 @@ import { useRouter } from 'next/navigation';
 import { LandingHeader } from '@/components/layout/LandingHeader';
 import { LandingFooter } from '@/components/layout/LandingFooter';
 import { 
-  ArrowRight, Sparkles, ChevronRight, Users, UserCheck, Briefcase, DollarSign, MessageSquare, BarChart3, CheckCircle2
+  ArrowRight, Sparkles, ChevronRight, Users, UserCheck, Briefcase, DollarSign, 
+  MessageSquare, BarChart3, CheckCircle2, ShieldCheck, Lock, Globe, Server, Play, 
+  Check, X as XIcon, HelpCircle, Layers, Clock, Calendar, AlertCircle
 } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
-  const [activeModule, setActiveModule] = useState<number | null>(0);
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [isAnnual, setIsAnnual] = useState(true);
-  const [faqOpen, setFaqOpen] = useState<Record<number, boolean>>({ 0: true });
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [videoOpen, setVideoOpen] = useState(false);
 
-  const modules = [
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
+  const replacedTools = [
     {
-      id: "01",
-      name: "CRM & Sales",
-      color: "var(--green)",
-      desc: "Leads, pipeline, proposals, and client accounts in one unified view.",
-      count: "20+ features",
-      bullets: [
-        "Lead capture, scoring & status pipeline",
-        "Deal stage tracking & drag-and-drop Kanban",
-        "Client profile history & activity timeline",
-        "Automated proposals & interactive estimates",
-        "Product & service pricing catalog",
-        "Sales revenue forecasting & conversion reports"
+      category: "HR & People",
+      color: "#2563eb",
+      tools: [
+        { name: "BambooHR", bg: "#7ab800", iconText: "b" },
+        { name: "Gusto", bg: "#e11d48", iconText: "g" },
+        { name: "Rippling", bg: "#f43f5e", iconText: "R" },
+        { name: "Deel", bg: "#2563eb", iconText: "d." },
+        { name: "Zenefits", bg: "#7c3aed", iconText: "z" },
+        { name: "Personio", bg: "#059669", iconText: "P" }
       ]
     },
     {
-      id: "02",
-      name: "HR & Payroll",
-      color: "var(--green-2)",
-      desc: "Employee directory, attendance check-ins, leaves, and automated payroll.",
-      count: "70+ features",
-      bullets: [
-        "Complete employee digital records & document vault",
-        "Attendance tracking with GPS office check-in",
-        "Applicant tracking system (ATS) & recruitment pipeline",
-        "Automated monthly payroll runs & PDF payslip generation",
-        "Leave balance tracker with multi-level approvals",
-        "Employee performance review cycles"
+      category: "CRM & Sales",
+      color: "#16a34a",
+      tools: [
+        { name: "HubSpot", bg: "#ff7a59", iconText: "H" },
+        { name: "Salesforce", bg: "#00a1e0", iconText: "SF" },
+        { name: "Pipedrive", bg: "#28a745", iconText: "P" },
+        { name: "Freshsales", bg: "#00c9a7", iconText: "F" },
+        { name: "Zoho CRM", bg: "#e53935", iconText: "Z" },
+        { name: "Close", bg: "#17a2b8", iconText: "C" }
       ]
     },
     {
-      id: "03",
-      name: "Project Management",
-      color: "var(--green-dark)",
-      desc: "Kanban boards, Gantt timelines, milestones, and real-time timesheets.",
-      count: "35+ features",
-      bullets: [
-        "Interactive Kanban task boards & List views",
-        "Visual Gantt chart timeline & dependency mapping",
-        "Logged hours timesheet approval workflows",
-        "Client contracts & SOW document repository",
-        "Team project knowledge base & wikis",
-        "Client portal status updates & milestone tracking"
+      category: "Projects",
+      color: "#d97706",
+      tools: [
+        { name: "Monday", bg: "#ff3d57", iconText: "M" },
+        { name: "Asana", bg: "#f06a6a", iconText: "A" },
+        { name: "ClickUp", bg: "#7b68ee", iconText: "CU" },
+        { name: "Trello", bg: "#0079bf", iconText: "T" },
+        { name: "Jira", bg: "#0052cc", iconText: "J" },
+        { name: "Wrike", bg: "#08753f", iconText: "W" }
       ]
     },
     {
-      id: "04",
-      name: "Finance & Invoicing",
-      color: "var(--green-deep)",
-      desc: "Recurring invoices, expense logging, purchase orders, and tax reports.",
-      count: "35+ features",
-      bullets: [
-        "Professional tax invoice generator & printable PDF preview",
-        "30+ integrated online payment gateway simulation",
-        "Employee expense claim logging & receipt upload",
-        "Vendor purchase order (PO) tracking",
-        "Core accounting general ledger",
-        "Tax-ready financial statements & profit/loss reports"
+      category: "Finance",
+      color: "#ca8a04",
+      tools: [
+        { name: "QuickBooks", bg: "#2ca01c", iconText: "qb" },
+        { name: "FreshBooks", bg: "#0075dd", iconText: "F" },
+        { name: "Xero", bg: "#13b5ea", iconText: "xero" },
+        { name: "Wave", bg: "#1c69d4", iconText: "W" },
+        { name: "Zoho Books", bg: "#e53935", iconText: "ZB" },
+        { name: "Sage", bg: "#00d632", iconText: "S" }
       ]
     },
     {
-      id: "05",
-      name: "Team Workspace",
-      color: "var(--green)",
-      desc: "Team channel chat, shared calendar events, and support desk inbox.",
-      count: "30+ features",
-      bullets: [
-        "Team messaging channels & direct messages",
-        "Shared company calendar for meetings & leave dates",
-        "Company-wide official announcements feed",
-        "Customer support ticket inbox with priority statuses",
-        "Video meeting room quick links",
-        "Company hardware & software asset inventory"
+      category: "Workspace",
+      color: "#9333ea",
+      tools: [
+        { name: "Slack", bg: "#4a154b", iconText: "#" },
+        { name: "Teams", bg: "#5059c9", iconText: "T" },
+        { name: "Notion", bg: "#111827", iconText: "N" },
+        { name: "Confluence", bg: "#0052cc", iconText: "C" },
+        { name: "Basecamp", bg: "#f8ca00", iconText: "B" },
+        { name: "Zoom", bg: "#2d8cff", iconText: "zm" }
       ]
     }
   ];
 
-  const featuresList = [
-    {
-      icon: Users,
-      count: "20+ Features",
-      title: "CRM & Sales",
-      bullets: ["Lead Capture & Pipeline", "Interactive Kanban", "Client Accounts", "Proposals & Pricing"]
-    },
-    {
-      icon: UserCheck,
-      count: "70+ Features",
-      title: "HR & Payroll",
-      bullets: ["Employee Directory", "GPS Attendance Log", "Leave Approval Workflow", "Automated PDF Payslips"]
-    },
-    {
-      icon: Briefcase,
-      count: "35+ Features",
-      title: "Project Management",
-      bullets: ["Kanban & List Tasks", "Visual Gantt Timelines", "Timesheet Approvals", "Client Portals"]
-    },
-    {
-      icon: DollarSign,
-      count: "35+ Features",
-      title: "Finance & Invoicing",
-      bullets: ["Tax Invoice Generator", "Printable PDF Invoices", "Expense Claim Log", "Profit & Loss Reports"]
-    },
-    {
-      icon: MessageSquare,
-      count: "30+ Features",
-      title: "Team Workspace",
-      bullets: ["Real-time Channels", "Support Ticket Desk", "Shared Calendar", "Company Announcements"]
-    },
-    {
-      icon: BarChart3,
-      count: "15+ Reports",
-      title: "Reports & Analytics",
-      bullets: ["Executive Dashboards", "Cross-Module Insights", "Exportable PDF Summary", "Custom Date Filters"]
-    }
+  const superpowers = [
+    "75+ Dashboard Widgets", "REST API Integration", "AI-Powered Templates", "200+ Permissions",
+    "Slack & Telegram Sync", "Excel Import/Export", "15+ Languages", "Multi-Level Approvals",
+    "Google Calendar Sync", "Mobile App (PWA)", "Custom Fields Engine", "White-Label Branding"
   ];
 
-  const capabilities = [
-    "REST API Integration", "Role-Based Permissions", "WhatsApp Direct Links",
-    "Email Notifications", "Google Calendar Sync", "Mobile Responsive UI",
-    "Custom Tax Rates", "White-Label Option", "Export to CSV/PDF"
+  const companiesList = [
+    "Apex Digital", "Greenfield Solutions", "Hudson & Partners", "Meridian Consulting",
+    "Cascade Media Group", "Brightpath Analytics", "Summit HR Group", "Pinnacle Financial",
+    "Redwood Staffing", "Lakeside Construction", "Apex Digital", "Greenfield Solutions",
+    "Hudson & Partners", "Meridian Consulting", "Cascade Media Group", "Brightpath Analytics"
+  ];
+
+  const comparisonRows = [
+    { name: "BambooHR", category: "HR & Payroll", monthly: "$130/mo", annual: "$1,560/yr" },
+    { name: "Monday.com", category: "Project Management", monthly: "$190/mo", annual: "$2,280/yr" },
+    { name: "QuickBooks Online", category: "Finance & Accounting", monthly: "$90/mo", annual: "$1,080/yr" },
+    { name: "HubSpot CRM", category: "CRM & Sales Pipeline", monthly: "$180/mo", annual: "$2,160/yr" },
+    { name: "Slack Pro", category: "Team Communication", monthly: "$87.50/mo", annual: "$1,050/yr" }
+  ];
+
+  const screenshotTabs = [
+    { id: 'dashboard', label: 'Main Dashboard', tag: 'Overview' },
+    { id: 'sales-dash', label: 'Sales CRM', tag: 'Sales' },
+    { id: 'projects-dash', label: 'Projects', tag: 'Projects' },
+    { id: 'hr-dash', label: 'HR Suite', tag: 'HR' },
+    { id: 'finance-dash', label: 'Finance', tag: 'Finance' },
+    { id: 'workspace-dash', label: 'Workspace', tag: 'Workspace' },
+    { id: 'employees', label: 'Directory', tag: 'People' },
+    { id: 'attendance', label: 'Attendance', tag: 'Time' },
+    { id: 'leaves', label: 'Leave', tag: 'Leave' },
+    { id: 'projects-list', label: 'Project List', tag: 'Tasks' }
   ];
 
   const faqs = [
     {
-      q: "What is VasifyTech Suite?",
-      a: "VasifyTech Suite is an all-in-one business management platform that unifies CRM & Sales, HR & Payroll, Project Management, Finance & Invoicing, and Team Workspace into a single subscription with one shared database."
+      q: "How does the 7-day free trial work?",
+      a: "Sign up and get full access to all 200+ features for 7 days. No credit card required. At the end of your trial, choose a plan to continue — or simply walk away, no charges."
+    },
+    {
+      q: "Can I cancel anytime?",
+      a: "Yes. Cancel anytime from your account settings — no penalties, no hidden fees. If you cancel, you keep access until the end of your billing period."
+    },
+    {
+      q: "What's the difference between Starter and Professional?",
+      a: "Both plans include all 5 modules and 200+ features. Starter supports up to 10 employees and 10 GB storage. Professional gives you unlimited employees and 50 GB storage with priority support."
+    },
+    {
+      q: "What modules are included?",
+      a: "All 5: HR & People, CRM & Sales, Projects & Tasks, Finance & Invoicing, and Team Workspace. That's 200+ features included in every plan with zero extra plugin costs."
     },
     {
       q: "Can I manage CRM and HR together in one workspace?",
       a: "Yes! Every module is natively connected. Closed CRM deals can automatically kick off onboarding projects, and staff assigned to projects link directly to HR payroll hours."
     },
     {
-      q: "Can I create and send professional tax invoices?",
-      a: "Absolutely. The Finance module features a full-featured invoice creator with line items, tax calculations, status tracking (Sent, Paid, Overdue), and clean printable PDF styling."
-    },
-    {
-      q: "Can I manage projects and view Gantt charts?",
-      a: "Yes, Project Management includes List, Kanban, and interactive Gantt timeline views, allowing you to track project progress, budgets, and team workloads effortlessly."
-    },
-    {
-      q: "Can I manage employee attendance and approve leave requests?",
-      a: "Yes. Employees can log attendance, request casual/sick leaves, and managers can approve or reject leave requests in real-time with automatic balance deduction."
-    },
-    {
       q: "Can I export reports and financial data?",
-      a: "Yes, all reports across CRM, HR, Projects, and Finance can be filtered by date or department and exported directly."
+      a: "Yes, all reports across CRM, HR, Projects, and Finance can be filtered by date range, exported directly to CSV or PDF, or accessed via REST API."
     },
     {
-      q: "Is the platform mobile responsive?",
-      a: "Yes, VasifyTech Suite is engineered with a mobile-first responsive layout, featuring responsive drawers, scrollable tables, and touch-friendly controls."
-    },
-    {
-      q: "Can the platform be customized for our company?",
-      a: "Yes! You can configure white-label branding, custom domain settings, custom fields, and granular role-based permissions."
+      q: "Is our company data secure?",
+      a: "Absolutely. We enforce 256-bit SSL encryption in transit and at rest, daily automated backups, SOC2 compliant cloud infrastructure, and granular role-based permissions."
     }
   ];
 
-  const toggleFaq = (index: number) => {
-    setFaqOpen(prev => ({ ...prev, [index]: !prev[index] }));
-  };
-
   return (
-    <div style={{ background: 'var(--bg)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ background: '#ffffff', color: '#0f172a', minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: 'var(--body)' }}>
       <LandingHeader />
 
-      {/* Hero Section */}
-      <section style={{ padding: '88px 0 60px', position: 'relative', overflow: 'hidden' }}>
-        <div className="wrap" style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: '56px', alignItems: 'center' }}>
+      {/* ===== HERO SECTION (WHITE & GREEN) ===== */}
+      <section style={{
+        background: 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(29, 168, 81, 0.15), transparent)',
+        padding: '56px 0 72px',
+        position: 'relative',
+        borderBottom: '1px solid #e2e8f0'
+      }}>
+        <div className="wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '52px', alignItems: 'center' }}>
           <div>
-            <span className="eyebrow">
-              <Sparkles size={14} color="var(--green-dark)" /> ALL-IN-ONE BUSINESS PLATFORM
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: 'var(--green-tint)',
+              border: '1px solid var(--green-tint-2)',
+              color: 'var(--green-dark)',
+              fontSize: '12px',
+              fontWeight: 700,
+              padding: '5px 14px',
+              borderRadius: '20px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              marginBottom: '20px'
+            }}>
+              <Sparkles size={14} color="var(--green-dark)" /> STOP OVERPAYING FOR TOOLS
             </span>
-            <h1 style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', lineHeight: 1.1, margin: '18px 0 20px' }}>
-              One platform for your entire business. <em style={{ fontStyle: 'normal', color: 'var(--green)' }}>CRM, HR, Projects & Finance.</em>
+
+            <h1 style={{
+              fontSize: 'clamp(38px, 4.8vw, 60px)',
+              lineHeight: 1.08,
+              fontWeight: 800,
+              color: '#0f172a',
+              marginBottom: '16px',
+              letterSpacing: '-0.02em'
+            }}>
+              5 Tools. 1 Platform.<br />
+              One <span style={{
+                background: 'linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>Subscription.</span>
             </h1>
-            <p style={{ fontSize: '17px', color: 'var(--text-dim)', maxWidth: '480px', marginBottom: '30px' }}>
-              Manage customers, employees, projects, invoices, and your entire operational workflow from one powerful workspace designed with clean green aesthetics.
+
+            {/* Colored Module Badges */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '22px' }}>
+              <span style={{ background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>HR & Payroll</span>
+              <span style={{ background: 'var(--green-tint)', color: 'var(--green-dark)', border: '1px solid var(--green-tint-2)', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>CRM & Sales</span>
+              <span style={{ background: '#fffbeb', color: '#b45309', border: '1px solid #fef3c7', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>Projects</span>
+              <span style={{ background: '#faf5ff', color: '#6b21a8', border: '1px solid #e9d5ff', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>Finance</span>
+              <span style={{ background: '#fdf2f8', color: '#be185d', border: '1px solid #fbcfe8', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>Team Workspace</span>
+            </div>
+
+            <p style={{ fontSize: '17px', color: '#475569', lineHeight: 1.6, maxWidth: '520px', marginBottom: '26px' }}>
+              Replace your scattered subscriptions with one platform. HR, CRM, projects, finance, and payroll — all in one place. Starting at <strong style={{ color: '#0f172a' }}>$39/mo</strong>. No setup fees. Cancel anytime.
             </p>
-            <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '36px' }}>
-              <button onClick={() => router.push('/app/crm')} className="btn btn-brass btn-lg">
-                Start Free Trial <ArrowRight size={16} />
+
+            {/* Price Anchor Strip */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '28px' }}>
+              <span style={{ fontSize: '24px', textDecoration: 'line-through', color: '#94a3b8', fontWeight: 600 }}>$677/mo</span>
+              <ArrowRight size={18} color="#94a3b8" />
+              <span style={{ fontSize: '42px', fontWeight: 800, color: 'var(--green)', lineHeight: 1 }}>$39</span>
+              <span style={{ color: '#64748b', fontSize: '15px' }}>/mo</span>
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', marginBottom: '32px' }}>
+              <button onClick={() => router.push('/app/crm')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '12px', fontSize: '16px', fontWeight: 700 }}>
+                Start Free Trial <ArrowRight size={18} />
               </button>
-              <a href="#modules" className="btn btn-ghost btn-lg">
-                Explore Platform
-              </a>
+              <Link href="/features" className="btn btn-secondary btn-lg" style={{ borderRadius: '12px', fontSize: '15px', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                Explore 200+ Features →
+              </Link>
             </div>
-            <div style={{ display: 'flex', gap: '28px', flexWrap: 'wrap', paddingTop: '22px', borderTop: '1px solid var(--border)' }}>
-              <div>
-                <div style={{ fontFamily: 'var(--display)', fontSize: '20px', color: 'var(--green-dark)', fontWeight: 700 }}>4,500+</div>
-                <div style={{ fontSize: '12.5px', color: 'var(--text-dim)' }}>Businesses onboard</div>
+
+            {/* Social Proof */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '13px', color: '#64748b', marginBottom: '28px' }}>
+              <div style={{ display: 'flex' }}>
+                <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--green-dark)', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '11px', fontWeight: 700 }}>A</span>
+                <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#2563eb', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '11px', fontWeight: 700, marginLeft: '-8px' }}>S</span>
+                <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#d97706', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '11px', fontWeight: 700, marginLeft: '-8px' }}>J</span>
+                <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#7c3aed', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '11px', fontWeight: 700, marginLeft: '-8px' }}>F</span>
               </div>
-              <div>
-                <div style={{ fontFamily: 'var(--display)', fontSize: '20px', color: 'var(--green-dark)', fontWeight: 700 }}>200+</div>
-                <div style={{ fontSize: '12.5px', color: 'var(--text-dim)' }}>Built-in features</div>
+              <span>Trusted by <strong style={{ color: '#0f172a' }}>4,500+</strong> growing businesses across <strong style={{ color: '#0f172a' }}>8 industries</strong> • 30-day money-back guarantee</span>
+            </div>
+
+            {/* 4 Security Badges Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', maxWidth: '480px' }}>
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                <Lock size={15} color="var(--green)" /> 256-bit Encryption
               </div>
-              <div>
-                <div style={{ fontFamily: 'var(--display)', fontSize: '20px', color: 'var(--green-dark)', fontWeight: 700 }}>30-day</div>
-                <div style={{ fontSize: '12.5px', color: 'var(--text-dim)' }}>Money-back guarantee</div>
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                <ShieldCheck size={15} color="var(--green)" /> 99.9% Uptime
+              </div>
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                <Globe size={15} color="var(--green)" /> 24/7 Support
+              </div>
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                <CheckCircle2 size={15} color="var(--green)" /> 7-Day Free Trial
               </div>
             </div>
           </div>
 
-          {/* Right Hero Dashboard Preview */}
-          <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', overflow: 'hidden' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 18px', background: 'var(--bg-soft)', borderBottom: '1px solid var(--border)' }}>
-              <div style={{ display: 'flex', gap: '6px' }}>
-                <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: 'var(--border)' }}></span>
-                <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: 'var(--border)' }}></span>
-                <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: 'var(--border)' }}></span>
-              </div>
-              <div style={{ flex: 1, fontSize: '12px', color: 'var(--text-dim)', background: '#fff', border: '1px solid var(--border)', borderRadius: '20px', padding: '6px 12px', textAlign: 'center' }}>
-                app.vasifytechsuite.com/dashboard
-              </div>
-            </div>
-            <div style={{ padding: '22px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '18px' }}>
-                <div style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px' }}>
-                  <div style={{ fontSize: '11.5px', color: 'var(--text-dim)', marginBottom: '8px' }}>Revenue (MTD)</div>
-                  <div style={{ fontFamily: 'var(--display)', fontSize: '17px', fontWeight: 700, color: 'var(--ink)' }}>$84,320</div>
-                  <div style={{ fontSize: '11px', color: 'var(--green-dark)', fontWeight: 600, marginTop: '4px' }}>↑ 12.4%</div>
+          {/* Right: Dashboard Interactive Live Laptop Frame */}
+          <div style={{ position: 'relative' }}>
+            <div style={{
+              background: '#ffffff',
+              border: '2px solid var(--green-tint-2)',
+              borderRadius: '16px',
+              boxShadow: '0 25px 60px -15px rgba(29, 168, 81, 0.15)',
+              overflow: 'hidden'
+            }}>
+              {/* Top Browser Bar */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }}></span>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#eab308' }}></span>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22c55e' }}></span>
                 </div>
-                <div style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px' }}>
-                  <div style={{ fontSize: '11.5px', color: 'var(--text-dim)', marginBottom: '8px' }}>Open leads</div>
-                  <div style={{ fontFamily: 'var(--display)', fontSize: '17px', fontWeight: 700, color: 'var(--ink)' }}>128</div>
-                  <div style={{ fontSize: '11px', color: 'var(--green-dark)', fontWeight: 600, marginTop: '4px' }}>↑ 6</div>
+                <div style={{ flex: 1, fontSize: '12px', color: '#64748b', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '20px', padding: '4px 12px', textAlign: 'center' }}>
+                  app.vasifytechsuite.com/live-workspace
                 </div>
-                <div style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px' }}>
-                  <div style={{ fontSize: '11.5px', color: 'var(--text-dim)', marginBottom: '8px' }}>Employees</div>
-                  <div style={{ fontFamily: 'var(--display)', fontSize: '17px', fontWeight: 700, color: 'var(--ink)' }}>42</div>
-                  <div style={{ fontSize: '11px', color: 'var(--green-dark)', fontWeight: 600, marginTop: '4px' }}>↑ 2</div>
-                </div>
-                <div style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px' }}>
-                  <div style={{ fontSize: '11.5px', color: 'var(--text-dim)', marginBottom: '8px' }}>Invoices due</div>
-                  <div style={{ fontFamily: 'var(--display)', fontSize: '17px', fontWeight: 700, color: 'var(--ink)' }}>6</div>
-                  <div style={{ fontSize: '11px', color: '#c0472f', fontWeight: 600, marginTop: '4px' }}>$14,200</div>
-                </div>
+                <button onClick={() => setVideoOpen(true)} style={{ background: 'var(--green-tint)', border: '1px solid var(--green-tint-2)', color: 'var(--green-dark)', borderRadius: '6px', padding: '3px 8px', fontSize: '11px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
+                  <Play size={10} /> Watch Demo
+                </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '12px' }}>
-                <div style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', borderRadius: '12px', padding: '16px' }}>
-                  <div style={{ fontSize: '12px', color: 'var(--text-dim)', marginBottom: '14px', fontWeight: 600 }}>Monthly Revenue Trend</div>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '100px' }}>
-                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green), var(--green-2))', borderRadius: '4px 4px 0 0', height: '38%' }}></div>
-                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green), var(--green-2))', borderRadius: '4px 4px 0 0', height: '52%' }}></div>
-                    <div style={{ flex: 1, background: 'var(--border)', borderRadius: '4px 4px 0 0', height: '44%' }}></div>
-                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green), var(--green-2))', borderRadius: '4px 4px 0 0', height: '68%' }}></div>
-                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green), var(--green-2))', borderRadius: '4px 4px 0 0', height: '84%' }}></div>
-                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green), var(--green-2))', borderRadius: '4px 4px 0 0', height: '100%' }}></div>
+              {/* Live Workspace Preview Content */}
+              <div style={{ padding: '20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '16px' }}>
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px' }}>
+                    <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '4px' }}>Monthly Revenue</div>
+                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>$84,320</div>
+                    <div style={{ fontSize: '11px', color: 'var(--green-dark)', fontWeight: 600 }}>↑ 14.2% this mo</div>
+                  </div>
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px' }}>
+                    <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '4px' }}>Active Employees</div>
+                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>48 staff</div>
+                    <div style={{ fontSize: '11px', color: '#2563eb', fontWeight: 600 }}>100% clocked in</div>
+                  </div>
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px' }}>
+                    <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '4px' }}>Projects On Track</div>
+                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>18 active</div>
+                    <div style={{ fontSize: '11px', color: 'var(--green-dark)', fontWeight: 600 }}>88% completed</div>
                   </div>
                 </div>
-                <div style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', borderRadius: '12px', padding: '16px' }}>
-                  <div style={{ fontSize: '12px', color: 'var(--text-dim)', marginBottom: '14px', fontWeight: 600 }}>Live Suite Activity</div>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--green)', marginTop: '6px', flexShrink: 0 }}></span>
-                    <div style={{ fontSize: '12.5px', color: 'var(--ink)' }}>Invoice #1042 paid <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-dim)' }}>Kestrel Manufacturing</span></div>
+
+                {/* Simulated Chart & Activity */}
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px', marginBottom: '14px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', fontSize: '12px', color: '#64748b' }}>
+                    <span style={{ fontWeight: 600, color: '#0f172a' }}>VasifyTech Unified Suite Pulse</span>
+                    <span>Live Auto-Sync</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '8px 0' }}>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--green-2)', marginTop: '6px', flexShrink: 0 }}></span>
-                    <div style={{ fontSize: '12.5px', color: 'var(--ink)' }}>New lead qualified <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-dim)' }}>Bright Path Realty</span></div>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '110px' }}>
+                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green-tint-2), var(--green))', borderRadius: '4px 4px 0 0', height: '45%' }}></div>
+                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green-tint-2), var(--green))', borderRadius: '4px 4px 0 0', height: '62%' }}></div>
+                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green-tint-2), var(--green))', borderRadius: '4px 4px 0 0', height: '55%' }}></div>
+                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green-tint-2), var(--green))', borderRadius: '4px 4px 0 0', height: '78%' }}></div>
+                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green-tint-2), var(--green-2))', borderRadius: '4px 4px 0 0', height: '90%' }}></div>
+                    <div style={{ flex: 1, background: 'linear-gradient(to top, var(--green), var(--green-dark))', borderRadius: '4px 4px 0 0', height: '100%' }}></div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <div style={{ flex: 1, background: 'var(--green-tint)', border: '1px solid var(--green-tint-2)', borderRadius: '8px', padding: '10px', fontSize: '12px', color: 'var(--green-dark)', fontWeight: 600 }}>
+                    ✓ Invoice #1042 Paid ($14,200)
+                  </div>
+                  <div style={{ flex: 1, background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '10px', fontSize: '12px', color: '#1e40af', fontWeight: 600 }}>
+                    ✓ 48 Employees Payroll Auto-Approved
                   </div>
                 </div>
               </div>
@@ -283,224 +330,650 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trusted Strip */}
-      <div style={{ padding: '34px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', background: 'var(--bg-soft)' }}>
-        <div className="wrap" style={{ display: 'flex', alignItems: 'center', gap: '28px', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-          <span style={{ fontWeight: 600, fontSize: '12px', color: 'var(--text-dim)', letterSpacing: '0.08em' }}>TRUSTED BY GROWING BUSINESSES</span>
-          <div style={{ display: 'flex', gap: '34px', flexWrap: 'wrap', fontFamily: 'var(--display)', fontWeight: 600, fontSize: '15px', color: 'var(--text)' }}>
-            <span>Northbridge Logistics</span>
-            <span>Everline Retail</span>
-            <span>Solace Health Group</span>
-            <span>Kestrel Manufacturing</span>
-            <span>Bright Path Realty</span>
+      {/* ===== LOGO MARQUEE STRIP ===== */}
+      <section style={{ background: '#f8fafc', padding: '24px 0', overflow: 'hidden', borderBottom: '1px solid #e2e8f0' }}>
+        <p style={{ textAlign: 'center', fontSize: '12.5px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '16px', fontWeight: 700 }}>
+          TRUSTED BY GROWING BUSINESSES ACROSS THE NATION
+        </p>
+        <div style={{ overflow: 'hidden' }}>
+          <div className="vt-marquee-track">
+            {companiesList.map((comp, idx) => (
+              <React.Fragment key={idx}>
+                <span style={{ fontSize: '14.5px', fontWeight: 700, color: '#334155', whiteSpace: 'nowrap' }}>{comp}</span>
+                <span style={{ color: '#cbd5e1' }}>|</span>
+              </React.Fragment>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Modules Ledger Section */}
-      <section id="modules" style={{ padding: '96px 0' }}>
-        <div className="wrap">
-          <div style={{ maxWidth: '600px', margin: '0 auto 52px', textAlign: 'center' }}>
-            <span className="eyebrow">The Platform Modules</span>
-            <h2 style={{ fontSize: 'clamp(28px, 3.4vw, 40px)', margin: '16px 0 12px' }}>Five modules. One balance sheet.</h2>
-            <p style={{ color: 'var(--text-dim)', fontSize: '16px' }}>Connect sales, people, projects, and finance through one unified workspace ledger.</p>
+      {/* ===== ONE PLATFORM REPLACES THEM ALL (WHITE & GREEN) ===== */}
+      <section style={{ background: '#ffffff', padding: '80px 0', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="wrap" style={{ maxWidth: '980px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '44px' }}>
+            <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
+              One Platform Replaces Them All
+            </h2>
+            <p style={{ fontSize: '17px', color: '#64748b' }}>
+              Cancel the subscriptions. Keep the features.
+            </p>
           </div>
 
-          <div style={{ border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden' }}>
-            {modules.map((mod, idx) => {
-              const isExpanded = activeModule === idx;
-              return (
-                <React.Fragment key={mod.id}>
-                  <div 
-                    onClick={() => setActiveModule(isExpanded ? null : idx)}
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '28px 200px 1fr 130px 20px',
-                      gap: '22px',
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {replacedTools.map((item, idx) => (
+              <div key={idx} style={{
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
+                borderRadius: '14px',
+                padding: '14px 20px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '20px',
+                flexWrap: 'wrap'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '150px', flexShrink: 0 }}>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: item.color }}></span>
+                  <span style={{ fontWeight: 700, fontSize: '14.5px', color: item.color }}>{item.category}</span>
+                </div>
+
+                <div style={{ flex: 1, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', position: 'relative', padding: '4px 0' }}>
+                  {/* Red Horizontal Strikethrough Line */}
+                  <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1.5px', background: 'rgba(239, 68, 68, 0.4)', pointerEvents: 'none', transform: 'translateY(-50%)' }}></div>
+
+                  {item.tools.map((t, tIdx) => (
+                    <div key={tIdx} style={{
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
+                      borderRadius: '8px',
+                      padding: '5px 12px',
+                      display: 'flex',
                       alignItems: 'center',
-                      padding: '26px 20px',
-                      borderBottom: '1px solid var(--border)',
-                      cursor: 'pointer',
-                      background: isExpanded ? 'var(--green-tint)' : '#fff'
-                    }}
-                  >
-                    <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: mod.color }}></span>
-                    <span style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: '19px', color: 'var(--ink)' }}>{mod.id} {mod.name}</span>
-                    <span style={{ color: 'var(--text-dim)', fontSize: '14.5px' }}>{mod.desc}</span>
-                    <span style={{ fontWeight: 600, fontSize: '12.5px', color: 'var(--green-dark)', textAlign: 'right' }}>{mod.count}</span>
-                    <span style={{ fontWeight: 700, color: isExpanded ? 'var(--green)' : 'var(--text-dim)' }}>{isExpanded ? '−' : '+'}</span>
-                  </div>
-                  {isExpanded && (
-                    <div style={{ background: 'var(--bg-soft)', padding: '20px 24px 24px 70px', borderBottom: '1px solid var(--border)' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px 24px' }}>
-                        {mod.bullets.map((b, bIdx) => (
-                          <div key={bIdx} style={{ fontSize: '14px', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ color: 'var(--green)', fontWeight: 700 }}>—</span> {b}
-                          </div>
-                        ))}
-                      </div>
-                      <div style={{ marginTop: '20px' }}>
-                        <Link href="/app/crm" className="btn btn-brass btn-sm">
-                          Explore {mod.name} Module <ChevronRight size={14} />
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Grid Section */}
-      <section id="features" style={{ padding: '80px 0', background: 'var(--bg-soft)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-        <div className="wrap">
-          <div style={{ maxWidth: '600px', margin: '0 auto 48px', textAlign: 'center' }}>
-            <span className="eyebrow">Enterprise Capabilities</span>
-            <h2 style={{ fontSize: 'clamp(28px, 3.4vw, 38px)', margin: '14px 0 10px' }}>Built for high-velocity teams.</h2>
-            <p style={{ color: 'var(--text-dim)', fontSize: '15.5px' }}>Every feature is natively integrated with zero third-party plugin clutter.</p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
-            {featuresList.map((feat, idx) => {
-              const Icon = feat.icon;
-              return (
-                <div key={idx} className="vt-card" style={{ background: '#fff', borderRadius: '14px', padding: '26px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-                    <div style={{
-                      width: '40px', height: '40px', borderRadius: '10px',
-                      background: 'var(--green-tint)', border: '1px solid var(--green-tint-2)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--green-dark)'
+                      gap: '8px',
+                      position: 'relative',
+                      zIndex: 2,
+                      boxShadow: '0 2px 5px rgba(0,0,0,0.04)'
                     }}>
-                      <Icon size={20} />
+                      <span style={{
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '5px',
+                        background: t.bg,
+                        color: '#ffffff',
+                        fontSize: '10px',
+                        fontWeight: 800,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.15)'
+                      }}>
+                        {t.iconText}
+                      </span>
+                      <span style={{ fontSize: '13px', fontWeight: 600, color: '#334155' }}>
+                        {t.name}
+                      </span>
                     </div>
-                    <span className="badge badge-green">{feat.count}</span>
-                  </div>
-                  <h3 style={{ fontSize: '18px', marginBottom: '12px', color: 'var(--ink)' }}>{feat.title}</h3>
-                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', listStyle: 'none' }}>
-                    {feat.bullets.map((b, bIdx) => (
-                      <li key={bIdx} style={{ fontSize: '13.5px', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <CheckCircle2 size={15} color="var(--green)" /> {b}
-                      </li>
-                    ))}
-                  </ul>
+                  ))}
                 </div>
-              );
-            })}
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '36px' }}>
+            <p style={{ fontSize: '18px', color: '#334155', marginBottom: '6px' }}>
+              <strong style={{ color: '#0f172a' }}>5 subscriptions</strong> → <strong style={{ color: 'var(--green-dark)' }}>1 platform</strong> → <strong style={{ color: '#0f172a' }}>from $39/mo</strong>
+            </p>
+            <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '20px' }}>
+              Why pay for 5 subscriptions when VasifyTech Suite covers it all?
+            </p>
+            <a href="#pricing" className="btn btn-brass" style={{ borderRadius: '20px' }}>
+              See Plans & Savings →
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Capability Pill Tags */}
-      <section style={{ padding: '40px 0', background: '#fff', borderBottom: '1px solid var(--border)' }}>
-        <div className="wrap" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '8px' }}>
-            PLATFORM CAPABILITIES:
-          </span>
-          {capabilities.map((cap, cIdx) => (
-            <span key={cIdx} className="badge badge-green" style={{ padding: '6px 14px', fontSize: '13px', borderRadius: '20px' }}>
-              {cap}
-            </span>
-          ))}
+      {/* ===== 5 POWERFUL MODULES SHOWCASE ===== */}
+      <section id="features" style={{ background: '#f8fdf9', padding: '88px 0', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="wrap">
+          <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 52px' }}>
+            <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', marginBottom: '12px' }}>
+              5 Powerful Modules. 200+ Features.
+            </h2>
+            <p style={{ fontSize: '17px', color: 'var(--green-dark)', fontWeight: 700 }}>
+              Everything Your Business Needs — In One Unified Platform
+            </p>
+          </div>
+
+          {/* Module Grid Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto 36px' }}>
+            {/* CRM Module */}
+            <div style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderRadius: '16px',
+              padding: '28px',
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <Users size={28} color="#2563eb" />
+                <div>
+                  <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: 700 }}>CRM & Sales</h3>
+                  <span style={{ fontSize: '12px', color: '#2563eb', fontWeight: 600 }}>20+ features</span>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13.5px', color: '#334155' }}>
+                <div>✓ Lead pipeline</div>
+                <div>✓ Deal stage tracking</div>
+                <div>✓ Proposals & estimates</div>
+                <div>✓ Client profile accounts</div>
+                <div>✓ Pricing catalog</div>
+                <div>✓ Revenue forecasting</div>
+              </div>
+            </div>
+
+            {/* HR & Payroll Module */}
+            <div style={{
+              background: '#ffffff',
+              border: '1px solid var(--green-tint-2)',
+              borderRadius: '16px',
+              padding: '28px',
+              boxShadow: 'var(--shadow-md)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <UserCheck size={28} color="var(--green)" />
+                <div>
+                  <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: 700 }}>HR & Payroll</h3>
+                  <span style={{ fontSize: '12px', color: 'var(--green-dark)', fontWeight: 600 }}>70+ features</span>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13.5px', color: '#334155' }}>
+                <div>✓ Employee directory</div>
+                <div>✓ Automated payslips</div>
+                <div>✓ GPS attendance check</div>
+                <div>✓ Leave approvals</div>
+                <div>✓ ATS recruitment</div>
+                <div>✓ Performance reviews</div>
+              </div>
+            </div>
+
+            {/* Project Management Module */}
+            <div style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderRadius: '16px',
+              padding: '28px',
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <Briefcase size={28} color="#d97706" />
+                <div>
+                  <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: 700 }}>Project Management</h3>
+                  <span style={{ fontSize: '12px', color: '#d97706', fontWeight: 600 }}>35+ features</span>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13.5px', color: '#334155' }}>
+                <div>✓ Kanban task boards</div>
+                <div>✓ Visual Gantt chart</div>
+                <div>✓ Logged timesheets</div>
+                <div>✓ SOW contracts vault</div>
+                <div>✓ Team wikis</div>
+                <div>✓ Client status portal</div>
+              </div>
+            </div>
+
+            {/* Finance & Invoicing Module */}
+            <div style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderRadius: '16px',
+              padding: '28px',
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <DollarSign size={28} color="#ca8a04" />
+                <div>
+                  <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: 700 }}>Finance & Invoicing</h3>
+                  <span style={{ fontSize: '12px', color: '#ca8a04', fontWeight: 600 }}>35+ features</span>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13.5px', color: '#334155' }}>
+                <div>✓ Tax invoice builder</div>
+                <div>✓ Expense log & claims</div>
+                <div>✓ 30+ Gateways sim</div>
+                <div>✓ Purchase orders (PO)</div>
+                <div>✓ General ledger</div>
+                <div>✓ Tax-ready statements</div>
+              </div>
+            </div>
+
+            {/* Team Workspace Module */}
+            <div style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderRadius: '16px',
+              padding: '28px',
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <MessageSquare size={28} color="#9333ea" />
+                <div>
+                  <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: 700 }}>Team Workspace</h3>
+                  <span style={{ fontSize: '12px', color: '#9333ea', fontWeight: 600 }}>30+ features</span>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13.5px', color: '#334155' }}>
+                <div>✓ Team channel chat</div>
+                <div>✓ Help desk tickets</div>
+                <div>✓ Shared team calendar</div>
+                <div>✓ Zoom & Video links</div>
+                <div>✓ Notice announcements</div>
+                <div>✓ Asset inventory</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Built-in Superpowers Strip */}
+          <div style={{
+            maxWidth: '1100px',
+            margin: '0 auto',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            borderRadius: '16px',
+            padding: '24px',
+            textAlign: 'center',
+            boxShadow: 'var(--shadow-sm)'
+          }}>
+            <p style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a', marginBottom: '16px' }}>
+              Built-In Superpowers Across Every Module
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px' }}>
+              {superpowers.map((sp, idx) => (
+                <span key={idx} style={{
+                  background: 'var(--green-tint)',
+                  border: '1px solid var(--green-tint-2)',
+                  color: 'var(--green-dark)',
+                  fontSize: '12.5px',
+                  fontWeight: 600,
+                  padding: '6px 14px',
+                  borderRadius: '20px'
+                }}>
+                  {sp}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" style={{ padding: '96px 0', background: 'var(--bg-soft)' }}>
-        <div className="wrap" style={{ display: 'grid', gridTemplateColumns: '0.9fr 1.1fr', gap: '60px', alignItems: 'center' }}>
-          <div>
-            <span className="eyebrow">Transparent Pricing</span>
-            <h2 style={{ fontSize: 'clamp(26px, 3vw, 36px)', margin: '16px 0' }}>One invoice replaces all software subscriptions.</h2>
-            <p style={{ color: 'var(--text-dim)', fontSize: '15.5px', marginBottom: '22px' }}>Every module, seat role, and report is included from day one.</p>
-            
-            <div style={{ marginTop: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '14px', fontWeight: !isAnnual ? 700 : 400 }}>Monthly</span>
-              <button 
-                onClick={() => setIsAnnual(!isAnnual)}
+      {/* ===== SOLUTION BANNER ===== */}
+      <section style={{
+        background: 'linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%)',
+        padding: '50px 0',
+        color: '#ffffff',
+        textAlign: 'center'
+      }}>
+        <div className="wrap" style={{ maxWidth: '800px' }}>
+          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 40px)', fontWeight: 800, color: '#ffffff', marginBottom: '12px' }}>
+            One Login. Five Modules. Starting at $39/mo.
+          </h2>
+          <p style={{ fontSize: '17px', color: '#dcf3e2', marginBottom: '24px' }}>
+            HR, CRM, Projects, Finance, Team Workspace — everything your business needs in one platform. 7-day free trial. No credit card required.
+          </p>
+          <button onClick={() => router.push('/app/crm')} className="btn btn-lg" style={{ background: '#ffffff', color: 'var(--green-dark)', fontWeight: 800, borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.15)' }}>
+            Start Free Trial →
+          </button>
+        </div>
+      </section>
+
+      {/* ===== INTERACTIVE SCREENSHOTS WALKTHROUGH ===== */}
+      <section id="screenshots" style={{ background: '#ffffff', padding: '88px 0', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="wrap">
+          <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 40px' }}>
+            <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
+              See VasifyTech Suite in Action
+            </h2>
+            <p style={{ fontSize: '16px', color: '#64748b' }}>
+              Real live previews from our workspace — click any tab below to inspect
+            </p>
+          </div>
+
+          {/* Screenshot Tabs */}
+          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '14px', marginBottom: '32px', justifyContent: 'center' }}>
+            {screenshotTabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
                 style={{
-                  width: '48px', height: '26px', borderRadius: '20px',
-                  background: 'var(--green)', border: 'none', padding: '3px',
-                  cursor: 'pointer', display: 'flex', alignItems: 'center',
-                  justifyContent: isAnnual ? 'flex-end' : 'flex-start'
+                  padding: '8px 16px',
+                  borderRadius: '10px',
+                  fontSize: '13.5px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: activeTab === tab.id ? '1px solid var(--green)' : '1px solid #e2e8f0',
+                  background: activeTab === tab.id ? 'var(--green)' : '#f8fafc',
+                  color: activeTab === tab.id ? '#ffffff' : '#475569',
+                  transition: 'all 0.2s',
+                  whiteSpace: 'nowrap'
                 }}
               >
-                <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#fff' }}></div>
+                {tab.label}
               </button>
-              <span style={{ fontSize: '14px', fontWeight: isAnnual ? 700 : 400, color: 'var(--green-dark)' }}>
+            ))}
+          </div>
+
+          {/* Interactive Dynamic Workspace Panel */}
+          <div style={{
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            borderRadius: '16px',
+            padding: '32px',
+            maxWidth: '1100px',
+            margin: '0 auto',
+            boxShadow: 'var(--shadow-lg)'
+          }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', alignItems: 'center' }}>
+              <div>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--green-dark)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  {screenshotTabs.find(t => t.id === activeTab)?.tag} MODULE VIEW
+                </span>
+                <h3 style={{ fontSize: '26px', fontWeight: 800, color: '#0f172a', margin: '8px 0 16px' }}>
+                  {activeTab === 'dashboard' && 'Your Entire Business at a Glance'}
+                  {activeTab === 'sales-dash' && 'CRM, Deals & Revenue Pipeline'}
+                  {activeTab === 'projects-dash' && 'Every Project, Task & Milestone'}
+                  {activeTab === 'hr-dash' && 'People, Attendance & Automated Payroll'}
+                  {activeTab === 'finance-dash' && 'Revenue, Expenses & Tax Invoicing'}
+                  {activeTab === 'workspace-dash' && 'Support Tickets & Team Channels'}
+                  {activeTab === 'employees' && '48 Employees in One Clean Directory'}
+                  {activeTab === 'attendance' && "GPS Clock-In, Attendance & Absences"}
+                  {activeTab === 'leaves' && 'Leave Requests, Approvals & Balances'}
+                  {activeTab === 'projects-list' && 'Gantt Timelines & Task Tracking'}
+                </h3>
+
+                <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', listStyle: 'none', padding: 0, marginBottom: '24px', fontSize: '14.5px', color: '#334155' }}>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <CheckCircle2 size={18} color="var(--green)" /> Real-time status update feeds & key metrics
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <CheckCircle2 size={18} color="var(--green)" /> One-click drill down into lead, staff, or invoice records
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <CheckCircle2 size={18} color="var(--green)" /> Export views to CSV, PDF, or sync with REST API
+                  </li>
+                </ul>
+
+                <button onClick={() => router.push('/app/crm')} className="btn btn-brass" style={{ borderRadius: '10px' }}>
+                  Launch {screenshotTabs.find(t => t.id === activeTab)?.label} Demo →
+                </button>
+              </div>
+
+              {/* Mock Screen Representation */}
+              <div style={{
+                background: '#f8fdf9',
+                border: '1px solid var(--green-tint-2)',
+                borderRadius: '12px',
+                padding: '20px',
+                minHeight: '260px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '14px' }}>
+                  <span style={{ fontWeight: 700, fontSize: '14px', color: '#0f172a' }}>VasifyTech Dashboard / {activeTab}</span>
+                  <span style={{ fontSize: '11px', background: 'var(--green-tint)', color: 'var(--green-dark)', padding: '3px 8px', borderRadius: '12px', fontWeight: 600 }}>Live Data</span>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
+                  <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '8px', fontSize: '12px' }}>
+                    <div style={{ color: '#64748b' }}>Module Activity</div>
+                    <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--green)', marginTop: '4px' }}>99.8% Sync Rate</div>
+                  </div>
+                  <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '8px', fontSize: '12px' }}>
+                    <div style={{ color: '#64748b' }}>Active Users</div>
+                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', marginTop: '4px' }}>42 Online Now</div>
+                  </div>
+                </div>
+
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '8px', fontSize: '12px', color: '#334155' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <span>Pipeline Progress</span>
+                    <span style={{ color: 'var(--green-dark)', fontWeight: 700 }}>$142,500 total</span>
+                  </div>
+                  <div style={{ height: '6px', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ width: '78%', height: '100%', background: 'linear-gradient(90deg, var(--green), var(--green-dark))' }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== REAL COST COMPARISON ===== */}
+      <section id="compare" style={{ background: '#f8fafc', padding: '88px 0', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="wrap" style={{ maxWidth: '940px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--green-dark)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>THE NUMBERS DON'T LIE</span>
+            <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', margin: '10px 0 8px' }}>
+              The Real Cost of Running Your Business
+            </h2>
+            <p style={{ fontSize: '16px', color: '#64748b' }}>
+              See what you're really paying for 5 separate tools — and what you save with VasifyTech Suite
+            </p>
+          </div>
+
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden', marginBottom: '32px', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
+                <thead>
+                  <tr style={{ background: '#f1f5f9', borderBottom: '1px solid #e2e8f0', color: '#475569', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    <th style={{ padding: '14px 20px' }}>Software</th>
+                    <th style={{ padding: '14px 20px' }}>Category</th>
+                    <th style={{ padding: '14px 20px', textAlign: 'right' }}>Monthly (25 users)</th>
+                    <th style={{ padding: '14px 20px', textAlign: 'right' }}>Annual Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparisonRows.map((row, idx) => (
+                    <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                      <td style={{ padding: '14px 20px', fontWeight: 700, color: '#0f172a' }}>{row.name}</td>
+                      <td style={{ padding: '14px 20px', color: '#64748b' }}>{row.category}</td>
+                      <td style={{ padding: '14px 20px', textAlign: 'right', color: '#dc2626', fontWeight: 600 }}>{row.monthly}</td>
+                      <td style={{ padding: '14px 20px', textAlign: 'right', color: '#dc2626', fontWeight: 600 }}>{row.annual}</td>
+                    </tr>
+                  ))}
+                  <tr style={{ background: '#f8fafc', fontWeight: 800, fontSize: '15px' }}>
+                    <td style={{ padding: '16px 20px', color: '#0f172a' }} colSpan={2}>Total 5 Separate Subscriptions</td>
+                    <td style={{ padding: '16px 20px', textAlign: 'right', color: '#dc2626' }}>$677.50/mo</td>
+                    <td style={{ padding: '16px 20px', textAlign: 'right', color: '#dc2626' }}>$8,130/yr</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontSize: '20px', color: '#334155', marginBottom: '16px' }}>
+              Or get all 5 modules in VasifyTech Suite for <strong style={{ color: 'var(--green)', fontSize: '26px' }}>$39/mo</strong>. Cancel anytime.
+            </p>
+            <button onClick={() => router.push('/app/crm')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '12px' }}>
+              Start Free Trial →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== HOW IT WORKS (3 MINUTES) ===== */}
+      <section style={{ background: '#ffffff', padding: '88px 0', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="wrap">
+          <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', textAlign: 'center', marginBottom: '56px' }}>
+            Set Up in 3 Minutes. Seriously.
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '32px', maxWidth: '960px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '32px 24px' }}>
+              <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: 'var(--green)', color: '#ffffff', fontSize: '22px', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>1</div>
+              <h3 style={{ fontSize: '19px', fontWeight: 700, color: '#0f172a', marginBottom: '10px' }}>Start Free Trial</h3>
+              <p style={{ fontSize: '14px', color: '#64748b', lineHeight: 1.5 }}>Sign up in seconds. No credit card required. Full access to all 200+ features.</p>
+            </div>
+
+            <div style={{ textAlign: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '32px 24px' }}>
+              <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: 'var(--green)', color: '#ffffff', fontSize: '22px', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>2</div>
+              <h3 style={{ fontSize: '19px', fontWeight: 700, color: '#0f172a', marginBottom: '10px' }}>Set Up Your Company</h3>
+              <p style={{ fontSize: '14px', color: '#64748b', lineHeight: 1.5 }}>Import employees, clients, proposals, and active projects in minutes.</p>
+            </div>
+
+            <div style={{ textAlign: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '32px 24px' }}>
+              <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: 'var(--green)', color: '#ffffff', fontSize: '22px', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>3</div>
+              <h3 style={{ fontSize: '19px', fontWeight: 700, color: '#0f172a', marginBottom: '10px' }}>Run Your Business</h3>
+              <p style={{ fontSize: '14px', color: '#64748b', lineHeight: 1.5 }}>HR, sales, projects, invoicing — all handled from one unified place.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== ROADMAP STRIP ===== */}
+      <section id="roadmap" style={{ background: '#f8fdf9', padding: '80px 0', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="wrap" style={{ maxWidth: '720px', textAlign: 'center' }}>
+          <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--green-dark)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>BUILT IN PUBLIC</span>
+          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 38px)', fontWeight: 800, color: '#0f172a', margin: '10px 0 12px' }}>
+            Product Road Map
+          </h2>
+          <p style={{ fontSize: '15px', color: '#64748b', marginBottom: '40px' }}>
+            Track our features development and suggest new ideas in real time.
+          </p>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', marginBottom: '32px', padding: '0 20px' }}>
+            <div style={{ position: 'absolute', top: '20px', left: '10%', right: '10%', height: '3px', background: '#e2e8f0' }}></div>
+            <div style={{ position: 'absolute', top: '20px', left: '10%', width: '60%', height: '3px', background: 'linear-gradient(90deg, var(--green-tint-2), var(--green))' }}></div>
+
+            <div style={{ zIndex: 2, textAlign: 'center' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--green)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', color: '#fff', fontWeight: 700 }}>✓</div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--green-dark)', marginTop: '8px' }}>2024</div>
+              <div style={{ fontSize: '11px', color: '#64748b' }}>Foundation</div>
+            </div>
+
+            <div style={{ zIndex: 2, textAlign: 'center' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--green)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', color: '#fff', fontWeight: 700 }}>✓</div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--green-dark)', marginTop: '8px' }}>2025</div>
+              <div style={{ fontSize: '11px', color: '#64748b' }}>80+ Features</div>
+            </div>
+
+            <div style={{ zIndex: 2, textAlign: 'center' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--green-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', color: '#ffffff', fontWeight: 800, fontSize: '10px' }}>NOW</div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--green-dark)', marginTop: '8px' }}>2026</div>
+              <div style={{ fontSize: '11px', color: '#64748b' }}>200+ Features</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== PRICING ===== */}
+      <section id="pricing" style={{ background: '#ffffff', padding: '88px 0', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="wrap">
+          <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 48px' }}>
+            <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', marginBottom: '12px' }}>
+              Simple, Transparent Pricing
+            </h2>
+            <p style={{ fontSize: '16px', color: '#64748b' }}>
+              Same 200+ features. Same 5 modules. 7-day free trial on every plan.
+            </p>
+
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: '#f8fafc', border: '1px solid #e2e8f0', padding: '6px 16px', borderRadius: '30px', marginTop: '20px' }}>
+              <span style={{ fontSize: '14px', color: !isAnnual ? '#0f172a' : '#64748b', fontWeight: !isAnnual ? 700 : 400 }}>Monthly</span>
+              <button onClick={() => setIsAnnual(!isAnnual)} style={{ width: '44px', height: '24px', borderRadius: '20px', background: 'var(--green)', border: 'none', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center', justifyContent: isAnnual ? 'flex-end' : 'flex-start' }}>
+                <span style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#ffffff' }}></span>
+              </button>
+              <span style={{ fontSize: '14px', color: isAnnual ? 'var(--green-dark)' : '#64748b', fontWeight: isAnnual ? 700 : 400 }}>
                 Annual (Save 20%)
               </span>
             </div>
           </div>
 
-          <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', overflow: 'hidden' }}>
-            <div style={{ padding: '28px 32px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <span style={{ fontFamily: 'var(--display)', fontSize: '22px', fontWeight: 700, color: 'var(--ink)' }}>Growth Plan</span>
-              <span className="badge badge-green">Most Popular</span>
-            </div>
-            <div style={{ padding: '26px 32px 10px', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <span style={{ fontFamily: 'var(--display)', fontSize: '48px', fontWeight: 800, color: 'var(--ink)' }}>{isAnnual ? '$39' : '$49'}</span>
-              <span style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>/ month, billed {isAnnual ? 'annually' : 'monthly'}</span>
-            </div>
-            <div style={{ padding: '10px 32px 28px' }}>
-              <ul style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '11px 20px', listStyle: 'none' }}>
-                <li style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>✓ CRM & sales pipeline</li>
-                <li style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>✓ HR & payroll suite</li>
-                <li style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>✓ Project management</li>
-                <li style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>✓ Finance & invoicing</li>
-                <li style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>✓ Team workspace</li>
-                <li style={{ fontSize: '13.5px', color: 'var(--text-dim)' }}>✓ Up to 25 team members</li>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', maxWidth: '900px', margin: '0 auto' }}>
+            {/* Starter Plan */}
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '20px', padding: '36px' }}>
+              <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>Starter</h3>
+              <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '24px' }}>For small teams getting started</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '24px' }}>
+                <span style={{ fontSize: '48px', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{isAnnual ? '$39' : '$49'}</span>
+                <span style={{ color: '#64748b', fontSize: '15px' }}>/month</span>
+              </div>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', listStyle: 'none', padding: 0, marginBottom: '32px', fontSize: '14px', color: '#334155' }}>
+                <li>✓ <strong style={{ color: '#0f172a' }}>10 GB</strong> storage</li>
+                <li>✓ Up to <strong style={{ color: '#0f172a' }}>10 employees</strong></li>
+                <li>✓ All 5 modules (CRM, HR, Projects, Finance, Workspace)</li>
+                <li>✓ 200+ features included</li>
+                <li>✓ Client portal</li>
+                <li>✓ Email support</li>
+                <li>✓ 7-day free trial</li>
               </ul>
-            </div>
-            <div style={{ background: 'var(--bg-soft)', padding: '22px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border)' }}>
-              <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>Cancel anytime • 30-day guarantee</span>
-              <button onClick={() => router.push('/app/crm')} className="btn btn-brass">
-                Start Free Trial →
+              <button onClick={() => router.push('/app/crm')} className="btn btn-secondary" style={{ width: '100%', borderRadius: '12px', fontWeight: 700 }}>
+                Start Free Trial
               </button>
             </div>
+
+            {/* Professional Plan */}
+            <div style={{ background: '#ffffff', border: '2px solid var(--green)', borderRadius: '20px', padding: '36px', position: 'relative', boxShadow: 'var(--shadow-lg)' }}>
+              <span style={{ position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', background: 'var(--green)', color: '#ffffff', fontSize: '11px', fontWeight: 800, padding: '4px 16px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                MOST POPULAR
+              </span>
+              <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>Professional</h3>
+              <p style={{ fontSize: '14px', color: 'var(--green-dark)', fontWeight: 600, marginBottom: '24px' }}>For growing businesses</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '24px' }}>
+                <span style={{ fontSize: '48px', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{isAnnual ? '$99' : '$119'}</span>
+                <span style={{ color: '#64748b', fontSize: '15px' }}>/month</span>
+              </div>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', listStyle: 'none', padding: 0, marginBottom: '32px', fontSize: '14px', color: '#334155' }}>
+                <li>✓ <strong style={{ color: '#0f172a' }}>50 GB</strong> storage</li>
+                <li>✓ <strong style={{ color: '#0f172a' }}>Unlimited</strong> employees</li>
+                <li>✓ All 5 modules (CRM, HR, Projects, Finance, Workspace)</li>
+                <li>✓ 200+ features included</li>
+                <li>✓ Client portal</li>
+                <li>✓ Priority 24/7 support</li>
+                <li>✓ 7-day free trial</li>
+              </ul>
+              <button onClick={() => router.push('/app/crm')} className="btn btn-brass vt-pulse-cta" style={{ width: '100%', borderRadius: '12px', fontWeight: 800 }}>
+                Start Free Trial
+              </button>
+              <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--green-dark)', fontWeight: 600, marginTop: '12px' }}>30-day money-back guarantee</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Large Final CTA Banner */}
-      <section style={{ padding: '80px 0', background: 'linear-gradient(135deg, var(--green-deep) 0%, var(--green-dark) 100%)', color: '#fff', textAlign: 'center' }}>
-        <div className="wrap" style={{ maxWidth: '720px' }}>
-          <h2 style={{ fontSize: 'clamp(30px, 4vw, 44px)', color: '#fff', marginBottom: '16px' }}>Run your entire business from one place.</h2>
-          <p style={{ fontSize: '17px', color: '#dcf3e2', marginBottom: '32px' }}>
-            CRM, HR, Projects, Finance, and Workspace — seamlessly connected through green & white VasifyTech aesthetics.
-          </p>
-          <button onClick={() => router.push('/app/crm')} className="btn btn-lg" style={{ background: '#fff', color: 'var(--green-dark)', fontWeight: 700 }}>
-            Start Free 14-Day Trial <ArrowRight size={18} />
-          </button>
+      {/* ===== 30-DAY MONEY BACK GUARANTEE ===== */}
+      <section style={{ background: '#f8fafc', padding: '64px 0', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="wrap" style={{ maxWidth: '760px', textAlign: 'center' }}>
+          <div style={{ background: 'var(--green-tint)', border: '1px solid var(--green-tint-2)', borderRadius: '20px', padding: '36px', marginBottom: '24px' }}>
+            <ShieldCheck size={48} color="var(--green)" style={{ margin: '0 auto 16px' }} />
+            <h3 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
+              30-Day Money-Back Guarantee
+            </h3>
+            <p style={{ fontSize: '15px', color: '#475569', maxWidth: '520px', margin: '0 auto', lineHeight: 1.6 }}>
+              Zero risk. Try every feature for 30 days — if VasifyTech Suite is not for you, get a full refund. No questions asked.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* FAQ Accordion */}
-      <section id="faq" style={{ padding: '96px 0' }}>
-        <div className="wrap">
-          <div style={{ maxWidth: '600px', margin: '0 auto 52px', textAlign: 'center' }}>
-            <span className="eyebrow">Frequently Asked Questions</span>
-            <h2 style={{ fontSize: 'clamp(28px, 3.4vw, 40px)', margin: '16px 0 12px' }}>Before you start your free trial</h2>
-          </div>
-          <div style={{ maxWidth: '760px', margin: '0 auto', borderTop: '1px solid var(--border)' }}>
-            {faqs.map((f, i) => (
-              <div key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                <div 
-                  onClick={() => toggleFaq(i)} 
-                  style={{
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                    padding: '20px 4px', cursor: 'pointer', fontFamily: 'var(--display)',
-                    fontWeight: 600, fontSize: '17px', color: 'var(--ink)'
-                  }}
-                >
-                  <span>{f.q}</span>
-                  <span style={{ color: 'var(--green)', fontSize: '20px', fontWeight: 700 }}>
-                    {faqOpen[i] ? '−' : '+'}
-                  </span>
+      {/* ===== FAQ ===== */}
+      <section id="faq" style={{ background: '#ffffff', padding: '88px 0' }}>
+        <div className="wrap" style={{ maxWidth: '780px' }}>
+          <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', textAlign: 'center', marginBottom: '44px' }}>
+            Got Questions? We've Got Answers
+          </h2>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {faqs.map((faq, idx) => (
+              <div key={idx} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', overflow: 'hidden' }}>
+                <div onClick={() => toggleFaq(idx)} style={{ padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontWeight: 700, fontSize: '16px', color: '#0f172a' }}>
+                  <span>{faq.q}</span>
+                  <span style={{ color: 'var(--green)', fontSize: '20px', fontWeight: 700 }}>{openFaq === idx ? '−' : '+'}</span>
                 </div>
-                {faqOpen[i] && (
-                  <div style={{ padding: '0 4px 24px', color: 'var(--text-dim)', fontSize: '14.5px' }}>
-                    {f.a}
+                {openFaq === idx && (
+                  <div style={{ padding: '0 24px 20px', color: '#475569', fontSize: '14.5px', lineHeight: 1.6 }}>
+                    {faq.a}
                   </div>
                 )}
               </div>
@@ -508,6 +981,21 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Video Demo Modal */}
+      {videoOpen && (
+        <div className="vt-modal-overlay" onClick={() => setVideoOpen(false)}>
+          <div className="vt-modal" style={{ background: '#ffffff', color: '#0f172a', border: '1px solid var(--green)', padding: '24px' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: 700 }}>VasifyTech Suite — Platform Walkthrough</h3>
+              <button onClick={() => setVideoOpen(false)} style={{ background: 'none', border: 'none', color: '#0f172a', cursor: 'pointer' }}><XIcon size={20} /></button>
+            </div>
+            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '12px' }}>
+              <iframe style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: '12px' }} src="https://www.youtube-nocookie.com/embed/1iQcLuvGU5o?autoplay=1" title="Demo Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+            </div>
+          </div>
+        </div>
+      )}
 
       <LandingFooter />
     </div>

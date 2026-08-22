@@ -2,10 +2,13 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Layers, Menu, X, ArrowRight } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { Layers, Menu, X, ArrowRight, Sparkles } from 'lucide-react';
 
 export const LandingHeader: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
 
   return (
     <header style={{
@@ -13,76 +16,91 @@ export const LandingHeader: React.FC = () => {
       top: 0,
       zIndex: 50,
       background: 'rgba(255, 255, 255, 0.94)',
-      backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid var(--border)'
+      backdropFilter: 'blur(12px)',
+      borderBottom: '1px solid #e2e8f0',
+      boxShadow: '0 2px 10px rgba(20, 24, 31, 0.03)'
     }}>
       <div className="wrap" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: '76px'
+        height: '72px'
       }}>
-        {/* Brand Logo */}
-        <Link href="/" style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          fontFamily: 'var(--display)',
-          fontWeight: 700,
-          fontSize: '19px',
-          color: 'var(--ink)'
-        }}>
-          <span style={{
-            width: '34px',
-            height: '34px',
+        {/* Brand Logo & Tag */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <Link href="/" style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            border: '2px solid var(--green)',
-            borderRadius: '50%',
-            color: 'var(--green)',
-            background: 'var(--green-tint)',
-            flexShrink: 0
+            gap: '10px',
+            fontFamily: 'var(--display)',
+            fontWeight: 800,
+            fontSize: '20px',
+            color: '#0f172a',
+            textDecoration: 'none'
           }}>
-            <Layers size={17} />
+            <span style={{
+              width: '36px',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '10px',
+              color: '#ffffff',
+              background: 'linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%)',
+              boxShadow: '0 4px 14px rgba(29, 168, 81, 0.35)',
+              flexShrink: 0
+            }}>
+              <Layers size={19} />
+            </span>
+            VasifyTech <span style={{ color: 'var(--green)' }}>Suite</span>
+          </Link>
+          <span style={{
+            background: 'var(--green-tint)',
+            border: '1px solid var(--green-tint-2)',
+            color: 'var(--green-dark)',
+            fontSize: '11px',
+            fontWeight: 600,
+            padding: '3px 10px',
+            borderRadius: '20px'
+          }}>
+            Complete Business Solution
           </span>
-          VasifyTech Suite
-        </Link>
-
-        {/* Desktop Nav Links */}
-        <div className="nav-links" style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '34px'
-        }}>
-          <a href="#modules" style={{ fontSize: '14.5px', fontWeight: 500, color: 'var(--text)' }}>Modules</a>
-          <a href="#features" style={{ fontSize: '14.5px', fontWeight: 500, color: 'var(--text)' }}>Features</a>
-          <a href="#pricing" style={{ fontSize: '14.5px', fontWeight: 500, color: 'var(--text)' }}>Pricing</a>
-          <a href="#faq" style={{ fontSize: '14.5px', fontWeight: 500, color: 'var(--text)' }}>FAQ</a>
         </div>
 
-        {/* CTA Buttons */}
-        <div className="nav-cta" style={{
+        {/* Desktop Nav Links */}
+        <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '18px'
+          gap: '30px'
         }}>
-          <Link href="/app/crm" style={{ fontSize: '14.5px', fontWeight: 500, color: 'var(--text)' }}>
-            Sign in
+          {!isHomePage && (
+            <Link href="/" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Home</Link>
+          )}
+          <Link href="/features" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Features</Link>
+          <Link href="/pricing" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Pricing</Link>
+          <Link href="/roadmap" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Roadmap</Link>
+          <Link href="/about" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>About</Link>
+          <Link href="/contact" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', transition: 'color 0.2s' }}>Contact</Link>
+        </div>
+
+        {/* CTA Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Link href="/signin" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none' }}>Sign In</Link>
+          <Link href="/signup" className="btn btn-sm btn-brass vt-pulse-cta" style={{ borderRadius: '50px', textDecoration: 'none' }}>
+            Start Free Trial
           </Link>
-          <Link href="/app/crm" className="btn btn-brass">
-            Start Free Trial <ArrowRight size={14} />
-          </Link>
+
+          {/* Mobile Menu Button */}
           <button 
-            className="nav-toggle" 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             style={{
-              background: 'none',
-              border: '1px solid var(--border)',
+              background: '#f1f5f9',
+              border: '1px solid #cbd5e1',
               borderRadius: '8px',
               padding: '6px 10px',
-              color: 'var(--ink)',
-              cursor: 'pointer'
+              color: '#0f172a',
+              cursor: 'pointer',
+              display: 'none'
             }}
             aria-label="Toggle menu"
           >
@@ -94,24 +112,27 @@ export const LandingHeader: React.FC = () => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div style={{
-          position: 'absolute',
-          top: '76px',
-          left: 0,
-          right: 0,
           background: '#ffffff',
-          flexDirection: 'column',
-          padding: '20px 28px',
-          borderBottom: '1px solid var(--border)',
+          borderTop: '1px solid #e2e8f0',
+          padding: '16px 24px 24px',
           display: 'flex',
-          gap: '16px',
-          boxShadow: 'var(--shadow-md)'
+          flexDirection: 'column',
+          gap: '14px',
+          boxShadow: 'var(--shadow-lg)'
         }}>
-          <a href="#modules" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', fontWeight: 500, color: 'var(--ink)' }}>Modules</a>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', fontWeight: 500, color: 'var(--ink)' }}>Features</a>
-          <a href="#pricing" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', fontWeight: 500, color: 'var(--ink)' }}>Pricing</a>
-          <a href="#faq" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', fontWeight: 500, color: 'var(--ink)' }}>FAQ</a>
+          {!isHomePage && (
+            <Link href="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Home</Link>
+          )}
+          <Link href="/features" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Features</Link>
+          <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Pricing</Link>
+          <Link href="/roadmap" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Roadmap</Link>
+          <Link href="/about" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>About</Link>
+          <Link href="/contact" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Contact</Link>
           <div style={{ paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <Link href="/app/crm" className="btn btn-brass btn-block">Go to Dashboard</Link>
+            <Link href="/signin" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '15px', color: '#0f172a', fontWeight: 600, textDecoration: 'none' }}>Sign In</Link>
+            <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="btn btn-brass btn-block" style={{ textAlign: 'center' }}>
+              Start Free Trial
+            </Link>
           </div>
         </div>
       )}
