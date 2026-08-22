@@ -30,16 +30,17 @@ export const LandingHeader: React.FC = () => {
         height: '72px'
       }}>
         {/* Brand Logo & Tag */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <Link href="/" style={{
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexShrink: 0 }}>
+          <Link href="/" className="vt-brand-logo" style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
+            gap: '8px',
             fontFamily: 'var(--display)',
             fontWeight: 800,
-            fontSize: '20px',
+            fontSize: '18px',
             color: '#0f172a',
-            textDecoration: 'none'
+            textDecoration: 'none',
+            whiteSpace: 'nowrap'
           }}>
             <span style={{
               width: '36px',
