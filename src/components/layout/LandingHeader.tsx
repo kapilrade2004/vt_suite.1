@@ -12,6 +12,7 @@ export const LandingHeader: React.FC = () => {
   const isFeaturesPage = pathname === '/features';
   const isPricingPage = pathname === '/pricing';
   const isAboutPage = pathname === '/about';
+  const isRoadmapPage = pathname === '/roadmap';
   const isContactPage = pathname === '/contact';
 
   return (
