@@ -123,9 +123,10 @@ export const LandingHeader: React.FC = () => {
         </div>
 
         {/* CTA Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           <Link
             href="/contact"
+            className="vt-header-support"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -144,6 +145,7 @@ export const LandingHeader: React.FC = () => {
           </Link>
 
           <Link href="/signin" className="vt-header-signin" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap' }}>Sign In</Link>
+          
           <Link href="/signup" className="btn btn-sm btn-brass vt-pulse-cta" style={{ borderRadius: '50px', textDecoration: 'none', whiteSpace: 'nowrap', fontWeight: 700 }}>
             Start Free Trial
           </Link>
