@@ -28,7 +28,7 @@ export default function LeadsDirectoryPage() {
     email: '',
     phone: '',
     source: 'Website',
-    value: '$10,000',
+    value: '₹1,00,000',
     assigned: 'Rhea Nair'
   });
 
@@ -60,7 +60,7 @@ export default function LeadsDirectoryPage() {
     e.preventDefault();
     if (!formData.name || !formData.company) return;
     addLead(formData);
-    setFormData({ name: '', company: '', email: '', phone: '', source: 'Website', value: '$10,000', assigned: 'Rhea Nair' });
+    setFormData({ name: '', company: '', email: '', phone: '', source: 'Website', value: '₹1,00,000', assigned: 'Rhea Nair' });
     setIsAddModalOpen(false);
   };
 
@@ -72,7 +72,7 @@ export default function LeadsDirectoryPage() {
     phone: u.mobile_number,
     source: 'Website',
     status: 'New',
-    value: '$25,000',
+    value: '₹2,50,000',
     assigned: 'VasifyTech System'
   }));
 

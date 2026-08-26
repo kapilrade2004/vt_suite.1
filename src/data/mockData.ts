@@ -240,52 +240,52 @@ export const initialMockData: SuiteData = {
       qualifiedLeads: 84,
       activeDeals: 36,
       wonDeals: 62,
-      revenueMTD: "$84,320",
+      revenueMTD: "₹6,84,320",
       conversionRate: "24.8%"
     },
     leads: [
-      { id: "LD-101", name: "Aarav Sharma", company: "Apex Digital Solutions", email: "aarav@apexdigital.com", phone: "+91 98765 43210", source: "Website", status: "Qualified", value: "$12,500", assigned: "Rhea Nair", date: "2026-08-18" },
-      { id: "LD-102", name: "Priya Patel", company: "Bright Path Realty", email: "priya@brightpath.in", phone: "+91 98123 45678", source: "Referral", status: "New", value: "$28,000", assigned: "Dev Kulkarni", date: "2026-08-20" },
-      { id: "LD-103", name: "Vikram Mehta", company: "Solace Health Group", email: "v.mehta@solacehealth.org", phone: "+91 99000 11223", source: "LinkedIn", status: "Proposal", value: "$45,000", assigned: "Sana Merchant", date: "2026-08-15" },
-      { id: "LD-104", name: "Ananya Iyer", company: "Everline Retail", email: "ananya@everline.com", phone: "+91 97654 32109", source: "Webinar", status: "Negotiation", value: "$18,400", assigned: "Rhea Nair", date: "2026-08-12" },
-      { id: "LD-105", name: "Rajesh Rao", company: "Kestrel Manufacturing", email: "rrao@kestrelmfg.com", phone: "+91 98450 67890", source: "Direct", status: "Won", value: "$64,000", assigned: "Dev Kulkarni", date: "2026-08-10" }
+      { id: "LD-101", name: "Aarav Sharma", company: "Apex Digital Solutions", email: "aarav@apexdigital.com", phone: "+91 98765 43210", source: "Website", status: "Qualified", value: "₹1,25,000", assigned: "Rhea Nair", date: "2026-08-18" },
+      { id: "LD-102", name: "Priya Patel", company: "Bright Path Realty", email: "priya@brightpath.in", phone: "+91 98123 45678", source: "Referral", status: "New", value: "₹2,80,000", assigned: "Dev Kulkarni", date: "2026-08-20" },
+      { id: "LD-103", name: "Vikram Mehta", company: "Solace Health Group", email: "v.mehta@solacehealth.org", phone: "+91 99000 11223", source: "LinkedIn", status: "Proposal", value: "₹4,50,000", assigned: "Sana Merchant", date: "2026-08-15" },
+      { id: "LD-104", name: "Ananya Iyer", company: "Everline Retail", email: "ananya@everline.com", phone: "+91 97654 32109", source: "Webinar", status: "Negotiation", value: "₹1,84,000", assigned: "Rhea Nair", date: "2026-08-12" },
+      { id: "LD-105", name: "Rajesh Rao", company: "Kestrel Manufacturing", email: "rrao@kestrelmfg.com", phone: "+91 98450 67890", source: "Direct", status: "Won", value: "₹6,40,000", assigned: "Dev Kulkarni", date: "2026-08-10" }
     ],
     clients: [
-      { id: "CL-01", name: "Kestrel Manufacturing", industry: "Industrial Engineering", contact: "Rajesh Rao", email: "rrao@kestrelmfg.com", phone: "+91 98450 67890", status: "Active", projectsCount: 4, totalInvoiced: "$124,000", location: "Mumbai, India" },
-      { id: "CL-02", name: "Everline Retail Corp", industry: "E-Commerce", contact: "Ananya Iyer", email: "ananya@everline.com", phone: "+91 97654 32109", status: "Active", projectsCount: 3, totalInvoiced: "$86,500", location: "Bengaluru, India" },
-      { id: "CL-03", name: "Solace Health Group", industry: "Healthcare & Pharma", contact: "Vikram Mehta", email: "v.mehta@solacehealth.org", phone: "+91 99000 11223", status: "Active", projectsCount: 2, totalInvoiced: "$150,000", location: "Hyderabad, India" },
-      { id: "CL-04", name: "Northbridge Logistics", industry: "Freight & Supply Chain", contact: "Kabir Das", email: "kabir@northbridge.com", phone: "+91 98220 54321", status: "Active", projectsCount: 5, totalInvoiced: "$210,000", location: "Delhi NCR, India" }
+      { id: "CL-01", name: "Kestrel Manufacturing", industry: "Industrial Engineering", contact: "Rajesh Rao", email: "rrao@kestrelmfg.com", phone: "+91 98450 67890", status: "Active", projectsCount: 4, totalInvoiced: "₹12,40,000", location: "Mumbai, India" },
+      { id: "CL-02", name: "Everline Retail Corp", industry: "E-Commerce", contact: "Ananya Iyer", email: "ananya@everline.com", phone: "+91 97654 32109", status: "Active", projectsCount: 3, totalInvoiced: "₹8,65,000", location: "Bengaluru, India" },
+      { id: "CL-03", name: "Solace Health Group", industry: "Healthcare & Pharma", contact: "Vikram Mehta", email: "v.mehta@solacehealth.org", phone: "+91 99000 11223", status: "Active", projectsCount: 2, totalInvoiced: "₹15,00,000", location: "Hyderabad, India" },
+      { id: "CL-04", name: "Northbridge Logistics", industry: "Freight & Supply Chain", contact: "Kabir Das", email: "kabir@northbridge.com", phone: "+91 98220 54321", status: "Active", projectsCount: 5, totalInvoiced: "₹21,00,000", location: "Delhi NCR, India" }
     ],
     dealsPipeline: {
       new: [
-        { id: "D-201", title: "CRM Customization Package", company: "Bright Path Realty", amount: "$28,000", prob: "30%", date: "Sep 15", owner: "Dev Kulkarni" },
-        { id: "D-202", title: "Cloud Portal Migration", company: "Nexus Dynamics", amount: "$15,000", prob: "25%", date: "Sep 20", owner: "Sana Merchant" }
+        { id: "D-201", title: "CRM Customization Package", company: "Bright Path Realty", amount: "₹2,80,000", prob: "30%", date: "Sep 15", owner: "Dev Kulkarni" },
+        { id: "D-202", title: "Cloud Portal Migration", company: "Nexus Dynamics", amount: "₹1,50,000", prob: "25%", date: "Sep 20", owner: "Sana Merchant" }
       ],
       qualification: [
-        { id: "D-203", title: "Enterprise ERP Expansion", company: "Apex Digital Solutions", amount: "$35,000", prob: "45%", date: "Sep 10", owner: "Rhea Nair" },
-        { id: "D-204", title: "API Integration License", company: "Zenith Tech Labs", amount: "$9,200", prob: "50%", date: "Sep 05", owner: "Sana Merchant" }
+        { id: "D-203", title: "Enterprise ERP Expansion", company: "Apex Digital Solutions", amount: "₹3,50,000", prob: "45%", date: "Sep 10", owner: "Rhea Nair" },
+        { id: "D-204", title: "API Integration License", company: "Zenith Tech Labs", amount: "₹92,000", prob: "50%", date: "Sep 05", owner: "Sana Merchant" }
       ],
       proposal: [
-        { id: "D-205", title: "HR & Payroll Suite Deployment", company: "Solace Health Group", amount: "$45,000", prob: "70%", date: "Aug 30", owner: "Sana Merchant" }
+        { id: "D-205", title: "HR & Payroll Suite Deployment", company: "Solace Health Group", amount: "₹4,50,000", prob: "70%", date: "Aug 30", owner: "Sana Merchant" }
       ],
       negotiation: [
-        { id: "D-206", title: "Multi-branch POS & Inventory", company: "Everline Retail", amount: "$18,400", prob: "85%", date: "Aug 25", owner: "Rhea Nair" }
+        { id: "D-206", title: "Multi-branch POS & Inventory", company: "Everline Retail", amount: "₹1,84,000", prob: "85%", date: "Aug 25", owner: "Rhea Nair" }
       ],
       won: [
-        { id: "D-207", title: "Factory Workflow Automation", company: "Kestrel Manufacturing", amount: "$64,000", prob: "100%", date: "Aug 10", owner: "Dev Kulkarni" }
+        { id: "D-207", title: "Factory Workflow Automation", company: "Kestrel Manufacturing", amount: "₹6,40,000", prob: "100%", date: "Aug 10", owner: "Dev Kulkarni" }
       ],
       lost: [
-        { id: "D-208", title: "Legacy DB Backup Solution", company: "OldGuard Inc", amount: "$7,500", prob: "0%", date: "Aug 02", owner: "Rhea Nair" }
+        { id: "D-208", title: "Legacy DB Backup Solution", company: "OldGuard Inc", amount: "₹75,000", prob: "0%", date: "Aug 02", owner: "Rhea Nair" }
       ]
     },
     products: [
-      { id: "PRD-01", name: "VasifyTech Core License", category: "Software", price: "$39/mo", tax: "18% GST", status: "Active" },
-      { id: "PRD-02", name: "Custom API Integration", category: "Services", price: "$2,500", tax: "18% GST", status: "Active" },
-      { id: "PRD-03", name: "Dedicated HR Onboarding", category: "Consulting", price: "$1,200", tax: "18% GST", status: "Active" }
+      { id: "PRD-01", name: "VasifyTech Core License", category: "Software", price: "₹2,999/mo", tax: "18% GST", status: "Active" },
+      { id: "PRD-02", name: "Custom API Integration", category: "Services", price: "₹25,000", tax: "18% GST", status: "Active" },
+      { id: "PRD-03", name: "Dedicated HR Onboarding", category: "Consulting", price: "₹12,000", tax: "18% GST", status: "Active" }
     ],
     proposals: [
-      { id: "PR-501", title: "ERP & HR Suite Implementation", client: "Solace Health Group", total: "$45,000", validUntil: "2026-09-15", status: "Sent" },
-      { id: "PR-502", title: "Retail Inventory System", client: "Everline Retail", total: "$18,400", validUntil: "2026-09-01", status: "Approved" }
+      { id: "PR-501", title: "ERP & HR Suite Implementation", client: "Solace Health Group", total: "₹4,50,000", validUntil: "2026-09-15", status: "Sent" },
+      { id: "PR-502", title: "Retail Inventory System", client: "Everline Retail", total: "₹18,40,000", validUntil: "2026-09-01", status: "Approved" }
     ]
   },
   hr: {

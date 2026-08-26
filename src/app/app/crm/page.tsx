@@ -51,7 +51,7 @@ export default function CRMDashboardPage() {
     phone: u.mobile_number,
     source: 'Website',
     status: 'New',
-    value: '$25,000',
+    value: '₹2,50,000',
     assigned: 'VasifyTech System'
   }));
 
@@ -92,7 +92,7 @@ export default function CRMDashboardPage() {
             <TrendingUp size={18} color="var(--green-dark)" />
           </div>
           <div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--ink)' }}>{data.crm.stats.activeDeals}</div>
-          <div style={{ fontSize: '12px', color: 'var(--green-dark)', fontWeight: 600, marginTop: '4px' }}>Value: $182,000</div>
+          <div style={{ fontSize: '12px', color: 'var(--green-dark)', fontWeight: 600, marginTop: '4px' }}>Value: ₹18,20,000</div>
         </div>
 
         <div className="vt-card">
