@@ -31,6 +31,17 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
 
   const loadUser = async () => {
     try {
+      // 1. Check logged-in user in local session storage first
+      const stored = localStorage.getItem('vt_active_user');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.email) {
+          setActiveUser(parsed);
+          return;
+        }
+      }
+
+      // 2. Fallback to API user database
       let res;
       try {
         res = await fetch('/api/users');

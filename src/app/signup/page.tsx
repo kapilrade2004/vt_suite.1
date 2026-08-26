@@ -76,6 +76,11 @@ export default function SignUpPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        if (data.user) {
+          try {
+            localStorage.setItem('vt_active_user', JSON.stringify(data.user));
+          } catch (e) {}
+        }
         setFormSubmitted(true);
         setName('');
         setMobileNumber('');

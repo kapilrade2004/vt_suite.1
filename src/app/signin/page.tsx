@@ -40,6 +40,9 @@ export default function SignInPage() {
         });
 
         if (matched) {
+          try {
+            localStorage.setItem('vt_active_user', JSON.stringify(matched));
+          } catch (e) {}
           router.push('/app/crm');
           return;
         }
