@@ -59,6 +59,30 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     loadUser();
   }, []);
 
+  // Enforce Access Control Guard: Redirect users away from unpurchased module pages
+  useEffect(() => {
+    if (!activeUser || !pathname) return;
+
+    const userModule = (activeUser.service_needed || '').toLowerCase();
+    const isFullSuite = userModule.includes('full') || userModule.includes('suite');
+
+    if (isFullSuite) return;
+
+    // Check if current page path is allowed for this user
+    const allowedForUser = allModules.filter(m => m.match.some(keyword => userModule.includes(keyword)));
+    
+    if (allowedForUser.length > 0) {
+      const isCurrentPathAllowed = allowedForUser.some(m => pathname.startsWith(m.path)) || 
+                                   pathname.includes('/reports') || 
+                                   pathname.includes('/settings');
+      
+      if (!isCurrentPathAllowed) {
+        // Redirect directly to the user's single authorized module page
+        router.replace(allowedForUser[0].path);
+      }
+    }
+  }, [activeUser, pathname]);
+
   const handleUpgradeToPremium = async () => {
     if (!activeUser || !activeUser.id) {
       router.push('/pricing');
