@@ -15,6 +15,7 @@ interface ActiveUserInfo {
   user_name: string;
   email: string;
   company_name: string;
+  service_needed?: string;
   trial_ends_at?: string;
   trial_status?: string;
   days_left?: number;
@@ -78,16 +79,29 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     return name.slice(0, 2).toUpperCase();
   };
 
+  // Filter modules based on user's chosen service_needed
+  const userModule = (activeUser?.service_needed || '').toLowerCase();
+  const isFullSuite = !userModule || userModule.includes('full') || userModule.includes('suite');
+
+  const allModules = [
+    { key: 'crm', name: "CRM & Sales", path: "/app/crm", icon: Users, badge: `${data.crm.stats.totalLeads} Leads`, match: ['crm', 'sales'] },
+    { key: 'hr', name: "HR & Payroll", path: "/app/hr", icon: UserCheck, badge: `${data.hr.stats.totalEmployees} Staff`, match: ['hr', 'payroll'] },
+    { key: 'projects', name: "Projects", path: "/app/projects", icon: Briefcase, badge: `${data.projects.stats.activeProjects} Active`, match: ['project', 'task'] },
+    { key: 'finance', name: "Finance", path: "/app/finance", icon: DollarSign, badge: `${data.finance.invoices.length} Invoices`, match: ['finance', 'invoicing', 'expense'] },
+    { key: 'workspace', name: "Workspace", path: "/app/workspace", icon: MessageSquare, badge: "Live", match: ['workspace', 'chat', 'whatsapp'] }
+  ];
+
+  const allowedModules = isFullSuite 
+    ? allModules 
+    : allModules.filter(m => m.match.some(keyword => userModule.includes(keyword)));
+
+  // Fallback: if no match, show full suite
+  const activeNavigationModules = allowedModules.length > 0 ? allowedModules : allModules;
+
   const navigation = [
     {
-      group: "MAIN MODULES",
-      items: [
-        { name: "CRM & Sales", path: "/app/crm", icon: Users, badge: `${data.crm.stats.totalLeads} Leads` },
-        { name: "HR & Payroll", path: "/app/hr", icon: UserCheck, badge: `${data.hr.stats.totalEmployees} Staff` },
-        { name: "Projects", path: "/app/projects", icon: Briefcase, badge: `${data.projects.stats.activeProjects} Active` },
-        { name: "Finance", path: "/app/finance", icon: DollarSign, badge: `${data.finance.invoices.length} Invoices` },
-        { name: "Workspace", path: "/app/workspace", icon: MessageSquare, badge: "Live" }
-      ]
+      group: `ACTIVATED MODULE (${isFullSuite ? 'FULL SUITE' : (activeUser?.service_needed || 'LIMITED')})`,
+      items: activeNavigationModules
     },
     {
       group: "ANALYTICS & CONTROL",
