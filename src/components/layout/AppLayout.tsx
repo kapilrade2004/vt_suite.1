@@ -1,20 +1,82 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   Layers, Users, UserCheck, Briefcase, DollarSign, 
   MessageSquare, BarChart3, Settings, LogOut,
-  Search, Bell, Plus, ExternalLink
+  Search, Bell, Plus, ExternalLink, ShieldAlert, Sparkles, Clock, CheckCircle2
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
+interface ActiveUserInfo {
+  id?: number;
+  user_name: string;
+  email: string;
+  company_name: string;
+  trial_ends_at?: string;
+  trial_status?: string;
+  days_left?: number;
+}
+
 export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [activeUser, setActiveUser] = useState<ActiveUserInfo | null>(null);
+  const [upgrading, setUpgrading] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { data } = useApp();
+
+  const loadUser = async () => {
+    try {
+      let res;
+      try {
+        res = await fetch('/api/users');
+      } catch (e) {
+        res = await fetch('http://localhost:5000/api/users');
+      }
+      const data = await res.json();
+      if (data.success && Array.isArray(data.users) && data.users.length > 0) {
+        setActiveUser(data.users[0]);
+      }
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  const handleUpgradeToPremium = async () => {
+    if (!activeUser || !activeUser.id) {
+      router.push('/pricing');
+      return;
+    }
+    setUpgrading(true);
+    try {
+      let res;
+      try {
+        res = await fetch(`/api/users/${activeUser.id}/upgrade`, { method: 'POST' });
+      } catch (err) {
+        res = await fetch(`http://localhost:5000/api/users/${activeUser.id}/upgrade`, { method: 'POST' });
+      }
+      const result = await res.json();
+      if (result.success && result.user) {
+        setActiveUser(result.user);
+      }
+    } catch (err) {
+      console.error('Error upgrading plan:', err);
+    } finally {
+      setUpgrading(false);
+    }
+  };
+
+  const getInitials = (name?: string) => {
+    if (!name) return 'VT';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    return name.slice(0, 2).toUpperCase();
+  };
 
   const navigation = [
     {
@@ -41,8 +103,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     if (p.includes('/crm/leads')) return 'CRM & Sales — Leads Directory';
     if (p.includes('/crm/clients')) return 'CRM & Sales — Client Accounts';
     if (p.includes('/crm/pipeline')) return 'CRM & Sales — Deal Pipeline';
-    if (p.includes('/crm/products')) return 'CRM & Sales — Products & Services';
-    if (p.includes('/crm/proposals')) return 'CRM & Sales — Proposals & Estimates';
+    if (p.includes('/crm/users')) return 'CRM & Sales — Registered Users (MySQL)';
     if (p.includes('/crm')) return 'CRM & Sales Overview';
 
     if (p.includes('/hr/employees')) return 'HR & Payroll — Employee Directory';
@@ -69,6 +130,14 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
 
     return 'VasifyTech Suite Dashboard';
   };
+
+  const daysLeft = activeUser?.days_left !== undefined ? Number(activeUser.days_left) : 7;
+  const isPremium = activeUser?.trial_status === 'premium';
+  const isWarning = daysLeft <= 2 && daysLeft > 0 && !isPremium;
+  const isExpired = daysLeft <= 0 && !isPremium;
+  const endDateFormatted = activeUser?.trial_ends_at 
+    ? new Date(activeUser.trial_ends_at).toLocaleDateString()
+    : 'in 7 days';
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-app)' }}>
@@ -174,28 +243,32 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
           ))}
         </div>
 
-        {/* User Card */}
+        {/* User Profile Card */}
         <div style={{
           padding: '16px 14px',
           borderTop: '1px solid var(--border)',
           background: 'var(--bg-soft)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
               <div style={{
                 width: '36px', height: '36px', borderRadius: '50%',
-                background: 'var(--green)', color: '#fff',
+                background: isPremium ? 'linear-gradient(135deg, #d97706, #f59e0b)' : 'var(--green)', color: '#fff',
                 fontFamily: 'var(--display)', fontWeight: 700, fontSize: '13px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
               }}>
-                RN
+                {getInitials(activeUser ? activeUser.user_name : 'Rhea Nair')}
               </div>
-              <div>
-                <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--ink)' }}>Rhea Nair</div>
-                <div style={{ fontSize: '11.5px', color: 'var(--text-dim)' }}>Admin • Growth Plan</div>
+              <div style={{ overflow: 'hidden' }}>
+                <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {activeUser ? activeUser.user_name : 'Rhea Nair'}
+                </div>
+                <div style={{ fontSize: '11px', color: isPremium ? '#d97706' : 'var(--green-dark)', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {isPremium ? '⭐ Premium Account' : `${daysLeft > 0 ? `${daysLeft} Days Free Trial` : 'Trial Expired'}`}
+                </div>
               </div>
             </div>
-            <Link href="/" title="Exit to Landing Page" style={{ color: 'var(--text-dim)', padding: '6px' }}>
+            <Link href="/admin/users" title="Switch User in Admin Panel" style={{ color: 'var(--green-dark)', padding: '6px', flexShrink: 0 }}>
               <LogOut size={16} />
             </Link>
           </div>
@@ -267,8 +340,10 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                   <div style={{ fontWeight: 700, fontSize: '13px', marginBottom: '10px', color: 'var(--ink)' }}>Recent Notifications</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <div style={{ fontSize: '12.5px', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
-                      <span style={{ fontWeight: 600, color: 'var(--green-dark)' }}>Invoice #1042 Paid</span>
-                      <div style={{ color: 'var(--text-dim)', fontSize: '11px' }}>Kestrel Mfg paid $32,000 via Gateway</div>
+                      <span style={{ fontWeight: 600, color: 'var(--green-dark)' }}>Free Trial Reminder</span>
+                      <div style={{ color: 'var(--text-dim)', fontSize: '11px' }}>
+                        Your trial ends on {endDateFormatted}. Upgrade to Premium to retain full access.
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -281,7 +356,76 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
           </div>
         </header>
 
+        {/* FREE TRIAL STATUS BANNER */}
         <main style={{ flex: 1, padding: '24px 28px' }}>
+          {isPremium ? (
+            <div style={{ background: '#fffdf5', border: '1px solid #fef3c7', borderRadius: '12px', padding: '10px 18px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Sparkles size={18} color="#d97706" />
+                <span style={{ fontSize: '13.5px', fontWeight: 700, color: '#92400e' }}>
+                  Premium Plan Active — Full unlimited access unlocked!
+                </span>
+              </div>
+              <span className="badge badge-amber" style={{ fontSize: '11px', fontWeight: 800 }}>PRO UNLIMITED</span>
+            </div>
+          ) : isExpired ? (
+            <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '12px 18px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <ShieldAlert size={20} color="#dc2626" />
+                <div>
+                  <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#991b1b' }}>Your 7-Day Free Trial Has Ended</h4>
+                  <p style={{ fontSize: '12.5px', color: '#991b1b', marginTop: '2px' }}>
+                    Your free trial ended on <strong>{endDateFormatted}</strong>. Upgrade to Premium to continue using all VT Suite features.
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={handleUpgradeToPremium}
+                disabled={upgrading}
+                style={{ background: '#dc2626', color: '#ffffff', border: 'none', padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 800, cursor: 'pointer' }}
+              >
+                {upgrading ? 'Upgrading...' : 'Upgrade to Premium Now'}
+              </button>
+            </div>
+          ) : isWarning ? (
+            <div style={{ background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '12px', padding: '12px 18px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Clock size={20} color="#d97706" />
+                <div>
+                  <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#92400e' }}>
+                    Free Trial Ending Soon ({daysLeft} Day{daysLeft === 1 ? '' : 's'} Remaining)
+                  </h4>
+                  <p style={{ fontSize: '12.5px', color: '#b45309', marginTop: '2px' }}>
+                    Your 7-Day Free Trial ends on <strong>{endDateFormatted}</strong>. Upgrade to Premium now to keep uninterrupted access.
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={handleUpgradeToPremium}
+                disabled={upgrading}
+                style={{ background: 'linear-gradient(135deg, #d97706, #b45309)', color: '#ffffff', border: 'none', padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 12px rgba(217, 119, 6, 0.25)' }}
+              >
+                {upgrading ? 'Upgrading...' : 'Upgrade to Premium'}
+              </button>
+            </div>
+          ) : (
+            <div style={{ background: '#f0fdf4', border: '1px solid var(--green-tint-2)', borderRadius: '12px', padding: '10px 18px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <CheckCircle2 size={18} color="var(--green-dark)" />
+                <span style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--green-dark)' }}>
+                  7-Day Free Trial Active ({daysLeft} Days Left • Ends on {endDateFormatted})
+                </span>
+              </div>
+              <button 
+                onClick={handleUpgradeToPremium}
+                disabled={upgrading}
+                style={{ background: 'var(--green-dark)', color: '#ffffff', border: 'none', padding: '6px 14px', borderRadius: '8px', fontSize: '12.5px', fontWeight: 700, cursor: 'pointer' }}
+              >
+                {upgrading ? 'Upgrading...' : 'Upgrade to Premium'}
+              </button>
+            </div>
+          )}
+
           {children}
         </main>
       </div>

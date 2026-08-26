@@ -21,11 +21,14 @@ export default function SignUpPage() {
   const [companyName, setCompanyName] = useState('');
   const [subdomain, setSubdomain] = useState('');
   const [name, setName] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [referralCode, setReferralCode] = useState('');
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [apiError, setApiError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Auto-generate subdomain from company name
   const handleCompanyChange = (val: string) => {
@@ -34,13 +37,64 @@ export default function SignUpPage() {
     setSubdomain(cleaned);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreedTerms) return;
-    setFormSubmitted(true);
-    setTimeout(() => {
-      router.push('/app/crm');
-    }, 1500);
+
+    setApiError('');
+    setIsSubmitting(true);
+
+    try {
+      let res;
+      try {
+        res = await fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_name: name,
+            mobile_number: mobileNumber,
+            email: email,
+            company_name: companyName
+          })
+        });
+      } catch (err) {
+        res = await fetch('http://localhost:5000/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_name: name,
+            mobile_number: mobileNumber,
+            email: email,
+            company_name: companyName
+          })
+        });
+      }
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setFormSubmitted(true);
+        setName('');
+        setMobileNumber('');
+        setEmail('');
+        setCompanyName('');
+        setSubdomain('');
+        setPassword('');
+        setReferralCode('');
+      } else {
+        if (data.message && data.message.toLowerCase().includes('email')) {
+          setApiError('This email is already registered.');
+        } else if (data.message && data.message.toLowerCase().includes('mobile')) {
+          setApiError('This mobile number is already registered.');
+        } else {
+          setApiError(data.message || 'Unable to save your information. Please try again.');
+        }
+      }
+    } catch (err) {
+      setApiError('Unable to save your information. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -57,15 +111,15 @@ export default function SignUpPage() {
         <div className="wrap" style={{ maxWidth: '1140px', width: '100%' }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
             gap: '48px',
             alignItems: 'start'
           }}>
             
             {/* LEFT MARKETING PANEL */}
-            <div style={{ position: 'sticky', top: '100px' }}>
+            <div style={{ position: 'relative' }}>
               <h1 style={{
-                fontSize: 'clamp(34px, 4.4vw, 52px)',
+                fontSize: 'clamp(30px, 4.2vw, 52px)',
                 fontWeight: 800,
                 color: '#0f172a',
                 lineHeight: 1.12,
@@ -145,21 +199,33 @@ export default function SignUpPage() {
               background: '#ffffff',
               border: '1px solid #cbd5e1',
               borderRadius: '24px',
-              padding: '36px 32px',
+              padding: 'clamp(20px, 4vw, 36px) clamp(16px, 4vw, 32px)',
               boxShadow: 'var(--shadow-lg)'
             }}>
 
               {formSubmitted ? (
                 <div style={{ padding: '32px 20px', textAlign: 'center', background: 'var(--green-tint)', border: '1px solid var(--green-tint-2)', borderRadius: '16px' }}>
                   <CheckCircle2 size={48} color="var(--green-dark)" style={{ margin: '0 auto 16px' }} />
-                  <h3 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--green-dark)', marginBottom: '8px' }}>Your Workspace is Ready!</h3>
+                  <h3 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--green-dark)', marginBottom: '8px' }}>Your information has been submitted successfully.</h3>
                   <p style={{ fontSize: '15px', color: 'var(--green-dark)', marginBottom: '16px' }}>
-                    Welcome to VasifyTech Suite. Redirecting to your dashboard...
+                    Welcome to VasifyTech Suite. Your account has been registered.
                   </p>
+                  <button 
+                    onClick={() => setFormSubmitted(false)} 
+                    style={{ background: 'var(--green-dark)', color: '#ffffff', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    Submit Another User
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   
+                  {apiError && (
+                    <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', color: '#991b1b', fontSize: '14px', fontWeight: 600 }}>
+                      {apiError}
+                    </div>
+                  )}
+
                   {/* Choose Your Plan Section */}
                   <div>
                     <label style={{ display: 'block', fontSize: '14px', fontWeight: 800, color: '#0f172a', marginBottom: '12px' }}>
@@ -387,6 +453,21 @@ export default function SignUpPage() {
                     />
                   </div>
 
+                  {/* Mobile Number */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
+                      Mobile Number <span style={{ color: '#ef4444' }}>*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
+                      placeholder="+91 9876543210"
+                      style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px' }}
+                    />
+                  </div>
+
                   {/* Work Email */}
                   <div>
                     <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
@@ -450,17 +531,17 @@ export default function SignUpPage() {
                   {/* Submit button */}
                   <button
                     type="submit"
-                    disabled={!agreedTerms}
+                    disabled={!agreedTerms || isSubmitting}
                     className="btn btn-brass"
                     style={{
                       borderRadius: '12px',
                       padding: '14px',
                       fontWeight: 800,
                       fontSize: '16px',
-                      opacity: agreedTerms ? 1 : 0.6
+                      opacity: (agreedTerms && !isSubmitting) ? 1 : 0.6
                     }}
                   >
-                    Start My Free Trial <ArrowRight size={18} />
+                    {isSubmitting ? 'Submitting...' : 'Start My Free Trial'} <ArrowRight size={18} />
                   </button>
 
                   <p style={{ fontSize: '13.5px', color: '#64748b', textAlign: 'center', marginTop: '4px' }}>

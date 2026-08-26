@@ -1,12 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
-import { Plus, Search, Download, X, Building } from 'lucide-react';
+import { Plus, Search, Download, X, Building, RefreshCw } from 'lucide-react';
+
+interface DbUser {
+  id: number;
+  user_name: string;
+  mobile_number: string;
+  email: string;
+  company_name: string;
+  created_at: string;
+}
 
 export default function LeadsDirectoryPage() {
   const { data, addLead } = useApp();
+  const [dbUsers, setDbUsers] = useState<DbUser[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -21,6 +32,30 @@ export default function LeadsDirectoryPage() {
     assigned: 'Rhea Nair'
   });
 
+  const fetchDbUsers = async () => {
+    setLoading(true);
+    try {
+      let res;
+      try {
+        res = await fetch('/api/users');
+      } catch (e) {
+        res = await fetch('http://localhost:5000/api/users');
+      }
+      const result = await res.json();
+      if (result.success && Array.isArray(result.users)) {
+        setDbUsers(result.users);
+      }
+    } catch (err) {
+      console.error('Error fetching database users for leads:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDbUsers();
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.company) return;
@@ -29,7 +64,21 @@ export default function LeadsDirectoryPage() {
     setIsAddModalOpen(false);
   };
 
-  const filteredLeads = data.crm.leads.filter(l => {
+  const dbLeads = dbUsers.map(u => ({
+    id: `db-${u.id}`,
+    name: u.user_name,
+    company: u.company_name,
+    email: u.email,
+    phone: u.mobile_number,
+    source: 'Website',
+    status: 'New',
+    value: '$25,000',
+    assigned: 'VasifyTech System'
+  }));
+
+  const combinedLeads = [...dbLeads, ...data.crm.leads];
+
+  const filteredLeads = combinedLeads.filter(l => {
     const matchesSearch = l.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           l.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           l.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -44,6 +93,7 @@ export default function LeadsDirectoryPage() {
         <Link href="/app/crm/leads" className="btn btn-sm btn-brass">Leads Directory</Link>
         <Link href="/app/crm/clients" className="btn btn-sm btn-ghost">Clients</Link>
         <Link href="/app/crm/pipeline" className="btn btn-sm btn-ghost">Deal Pipeline</Link>
+        <Link href="/app/crm/users" className="btn btn-sm btn-ghost">Registered Users (MySQL)</Link>
       </div>
 
       <div className="vt-card" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
@@ -96,7 +146,7 @@ export default function LeadsDirectoryPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredLeads.map(lead => (
+            {filteredLeads.map((lead: any) => (
               <tr key={lead.id}>
                 <td style={{ fontWeight: 600 }}>{lead.name}</td>
                 <td>

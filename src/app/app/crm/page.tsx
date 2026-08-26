@@ -1,23 +1,61 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
-import { Users, UserCheck, TrendingUp, DollarSign, Plus, Eye, Filter } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { Users, UserCheck, TrendingUp, DollarSign, Plus } from 'lucide-react';
+
+interface DbUser {
+  id: number;
+  user_name: string;
+  mobile_number: string;
+  email: string;
+  company_name: string;
+  created_at: string;
+}
 
 export default function CRMDashboardPage() {
   const { data } = useApp();
+  const [dbUsers, setDbUsers] = useState<DbUser[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
 
-  const chartData = [
-    { month: 'Jan', leads: 45, won: 12 },
-    { month: 'Feb', leads: 52, won: 18 },
-    { month: 'Mar', leads: 68, won: 22 },
-    { month: 'Apr', leads: 74, won: 28 },
-    { month: 'May', leads: 89, won: 34 },
-    { month: 'Jun', leads: 112, won: 45 },
-    { month: 'Jul', leads: 128, won: 62 },
-  ];
+  useEffect(() => {
+    const fetchDbUsers = async () => {
+      setLoadingUsers(true);
+      try {
+        let res;
+        try {
+          res = await fetch('/api/users');
+        } catch (e) {
+          res = await fetch('http://localhost:5000/api/users');
+        }
+        const result = await res.json();
+        if (result.success && Array.isArray(result.users)) {
+          setDbUsers(result.users);
+        }
+      } catch (err) {
+        console.error('Error loading CRM leads:', err);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+    fetchDbUsers();
+  }, []);
+
+  // Map MySQL database records to lead format + combine with sample leads
+  const dbLeads = dbUsers.map(u => ({
+    id: `db-${u.id}`,
+    name: u.user_name,
+    company: u.company_name,
+    email: u.email,
+    phone: u.mobile_number,
+    source: 'Website',
+    status: 'New',
+    value: '$25,000',
+    assigned: 'VasifyTech System'
+  }));
+
+  const combinedLeads = [...dbLeads, ...data.crm.leads];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -26,6 +64,7 @@ export default function CRMDashboardPage() {
         <Link href="/app/crm/leads" className="btn btn-sm btn-ghost">Leads Directory</Link>
         <Link href="/app/crm/clients" className="btn btn-sm btn-ghost">Clients</Link>
         <Link href="/app/crm/pipeline" className="btn btn-sm btn-ghost">Deal Pipeline</Link>
+        <Link href="/app/crm/users" className="btn btn-sm btn-ghost">Registered Users (MySQL)</Link>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
@@ -34,7 +73,7 @@ export default function CRMDashboardPage() {
             <span style={{ fontSize: '12.5px', color: 'var(--text-dim)', fontWeight: 600 }}>TOTAL LEADS</span>
             <Users size={18} color="var(--green)" />
           </div>
-          <div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--ink)' }}>{data.crm.stats.totalLeads}</div>
+          <div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--ink)' }}>{combinedLeads.length}</div>
           <div style={{ fontSize: '12px', color: 'var(--green-dark)', fontWeight: 600, marginTop: '4px' }}>↑ 18% vs last month</div>
         </div>
 
@@ -69,7 +108,7 @@ export default function CRMDashboardPage() {
       <div className="vt-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div>
-            <h3 style={{ fontSize: '16px' }}>Recent Inbound Leads</h3>
+            <h3 style={{ fontSize: '16px', fontWeight: 800 }}>Recent Inbound Leads</h3>
             <p style={{ fontSize: '12.5px', color: 'var(--text-dim)' }}>Latest prospects from web forms and direct sales</p>
           </div>
           <Link href="/app/crm/leads" className="btn btn-sm btn-brass">
@@ -81,29 +120,37 @@ export default function CRMDashboardPage() {
           <table className="vt-table">
             <thead>
               <tr>
-                <th>Lead / Contact</th>
-                <th>Company</th>
-                <th>Source</th>
-                <th>Status</th>
-                <th>Value</th>
-                <th>Assigned To</th>
+                <th>LEAD / CONTACT</th>
+                <th>COMPANY</th>
+                <th>SOURCE</th>
+                <th>STATUS</th>
+                <th>VALUE</th>
+                <th>ASSIGNED TO</th>
               </tr>
             </thead>
             <tbody>
-              {data.crm.leads.slice(0, 5).map(lead => (
-                <tr key={lead.id}>
-                  <td style={{ fontWeight: 600 }}>{lead.name}</td>
-                  <td>{lead.company}</td>
-                  <td><span className="badge badge-gray">{lead.source}</span></td>
-                  <td>
-                    <span className={`badge ${lead.status === 'Won' ? 'badge-green' : lead.status === 'Qualified' ? 'badge-blue' : 'badge-orange'}`}>
-                      {lead.status}
-                    </span>
+              {loadingUsers ? (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: 'center', padding: '30px', color: 'var(--text-dim)' }}>
+                    Loading inbound leads...
                   </td>
-                  <td style={{ fontWeight: 700 }}>{lead.value}</td>
-                  <td>{lead.assigned}</td>
                 </tr>
-              ))}
+              ) : (
+                combinedLeads.slice(0, 5).map((lead: any) => (
+                  <tr key={lead.id}>
+                    <td style={{ fontWeight: 600 }}>{lead.name}</td>
+                    <td>{lead.company}</td>
+                    <td><span className="badge badge-gray">{lead.source}</span></td>
+                    <td>
+                      <span className={`badge ${lead.status === 'Won' ? 'badge-green' : lead.status === 'Qualified' ? 'badge-blue' : 'badge-orange'}`}>
+                        {lead.status}
+                      </span>
+                    </td>
+                    <td style={{ fontWeight: 700 }}>{lead.value}</td>
+                    <td>{lead.assigned}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
