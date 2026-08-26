@@ -294,14 +294,14 @@ export const initialMockData: SuiteData = {
       presentToday: 38,
       onLeave: 3,
       pendingRequests: 4,
-      payrollThisMonth: "$126,400"
+      payrollThisMonth: "₹12,64,000"
     },
     employees: [
-      { id: "EMP-001", name: "Rhea Nair", role: "Operations Lead", dept: "Operations", email: "rhea@vasifytech.com", phone: "+91 98765 11111", status: "Active", joinDate: "2023-03-15", salary: "$4,500/mo" },
-      { id: "EMP-002", name: "Dev Kulkarni", role: "Finance Manager", dept: "Finance", email: "dev@vasifytech.com", phone: "+91 98765 22222", status: "Active", joinDate: "2022-08-01", salary: "$5,200/mo" },
-      { id: "EMP-003", name: "Sana Merchant", role: "Sales Director", dept: "Sales", email: "sana@vasifytech.com", phone: "+91 98765 33333", status: "Active", joinDate: "2021-11-10", salary: "$5,800/mo" },
-      { id: "EMP-004", name: "Karan Verma", role: "Lead Full-Stack Eng", dept: "Engineering", email: "karan@vasifytech.com", phone: "+91 98765 44444", status: "Active", joinDate: "2024-01-20", salary: "$4,800/mo" },
-      { id: "EMP-005", name: "Meera Josh", role: "UI/UX Designer", dept: "Design", email: "meera@vasifytech.com", phone: "+91 98765 55555", status: "Active", joinDate: "2024-05-12", salary: "$3,900/mo" }
+      { id: "EMP-001", name: "Rhea Nair", role: "Operations Lead", dept: "Operations", email: "rhea@vasifytech.com", phone: "+91 98765 11111", status: "Active", joinDate: "2023-03-15", salary: "₹45,000/mo" },
+      { id: "EMP-002", name: "Dev Kulkarni", role: "Finance Manager", dept: "Finance", email: "dev@vasifytech.com", phone: "+91 98765 22222", status: "Active", joinDate: "2022-08-01", salary: "₹52,000/mo" },
+      { id: "EMP-003", name: "Sana Merchant", role: "Sales Director", dept: "Sales", email: "sana@vasifytech.com", phone: "+91 98765 33333", status: "Active", joinDate: "2021-11-10", salary: "₹58,000/mo" },
+      { id: "EMP-004", name: "Karan Verma", role: "Lead Full-Stack Eng", dept: "Engineering", email: "karan@vasifytech.com", phone: "+91 98765 44444", status: "Active", joinDate: "2024-01-20", salary: "₹48,000/mo" },
+      { id: "EMP-005", name: "Meera Josh", role: "UI/UX Designer", dept: "Design", email: "meera@vasifytech.com", phone: "+91 98765 55555", status: "Active", joinDate: "2024-05-12", salary: "₹39,000/mo" }
     ],
     attendanceToday: [
       { empId: "EMP-001", name: "Rhea Nair", timeIn: "09:05 AM", timeOut: "—", location: "HQ Office (GPS Verified)", status: "Present" },
@@ -313,8 +313,8 @@ export const initialMockData: SuiteData = {
       { id: "LV-302", employee: "Meera Josh", empId: "EMP-005", type: "Sick Leave", startDate: "2026-08-25", endDate: "2026-08-26", days: 2, reason: "Medical appointment", status: "Pending" }
     ],
     payroll: [
-      { empId: "EMP-001", name: "Rhea Nair", dept: "Operations", basic: "$3,200", allowance: "$1,300", deduction: "$300", net: "$4,200", status: "Processed" },
-      { empId: "EMP-002", name: "Dev Kulkarni", dept: "Finance", basic: "$3,800", allowance: "$1,400", deduction: "$400", net: "$4,800", status: "Processed" }
+      { empId: "EMP-001", name: "Rhea Nair", dept: "Operations", basic: "₹32,000", allowance: "₹13,000", deduction: "₹3,000", net: "₹42,000", status: "Processed" },
+      { empId: "EMP-002", name: "Dev Kulkarni", dept: "Finance", basic: "₹38,000", allowance: "₹14,000", deduction: "₹4,000", net: "₹48,000", status: "Processed" }
     ]
   },
   projects: {
@@ -322,12 +322,12 @@ export const initialMockData: SuiteData = {
       activeProjects: 14,
       completedProjects: 28,
       dueSoon: 3,
-      totalBudget: "$340,000",
+      totalBudget: "₹34,00,000",
       hoursLoggedThisMonth: "1,240 hrs"
     },
     list: [
-      { id: "PRJ-101", title: "Kestrel Factory IoT Suite", client: "Kestrel Manufacturing", manager: "Karan Verma", deadline: "2026-09-30", budget: "$64,000", progress: 78, status: "In Progress", priority: "High", teamCount: 6 },
-      { id: "PRJ-102", title: "Solace HR Portal Migration", client: "Solace Health Group", manager: "Rhea Nair", deadline: "2026-10-15", budget: "$45,000", progress: 42, status: "In Progress", priority: "Medium", teamCount: 4 }
+      { id: "PRJ-101", title: "Kestrel Factory IoT Suite", client: "Kestrel Manufacturing", manager: "Karan Verma", deadline: "2026-09-30", budget: "₹6,40,000", progress: 78, status: "In Progress", priority: "High", teamCount: 6 },
+      { id: "PRJ-102", title: "Solace HR Portal Migration", client: "Solace Health Group", manager: "Rhea Nair", deadline: "2026-10-15", budget: "₹4,50,000", progress: 42, status: "In Progress", priority: "Medium", teamCount: 4 }
     ],
     tasks: [
       { id: "TSK-801", title: "Design responsive dashboard widget layout", project: "Kestrel Factory IoT Suite", assignee: "Meera Josh", priority: "High", dueDate: "2026-08-25", status: "In Progress" },
@@ -341,18 +341,18 @@ export const initialMockData: SuiteData = {
   },
   finance: {
     stats: {
-      revenueMTD: "$84,320",
-      expensesMTD: "$32,150",
-      netProfit: "$52,170",
-      outstandingInvoices: "$28,400",
-      overdueAmount: "$14,200"
+      revenueMTD: "₹6,84,320",
+      expensesMTD: "₹2,32,150",
+      netProfit: "₹4,52,170",
+      outstandingInvoices: "₹2,28,400",
+      overdueAmount: "₹1,14,200"
     },
     invoices: [
-      { id: "INV-1042", client: "Kestrel Manufacturing", issueDate: "2026-08-01", dueDate: "2026-08-15", amount: "$32,000", status: "Paid" },
-      { id: "INV-1043", client: "Everline Retail", issueDate: "2026-08-05", dueDate: "2026-08-19", amount: "$14,200", status: "Overdue" }
+      { id: "INV-1042", client: "Kestrel Manufacturing", issueDate: "2026-08-01", dueDate: "2026-08-15", amount: "₹3,20,000", status: "Paid" },
+      { id: "INV-1043", client: "Everline Retail", issueDate: "2026-08-05", dueDate: "2026-08-19", amount: "₹1,42,000", status: "Overdue" }
     ],
     expenses: [
-      { id: "EXP-901", category: "Cloud Servers (AWS)", vendor: "Amazon Web Services", amount: "$2,450", date: "2026-08-15", status: "Approved" }
+      { id: "EXP-901", category: "Cloud Servers (AWS)", vendor: "Amazon Web Services", amount: "₹24,500", date: "2026-08-15", status: "Approved" }
     ]
   },
   workspace: {
