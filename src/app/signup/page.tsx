@@ -214,16 +214,31 @@ export default function SignUpPage() {
               {formSubmitted ? (
                 <div style={{ padding: '32px 20px', textAlign: 'center', background: 'var(--green-tint)', border: '1px solid var(--green-tint-2)', borderRadius: '16px' }}>
                   <CheckCircle2 size={48} color="var(--green-dark)" style={{ margin: '0 auto 16px' }} />
-                  <h3 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--green-dark)', marginBottom: '8px' }}>Your information has been submitted successfully.</h3>
-                  <p style={{ fontSize: '15px', color: 'var(--green-dark)', marginBottom: '16px' }}>
-                    Welcome to VasifyTech Suite. Your account has been registered.
+                  <h3 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--green-dark)', marginBottom: '8px' }}>Workspace Created Successfully!</h3>
+                  <p style={{ fontSize: '15px', color: 'var(--green-dark)', marginBottom: '24px' }}>
+                    Welcome to VasifyTech. Your chosen service module is activated and ready.
                   </p>
-                  <button 
-                    onClick={() => setFormSubmitted(false)} 
-                    style={{ background: 'var(--green-dark)', color: '#ffffff', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}
-                  >
-                    Submit Another User
-                  </button>
+                  <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <button 
+                      onClick={() => {
+                        const target = selectedService.toLowerCase().includes('hr') ? '/app/hr' :
+                                       selectedService.toLowerCase().includes('project') || selectedService.toLowerCase().includes('custom') || selectedService.toLowerCase().includes('saas') ? '/app/projects' :
+                                       selectedService.toLowerCase().includes('finance') || selectedService.toLowerCase().includes('invoicing') ? '/app/finance' :
+                                       selectedService.toLowerCase().includes('workspace') || selectedService.toLowerCase().includes('whatsapp') ? '/app/workspace' : '/app/crm';
+                        router.push(target);
+                      }} 
+                      className="btn btn-brass"
+                      style={{ borderRadius: '12px', padding: '12px 24px', fontWeight: 800 }}
+                    >
+                      🚀 Enter My Activated Workspace
+                    </button>
+                    <button 
+                      onClick={() => setFormSubmitted(false)} 
+                      style={{ background: '#ffffff', color: '#475569', border: '1px solid #cbd5e1', padding: '12px 20px', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }}
+                    >
+                      Register Another User
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
