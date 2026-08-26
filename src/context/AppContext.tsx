@@ -24,21 +24,27 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [data, setData] = useState<SuiteData>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('vasifytech_next_data');
-      return saved ? JSON.parse(saved) : initialMockData;
-    }
-    return initialMockData;
-  });
-
+  const [data, setData] = useState<SuiteData>(initialMockData);
+  const [isHydrated, setIsHydrated] = useState(false);
   const [toast, setToast] = useState<Toast | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('vasifytech_next_data', JSON.stringify(data));
+      const saved = localStorage.getItem('vasifytech_next_data_v2');
+      if (saved) {
+        try {
+          setData(JSON.parse(saved));
+        } catch (e) {}
+      }
+      setIsHydrated(true);
     }
-  }, [data]);
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated && typeof window !== 'undefined') {
+      localStorage.setItem('vasifytech_next_data_v2', JSON.stringify(data));
+    }
+  }, [data, isHydrated]);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
