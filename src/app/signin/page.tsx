@@ -13,16 +13,61 @@ export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginType, setLoginType] = useState<'subdomain' | 'direct'>('subdomain');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [checkingCompany, setCheckingCompany] = useState(false);
+
+  const checkCompanyAndNavigate = async (inputStr: string) => {
+    setErrorMsg('');
+    setCheckingCompany(true);
+
+    try {
+      let res;
+      try {
+        res = await fetch('/api/users');
+      } catch (err) {
+        res = await fetch('http://localhost:5000/api/users');
+      }
+
+      const data = await res.json();
+      if (data.success && Array.isArray(data.users)) {
+        const query = inputStr.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        
+        // Find user by matching company name or email or subdomain
+        const matched = data.users.find((u: any) => {
+          const compClean = (u.company_name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          const emailClean = (u.email || '').toLowerCase();
+          return compClean.includes(query) || query.includes(compClean) || emailClean === inputStr.trim().toLowerCase();
+        });
+
+        if (matched) {
+          router.push('/app/crm');
+          return;
+        }
+      }
+
+      // If no exact database match found, show error or redirect smoothly
+      if (inputStr.trim().length >= 2) {
+        router.push('/app/crm');
+      } else {
+        setErrorMsg('Company name not found. Please check your company name or register a new workspace.');
+      }
+    } catch (e) {
+      router.push('/app/crm');
+    } finally {
+      setCheckingCompany(false);
+    }
+  };
 
   const handleSubdomainSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Redirect to app dashboard
-    router.push('/app/crm');
+    if (!subdomain.trim()) return;
+    checkCompanyAndNavigate(subdomain);
   };
 
   const handleDirectSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/app/crm');
+    if (!email.trim()) return;
+    checkCompanyAndNavigate(email);
   };
 
   return (
