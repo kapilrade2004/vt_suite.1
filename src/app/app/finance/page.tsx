@@ -68,8 +68,8 @@ export default function FinanceDashboardPage() {
               <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
               <YAxis stroke="#6b7280" fontSize={12} />
               <Tooltip contentStyle={{ background: '#fff', border: '1px solid #e4e9ec', borderRadius: '8px' }} />
-              <Bar dataKey="revenue" fill="#1DA851" radius={[4, 4, 0, 0]} name="Revenue ($)" />
-              <Bar dataKey="expense" fill="#6b7280" radius={[4, 4, 0, 0]} name="Expenses ($)" />
+              <Bar dataKey="revenue" fill="#1DA851" radius={[4, 4, 0, 0]} name="Revenue (₹)" />
+              <Bar dataKey="expense" fill="#6b7280" radius={[4, 4, 0, 0]} name="Expenses (₹)" />
             </BarChart>
           </ResponsiveContainer>
         </div>

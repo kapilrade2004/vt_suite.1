@@ -94,7 +94,7 @@ export default function CreateInvoicePage() {
                 <tr>
                   <th>Description</th>
                   <th style={{ width: '90px' }}>Qty</th>
-                  <th style={{ width: '130px' }}>Rate ($)</th>
+                  <th style={{ width: '130px' }}>Rate (₹)</th>
                   <th style={{ width: '90px' }}>Tax %</th>
                   <th style={{ width: '120px' }}>Amount</th>
                   <th style={{ width: '50px' }}></th>
@@ -139,7 +139,7 @@ export default function CreateInvoicePage() {
                         />
                       </td>
                       <td style={{ fontWeight: 700, color: 'var(--ink)' }}>
-                        ${lineAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        ₹{lineAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                       <td>
                         <button type="button" onClick={() => removeItem(item.id)} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer' }}>
@@ -162,15 +162,15 @@ export default function CreateInvoicePage() {
           <div style={{ width: '280px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Subtotal:</span>
-              <span>${calculateSubtotal().toLocaleString()}</span>
+              <span>₹{calculateSubtotal().toLocaleString()}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Tax (GST 18%):</span>
-              <span>${calculateTax().toLocaleString()}</span>
+              <span>₹{calculateTax().toLocaleString()}</span>
             </div>
             <div style={{ borderTop: '2px solid var(--border)', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', fontSize: '18px', fontWeight: 800 }}>
               <span>Grand Total:</span>
-              <span style={{ color: 'var(--green-dark)' }}>${calculateTotal().toLocaleString()}</span>
+              <span style={{ color: 'var(--green-dark)' }}>₹{calculateTotal().toLocaleString()}</span>
             </div>
           </div>
         </div>
