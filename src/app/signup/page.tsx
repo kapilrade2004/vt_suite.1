@@ -18,7 +18,7 @@ export default function SignUpPage() {
   const [selectedPlan, setSelectedPlan] = useState<string>('starter_monthly');
 
   // Form State
-  const [selectedService, setSelectedService] = useState('Full Business Suite');
+  const [selectedServices, setSelectedServices] = useState<string[]>(['Full Business Suite']);
   const [companyName, setCompanyName] = useState('');
   const [subdomain, setSubdomain] = useState('');
   const [name, setName] = useState('');
@@ -56,7 +56,7 @@ export default function SignUpPage() {
             mobile_number: mobileNumber,
             email: email,
             company_name: companyName,
-            service_needed: selectedService
+            service_needed: selectedServices.join(', ')
           })
         });
       } catch (err) {
@@ -68,7 +68,7 @@ export default function SignUpPage() {
             mobile_number: mobileNumber,
             email: email,
             company_name: companyName,
-            service_needed: selectedService
+            service_needed: selectedServices.join(', ')
           })
         });
       }
@@ -221,10 +221,11 @@ export default function SignUpPage() {
                   <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
                     <button 
                       onClick={() => {
-                        const target = selectedService.toLowerCase().includes('hr') ? '/app/hr' :
-                                       selectedService.toLowerCase().includes('project') || selectedService.toLowerCase().includes('custom') || selectedService.toLowerCase().includes('saas') ? '/app/projects' :
-                                       selectedService.toLowerCase().includes('finance') || selectedService.toLowerCase().includes('invoicing') ? '/app/finance' :
-                                       selectedService.toLowerCase().includes('workspace') || selectedService.toLowerCase().includes('whatsapp') ? '/app/workspace' : '/app/crm';
+                        const sStr = selectedServices.join(' ').toLowerCase();
+                        const target = sStr.includes('hr') ? '/app/hr' :
+                                       sStr.includes('project') || sStr.includes('custom') || sStr.includes('saas') ? '/app/projects' :
+                                       sStr.includes('finance') || sStr.includes('invoicing') ? '/app/finance' :
+                                       sStr.includes('workspace') || sStr.includes('whatsapp') ? '/app/workspace' : '/app/crm';
                         router.push(target);
                       }} 
                       className="btn btn-brass"
@@ -405,39 +406,78 @@ export default function SignUpPage() {
                     )}
                   </div>
 
-                  {/* What Service Do You Want Section */}
+                  {/* What Services Do You Want Section (Multi-select: Min 1, Max 3) */}
                   <div>
-                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
-                      What Service Do You Want? <span style={{ color: '#ef4444' }}>*</span>
-                    </label>
-                    <select
-                      required
-                      value={selectedService}
-                      onChange={(e) => setSelectedService(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '12px 14px',
-                        borderRadius: '10px',
-                        border: '1px solid #cbd5e1',
-                        fontSize: '14px',
-                        fontWeight: 600,
-                        color: '#0f172a',
-                        background: '#ffffff',
-                        outline: 'none',
-                        boxShadow: 'var(--shadow-sm)'
-                      }}
-                    >
-                      <option value="Full Business Suite">🚀 Full Business Suite (All 5 Modules)</option>
-                      <option value="CRM & Sales">📈 CRM & Sales Pipeline Management</option>
-                      <option value="HR & Payroll">💼 HR, Payroll & Attendance Management</option>
-                      <option value="Project Management">📊 Project & Task Management</option>
-                      <option value="Finance & Invoicing">💳 Finance, Invoicing & Expenses</option>
-                      <option value="Team Workspace">💬 Team Workspace & Internal Chat</option>
-                      <option value="WhatsApp Business API">📱 WhatsApp Business API Automation</option>
-                      <option value="Custom Software & SaaS">⚡ Custom Software & SaaS Development</option>
-                    </select>
-                    <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-                      Selected service: <strong style={{ color: 'var(--green-dark)' }}>Only your chosen service module will be activated.</strong>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <label style={{ fontSize: '13.5px', fontWeight: 800, color: '#0f172a' }}>
+                        What Services Do You Want? <span style={{ color: '#ef4444' }}>*</span>
+                      </label>
+                      <span style={{ fontSize: '12px', fontWeight: 700, color: selectedServices.length >= 3 ? '#d97706' : 'var(--green-dark)' }}>
+                        {selectedServices.length}/3 selected (Min 1, Max 3)
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '8px', background: '#f8fafc', padding: '12px', borderRadius: '12px', border: '1px solid #cbd5e1' }}>
+                      {[
+                        { title: 'Full Business Suite', desc: '🚀 All 5 Modules Included' },
+                        { title: 'CRM & Sales', desc: '📈 Sales Pipeline & Leads' },
+                        { title: 'HR & Payroll', desc: '💼 Attendance & Payroll' },
+                        { title: 'Project Management', desc: '📊 Tasks & Project Gantt' },
+                        { title: 'Finance & Invoicing', desc: '💳 Invoices & Expense Log' },
+                        { title: 'Team Workspace', desc: '💬 Live Chat & Calendar' },
+                        { title: 'WhatsApp Business API', desc: '📱 Automation & Bot Support' },
+                        { title: 'Custom Software & SaaS', desc: '⚡ Custom Dev Solutions' }
+                      ].map((item) => {
+                        const isChecked = selectedServices.includes(item.title);
+                        const isMaxReached = selectedServices.length >= 3 && !isChecked;
+
+                        return (
+                          <div
+                            key={item.title}
+                            onClick={() => {
+                              if (isChecked) {
+                                // Enforce minimum 1 selection constraint
+                                if (selectedServices.length > 1) {
+                                  setSelectedServices(selectedServices.filter(s => s !== item.title));
+                                }
+                              } else {
+                                // Enforce maximum 3 selection constraint
+                                if (selectedServices.length < 3) {
+                                  setSelectedServices([...selectedServices, item.title]);
+                                }
+                              }
+                            }}
+                            style={{
+                              padding: '10px 12px',
+                              borderRadius: '8px',
+                              border: isChecked ? '2px solid var(--green-dark)' : '1px solid #e2e8f0',
+                              background: isChecked ? 'var(--green-tint)' : isMaxReached ? '#f1f5f9' : '#ffffff',
+                              cursor: isMaxReached ? 'not-allowed' : 'pointer',
+                              opacity: isMaxReached ? 0.6 : 1,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              disabled={isMaxReached}
+                              readOnly
+                              style={{ accentColor: 'var(--green-dark)', width: '16px', height: '16px', cursor: 'pointer' }}
+                            />
+                            <div>
+                              <div style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>{item.title}</div>
+                              <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{item.desc}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <p style={{ fontSize: '12px', color: '#64748b', marginTop: '6px' }}>
+                      Selected: <strong style={{ color: 'var(--green-dark)' }}>{selectedServices.join(', ')}</strong>
                     </p>
                   </div>
 
