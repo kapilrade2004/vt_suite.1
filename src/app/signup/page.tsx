@@ -19,6 +19,7 @@ export default function SignUpPage() {
 
   // Form State
   const [selectedServices, setSelectedServices] = useState<string[]>(['Full Business Suite']);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [companyName, setCompanyName] = useState('');
   const [subdomain, setSubdomain] = useState('');
   const [name, setName] = useState('');
@@ -406,8 +407,8 @@ export default function SignUpPage() {
                     )}
                   </div>
 
-                  {/* What Services Do You Want Section (Multi-select: Min 1, Max 3) */}
-                  <div>
+                  {/* What Services Do You Want Section (Custom Multi-Select Dropdown: Min 1, Max 3) */}
+                  <div style={{ position: 'relative' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                       <label style={{ fontSize: '13.5px', fontWeight: 800, color: '#0f172a' }}>
                         What Services Do You Want? <span style={{ color: '#ef4444' }}>*</span>
@@ -417,68 +418,107 @@ export default function SignUpPage() {
                       </span>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '8px', background: '#f8fafc', padding: '12px', borderRadius: '12px', border: '1px solid #cbd5e1' }}>
-                      {[
-                        { title: 'Full Business Suite', desc: '🚀 All 5 Modules Included' },
-                        { title: 'CRM & Sales', desc: '📈 Sales Pipeline & Leads' },
-                        { title: 'HR & Payroll', desc: '💼 Attendance & Payroll' },
-                        { title: 'Project Management', desc: '📊 Tasks & Project Gantt' },
-                        { title: 'Finance & Invoicing', desc: '💳 Invoices & Expense Log' },
-                        { title: 'Team Workspace', desc: '💬 Live Chat & Calendar' },
-                        { title: 'WhatsApp Business API', desc: '📱 Automation & Bot Support' },
-                        { title: 'Custom Software & SaaS', desc: '⚡ Custom Dev Solutions' }
-                      ].map((item) => {
-                        const isChecked = selectedServices.includes(item.title);
-                        const isMaxReached = selectedServices.length >= 3 && !isChecked;
-
-                        return (
-                          <div
-                            key={item.title}
-                            onClick={() => {
-                              if (isChecked) {
-                                // Enforce minimum 1 selection constraint
-                                if (selectedServices.length > 1) {
-                                  setSelectedServices(selectedServices.filter(s => s !== item.title));
-                                }
-                              } else {
-                                // Enforce maximum 3 selection constraint
-                                if (selectedServices.length < 3) {
-                                  setSelectedServices([...selectedServices, item.title]);
-                                }
-                              }
-                            }}
-                            style={{
-                              padding: '10px 12px',
-                              borderRadius: '8px',
-                              border: isChecked ? '2px solid var(--green-dark)' : '1px solid #e2e8f0',
-                              background: isChecked ? 'var(--green-tint)' : isMaxReached ? '#f1f5f9' : '#ffffff',
-                              cursor: isMaxReached ? 'not-allowed' : 'pointer',
-                              opacity: isMaxReached ? 0.6 : 1,
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '10px',
-                              transition: 'all 0.15s ease'
-                            }}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              disabled={isMaxReached}
-                              readOnly
-                              style={{ accentColor: 'var(--green-dark)', width: '16px', height: '16px', cursor: 'pointer' }}
-                            />
-                            <div>
-                              <div style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>{item.title}</div>
-                              <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{item.desc}</div>
-                            </div>
-                          </div>
-                        );
-                      })}
+                    {/* Dropdown Menu Header Button */}
+                    <div
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      style={{
+                        width: '100%',
+                        padding: '12px 14px',
+                        borderRadius: '10px',
+                        border: '1px solid #cbd5e1',
+                        background: '#ffffff',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justify: 'space-between',
+                        alignItems: 'center',
+                        boxShadow: 'var(--shadow-sm)'
+                      }}
+                    >
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+                        {selectedServices.map(s => (
+                          <span key={s} style={{ background: 'var(--green-tint)', color: 'var(--green-dark)', border: '1px solid var(--green-tint-2)', padding: '2px 8px', borderRadius: '6px', fontSize: '12.5px', fontWeight: 700 }}>
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                      <span style={{ color: '#64748b', fontSize: '12px', fontWeight: 700 }}>
+                        {dropdownOpen ? '▲ Close' : '▼ Select Services'}
+                      </span>
                     </div>
 
-                    <p style={{ fontSize: '12px', color: '#64748b', marginTop: '6px' }}>
-                      Selected: <strong style={{ color: 'var(--green-dark)' }}>{selectedServices.join(', ')}</strong>
-                    </p>
+                    {/* Dropdown Popup Checklist Menu */}
+                    {dropdownOpen && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        zIndex: 30,
+                        marginTop: '4px',
+                        background: '#ffffff',
+                        border: '1px solid #cbd5e1',
+                        borderRadius: '12px',
+                        boxShadow: 'var(--shadow-lg)',
+                        padding: '8px',
+                        maxHeight: '260px',
+                        overflowY: 'auto'
+                      }}>
+                        {[
+                          { title: 'Full Business Suite', desc: '🚀 All 5 Modules Included' },
+                          { title: 'CRM & Sales', desc: '📈 Sales Pipeline & Leads' },
+                          { title: 'HR & Payroll', desc: '💼 Attendance & Payroll' },
+                          { title: 'Project Management', desc: '📊 Tasks & Project Gantt' },
+                          { title: 'Finance & Invoicing', desc: '💳 Invoices & Expense Log' },
+                          { title: 'Team Workspace', desc: '💬 Live Chat & Calendar' },
+                          { title: 'WhatsApp Business API', desc: '📱 Automation & Bot Support' },
+                          { title: 'Custom Software & SaaS', desc: '⚡ Custom Dev Solutions' }
+                        ].map((item) => {
+                          const isChecked = selectedServices.includes(item.title);
+                          const isMaxReached = selectedServices.length >= 3 && !isChecked;
+
+                          return (
+                            <div
+                              key={item.title}
+                              onClick={() => {
+                                if (isChecked) {
+                                  if (selectedServices.length > 1) {
+                                    setSelectedServices(selectedServices.filter(s => s !== item.title));
+                                  }
+                                } else {
+                                  if (selectedServices.length < 3) {
+                                    setSelectedServices([...selectedServices, item.title]);
+                                  }
+                                }
+                              }}
+                              style={{
+                                padding: '9px 12px',
+                                borderRadius: '8px',
+                                background: isChecked ? 'var(--green-tint)' : isMaxReached ? '#f8fafc' : 'transparent',
+                                cursor: isMaxReached ? 'not-allowed' : 'pointer',
+                                opacity: isMaxReached ? 0.5 : 1,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                marginBottom: '4px',
+                                transition: 'background 0.15s ease'
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                disabled={isMaxReached}
+                                readOnly
+                                style={{ accentColor: 'var(--green-dark)', width: '16px', height: '16px', cursor: 'pointer' }}
+                              />
+                              <div>
+                                <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{item.title}</div>
+                                <div style={{ fontSize: '11px', color: '#64748b' }}>{item.desc}</div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
 
                   {/* Company Name */}
