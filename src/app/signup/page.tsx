@@ -429,7 +429,7 @@ export default function SignUpPage() {
                         background: '#ffffff',
                         cursor: 'pointer',
                         display: 'flex',
-                        justify: 'space-between',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
                         boxShadow: 'var(--shadow-sm)'
                       }}
