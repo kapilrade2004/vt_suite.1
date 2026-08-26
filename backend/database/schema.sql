@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     mobile_number VARCHAR(20) NOT NULL UNIQUE,
     email VARCHAR(150) NOT NULL UNIQUE,
     company_name VARCHAR(150) NOT NULL,
+    service_needed VARCHAR(100) DEFAULT 'full_suite',
     trial_ends_at DATETIME NULL,
     trial_status VARCHAR(20) DEFAULT 'active',
     reminder_sent_at DATETIME NULL,

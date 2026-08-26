@@ -19,16 +19,17 @@ export const LandingHeader: React.FC = () => {
       position: 'sticky',
       top: 0,
       zIndex: 50,
-      background: 'rgba(255, 255, 255, 0.94)',
-      backdropFilter: 'blur(12px)',
-      borderBottom: '1px solid #e2e8f0',
-      boxShadow: '0 2px 10px rgba(20, 24, 31, 0.03)'
+      background: 'rgba(255, 255, 255, 0.88)',
+      backdropFilter: 'blur(16px)',
+      WebkitBackdropFilter: 'blur(16px)',
+      borderBottom: '1px solid rgba(226, 232, 240, 0.8)',
+      boxShadow: '0 4px 20px -2px rgba(20, 24, 31, 0.05)'
     }}>
       <div className="wrap" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        minHeight: '64px',
+        minHeight: '68px',
         paddingTop: '10px',
         paddingBottom: '10px'
       }}>
@@ -37,40 +38,44 @@ export const LandingHeader: React.FC = () => {
           <Link href="/" className="vt-brand-logo" style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: '10px',
             fontFamily: 'var(--display)',
             fontWeight: 800,
-            fontSize: '18px',
+            fontSize: '19px',
             color: '#0f172a',
             textDecoration: 'none',
             whiteSpace: 'nowrap'
           }}>
             <span style={{
-              width: '36px',
-              height: '36px',
+              width: '38px',
+              height: '38px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              borderRadius: '10px',
+              borderRadius: '11px',
               color: '#ffffff',
               background: 'linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%)',
-              boxShadow: '0 4px 14px rgba(29, 168, 81, 0.35)',
+              boxShadow: '0 6px 16px -2px rgba(29, 168, 81, 0.4)',
               flexShrink: 0
             }}>
-              <Layers size={19} />
+              <Layers size={20} />
             </span>
-            VasifyTech <span style={{ color: 'var(--green)' }}>Suite</span>
+            <span>VasifyTech <span style={{ color: 'var(--green-dark)' }}>Suite</span></span>
           </Link>
           <span className="vt-header-badge" style={{
-            background: 'var(--green-tint)',
+            background: 'linear-gradient(135deg, var(--green-tint) 0%, #e6f7ec 100%)',
             border: '1px solid var(--green-tint-2)',
             color: 'var(--green-dark)',
             fontSize: '11px',
-            fontWeight: 600,
-            padding: '3px 10px',
-            borderRadius: '20px'
+            fontWeight: 700,
+            padding: '3px 12px',
+            borderRadius: '20px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px'
           }}>
-            Complete Business Solution
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--green)' }}></span>
+            IT & SaaS Solutions
           </span>
         </div>
 
@@ -119,8 +124,27 @@ export const LandingHeader: React.FC = () => {
 
         {/* CTA Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexShrink: 0 }}>
+          <Link
+            href="/contact"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: '#25D36615',
+              border: '1px solid #25D36640',
+              color: '#128C7E',
+              fontSize: '13px',
+              fontWeight: 700,
+              padding: '6px 14px',
+              borderRadius: '20px',
+              textDecoration: 'none'
+            }}
+          >
+            💬 Support & Chat
+          </Link>
+
           <Link href="/signin" className="vt-header-signin" style={{ fontSize: '14.5px', fontWeight: 600, color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap' }}>Sign In</Link>
-          <Link href="/signup" className="btn btn-sm btn-brass vt-pulse-cta" style={{ borderRadius: '50px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+          <Link href="/signup" className="btn btn-sm btn-brass vt-pulse-cta" style={{ borderRadius: '50px', textDecoration: 'none', whiteSpace: 'nowrap', fontWeight: 700 }}>
             Start Free Trial
           </Link>
 

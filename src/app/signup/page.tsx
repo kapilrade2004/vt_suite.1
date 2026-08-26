@@ -18,6 +18,7 @@ export default function SignUpPage() {
   const [selectedPlan, setSelectedPlan] = useState<string>('starter_monthly');
 
   // Form State
+  const [selectedService, setSelectedService] = useState('Full Business Suite');
   const [companyName, setCompanyName] = useState('');
   const [subdomain, setSubdomain] = useState('');
   const [name, setName] = useState('');
@@ -54,7 +55,8 @@ export default function SignUpPage() {
             user_name: name,
             mobile_number: mobileNumber,
             email: email,
-            company_name: companyName
+            company_name: companyName,
+            service_needed: selectedService
           })
         });
       } catch (err) {
@@ -65,7 +67,8 @@ export default function SignUpPage() {
             user_name: name,
             mobile_number: mobileNumber,
             email: email,
-            company_name: companyName
+            company_name: companyName,
+            service_needed: selectedService
           })
         });
       }
@@ -296,7 +299,7 @@ export default function SignUpPage() {
                             <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px' }}>Up to 10 employees</p>
                           </div>
                           <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>$39<span style={{ fontSize: '12px', color: '#64748b' }}>/mo</span></div>
+                            <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>₹2,999<span style={{ fontSize: '12px', color: '#64748b' }}>/mo</span></div>
                             <div style={{ fontSize: '11px', color: '#94a3b8' }}>after trial</div>
                           </div>
                         </div>
@@ -323,7 +326,7 @@ export default function SignUpPage() {
                             <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px' }}>Unlimited employees</p>
                           </div>
                           <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>$99<span style={{ fontSize: '12px', color: '#64748b' }}>/mo</span></div>
+                            <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>₹7,999<span style={{ fontSize: '12px', color: '#64748b' }}>/mo</span></div>
                             <div style={{ fontSize: '11px', color: '#94a3b8' }}>after trial</div>
                           </div>
                         </div>
@@ -348,7 +351,7 @@ export default function SignUpPage() {
                             <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px' }}>Up to 5 employees • Pay once, use forever</p>
                           </div>
                           <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>$49</div>
+                            <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>₹3,999</div>
                             <div style={{ fontSize: '11px', color: 'var(--green-dark)', fontWeight: 700 }}>one-time</div>
                           </div>
                         </div>
@@ -374,12 +377,48 @@ export default function SignUpPage() {
                             <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px' }}>Unlimited employees • Pay once, use forever</p>
                           </div>
                           <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>$149</div>
+                            <div style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>₹11,999</div>
                             <div style={{ fontSize: '11px', color: 'var(--green-dark)', fontWeight: 700 }}>one-time</div>
                           </div>
                         </div>
                       </div>
                     )}
+                  </div>
+
+                  {/* What Service Do You Want Section */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
+                      What Service Do You Want? <span style={{ color: '#ef4444' }}>*</span>
+                    </label>
+                    <select
+                      required
+                      value={selectedService}
+                      onChange={(e) => setSelectedService(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '12px 14px',
+                        borderRadius: '10px',
+                        border: '1px solid #cbd5e1',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        color: '#0f172a',
+                        background: '#ffffff',
+                        outline: 'none',
+                        boxShadow: 'var(--shadow-sm)'
+                      }}
+                    >
+                      <option value="Full Business Suite">🚀 Full Business Suite (All 5 Modules)</option>
+                      <option value="CRM & Sales">📈 CRM & Sales Pipeline Management</option>
+                      <option value="HR & Payroll">💼 HR, Payroll & Attendance Management</option>
+                      <option value="Project Management">📊 Project & Task Management</option>
+                      <option value="Finance & Invoicing">💳 Finance, Invoicing & Expenses</option>
+                      <option value="Team Workspace">💬 Team Workspace & Internal Chat</option>
+                      <option value="WhatsApp Business API">📱 WhatsApp Business API Automation</option>
+                      <option value="Custom Software & SaaS">⚡ Custom Software & SaaS Development</option>
+                    </select>
+                    <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
+                      Selected service: <strong style={{ color: 'var(--green-dark)' }}>Only your chosen service module will be activated.</strong>
+                    </p>
                   </div>
 
                   {/* Company Name */}
@@ -458,14 +497,45 @@ export default function SignUpPage() {
                     <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
                       Mobile Number <span style={{ color: '#ef4444' }}>*</span>
                     </label>
-                    <input
-                      type="tel"
-                      required
-                      value={mobileNumber}
-                      onChange={(e) => setMobileNumber(e.target.value)}
-                      placeholder="+91 9876543210"
-                      style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px' }}
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span style={{
+                        background: '#f8fafc',
+                        border: '1px solid #cbd5e1',
+                        borderRight: 'none',
+                        padding: '11px 12px',
+                        borderTopLeftRadius: '8px',
+                        borderBottomLeftRadius: '8px',
+                        fontSize: '14px',
+                        fontWeight: 700,
+                        color: '#475569'
+                      }}>
+                        +91
+                      </span>
+                      <input
+                        type="tel"
+                        required
+                        maxLength={10}
+                        pattern="[0-9]{10}"
+                        value={mobileNumber}
+                        onChange={(e) => {
+                          const onlyDigits = e.target.value.replace(/\D/g, '').slice(0, 10);
+                          setMobileNumber(onlyDigits);
+                        }}
+                        placeholder="9876543210"
+                        style={{
+                          width: '100%',
+                          padding: '11px 14px',
+                          borderTopRightRadius: '8px',
+                          borderBottomRightRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '14px',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+                    <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
+                      Enter 10-digit mobile number ({mobileNumber.length}/10 digits)
+                    </p>
                   </div>
 
                   {/* Work Email */}

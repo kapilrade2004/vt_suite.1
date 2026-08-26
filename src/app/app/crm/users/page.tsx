@@ -12,6 +12,7 @@ interface UserItem {
   mobile_number: string;
   email: string;
   company_name: string;
+  service_needed?: string;
   created_at: string;
   trial_ends_at?: string;
   trial_status?: string;
@@ -237,6 +238,7 @@ export default function CRMRegisteredUsersPage() {
               <th>MOBILE NUMBER</th>
               <th>EMAIL ADDRESS</th>
               <th>COMPANY NAME</th>
+              <th>SERVICE NEEDED</th>
               <th>TRIAL END DATE</th>
               <th>STATUS</th>
               <th>REGISTRATION DATE</th>
@@ -246,13 +248,13 @@ export default function CRMRegisteredUsersPage() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={9} style={{ textAlign: 'center', padding: '30px', color: 'var(--text-dim)' }}>
+                <td colSpan={10} style={{ textAlign: 'center', padding: '30px', color: 'var(--text-dim)' }}>
                   Loading database users...
                 </td>
               </tr>
             ) : filteredUsers.length === 0 ? (
               <tr>
-                <td colSpan={9} style={{ textAlign: 'center', padding: '30px', color: 'var(--text-dim)' }}>
+                <td colSpan={10} style={{ textAlign: 'center', padding: '30px', color: 'var(--text-dim)' }}>
                   {searchTerm ? 'No registered users match your search.' : 'No registered users in database.'}
                 </td>
               </tr>
@@ -270,6 +272,11 @@ export default function CRMRegisteredUsersPage() {
                     <td style={{ fontWeight: 600 }}>{u.mobile_number}</td>
                     <td style={{ fontWeight: 600 }}>{u.email}</td>
                     <td>{u.company_name}</td>
+                    <td>
+                      <span className="badge badge-green" style={{ fontSize: '11.5px', fontWeight: 700 }}>
+                        {u.service_needed || 'full_suite'}
+                      </span>
+                    </td>
                     <td style={{ fontSize: '13px', color: 'var(--text-dim)' }}>
                       {u.trial_ends_at ? new Date(u.trial_ends_at).toLocaleDateString() : '7 Days'}
                     </td>

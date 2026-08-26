@@ -2,14 +2,15 @@ const db = require('../database/db');
 
 // Create new user record with automatic 7-Day Free Trial
 async function createUser(userData) {
-  const { user_name, mobile_number, email, company_name } = userData;
+  const { user_name, mobile_number, email, company_name, service_needed } = userData;
+  const service = service_needed || 'full_suite';
   
   // Set 7-day free trial end date
   const sql = `
-    INSERT INTO users (user_name, mobile_number, email, company_name, trial_ends_at, trial_status)
-    VALUES (?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 7 DAY), 'active')
+    INSERT INTO users (user_name, mobile_number, email, company_name, service_needed, trial_ends_at, trial_status)
+    VALUES (?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 7 DAY), 'active')
   `;
-  const [result] = await db.query(sql, [user_name, mobile_number, email, company_name]);
+  const [result] = await db.query(sql, [user_name, mobile_number, email, company_name, service]);
   
   return getUserById(result.insertId);
 }
@@ -18,7 +19,7 @@ async function createUser(userData) {
 async function getAllUsers() {
   const sql = `
     SELECT 
-      id, user_name, mobile_number, email, company_name, 
+      id, user_name, mobile_number, email, company_name, service_needed,
       created_at, updated_at, trial_ends_at, trial_status, reminder_sent_at,
       TIMESTAMPDIFF(DAY, NOW(), trial_ends_at) AS days_left
     FROM users 
@@ -32,7 +33,7 @@ async function getAllUsers() {
 async function getUserById(id) {
   const sql = `
     SELECT 
-      id, user_name, mobile_number, email, company_name, 
+      id, user_name, mobile_number, email, company_name, service_needed,
       created_at, updated_at, trial_ends_at, trial_status, reminder_sent_at,
       TIMESTAMPDIFF(DAY, NOW(), trial_ends_at) AS days_left
     FROM users 

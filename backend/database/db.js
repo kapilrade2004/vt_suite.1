@@ -39,6 +39,7 @@ async function initDB() {
         mobile_number VARCHAR(20) NOT NULL UNIQUE,
         email VARCHAR(150) NOT NULL UNIQUE,
         company_name VARCHAR(150) NOT NULL,
+        service_needed VARCHAR(100) DEFAULT 'full_suite',
         trial_ends_at DATETIME NULL,
         trial_status VARCHAR(20) DEFAULT 'active',
         reminder_sent_at DATETIME NULL,
@@ -48,9 +49,12 @@ async function initDB() {
     `;
     await pool.query(createTableSql);
 
-    // Auto-migration: ensure trial columns exist on existing table
+    // Auto-migration: ensure columns exist on existing table
     try {
-      await pool.query(`ALTER TABLE users ADD COLUMN trial_ends_at DATETIME NULL AFTER company_name;`);
+      await pool.query(`ALTER TABLE users ADD COLUMN service_needed VARCHAR(100) DEFAULT 'full_suite' AFTER company_name;`);
+    } catch (e) {}
+    try {
+      await pool.query(`ALTER TABLE users ADD COLUMN trial_ends_at DATETIME NULL AFTER service_needed;`);
     } catch (e) {}
     try {
       await pool.query(`ALTER TABLE users ADD COLUMN trial_status VARCHAR(20) DEFAULT 'active' AFTER trial_ends_at;`);

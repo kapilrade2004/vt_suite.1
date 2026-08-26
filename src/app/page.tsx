@@ -154,89 +154,91 @@ export default function Home() {
     <div style={{ background: '#ffffff', color: '#0f172a', minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: 'var(--body)' }}>
       <LandingHeader />
 
-      {/* ===== HERO SECTION (WHITE & GREEN) ===== */}
+      {/* ===== HERO SECTION (VIBRANT & AESTHETIC) ===== */}
       <section style={{
-        background: 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(29, 168, 81, 0.15), transparent)',
-        padding: '56px 0 72px',
+        background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(29, 168, 81, 0.16), transparent), linear-gradient(180deg, #ffffff 0%, #f8fdf9 100%)',
+        padding: '64px 0 80px',
         position: 'relative',
-        borderBottom: '1px solid #e2e8f0'
+        borderBottom: '1px solid #e2e8f0',
+        overflow: 'hidden'
       }}>
         <div className="wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '52px', alignItems: 'center' }}>
           <div>
             <span style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              background: 'var(--green-tint)',
+              gap: '8px',
+              background: 'linear-gradient(135deg, var(--green-tint) 0%, #dcf3e2 100%)',
               border: '1px solid var(--green-tint-2)',
               color: 'var(--green-dark)',
               fontSize: '12px',
-              fontWeight: 700,
-              padding: '5px 14px',
-              borderRadius: '20px',
+              fontWeight: 800,
+              padding: '6px 16px',
+              borderRadius: '24px',
               textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              marginBottom: '20px'
+              letterSpacing: '0.08em',
+              marginBottom: '22px',
+              boxShadow: '0 2px 8px rgba(29, 168, 81, 0.1)'
             }}>
-              <Sparkles size={14} color="var(--green-dark)" /> STOP OVERPAYING FOR TOOLS
+              <Sparkles size={14} color="var(--green-dark)" /> Engineered for Growing Businesses
             </span>
 
             <h1 style={{
-              fontSize: 'clamp(38px, 4.8vw, 60px)',
-              lineHeight: 1.08,
+              fontSize: 'clamp(40px, 5vw, 64px)',
+              lineHeight: 1.06,
               fontWeight: 800,
               color: '#0f172a',
-              marginBottom: '16px',
-              letterSpacing: '-0.02em'
+              marginBottom: '20px',
+              letterSpacing: '-0.025em'
             }}>
-              5 Tools. 1 Platform.<br />
-              One <span style={{
-                background: 'linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%)',
+              5 Essential Tools.<br />
+              One Unified <span style={{
+                background: 'linear-gradient(135deg, var(--green-dark) 0%, #17c15c 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
-              }}>Subscription.</span>
+              }}>Super-Platform.</span>
             </h1>
 
             {/* Colored Module Badges */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '22px' }}>
-              <span style={{ background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>HR & Payroll</span>
-              <span style={{ background: 'var(--green-tint)', color: 'var(--green-dark)', border: '1px solid var(--green-tint-2)', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>CRM & Sales</span>
-              <span style={{ background: '#fffbeb', color: '#b45309', border: '1px solid #fef3c7', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>Projects</span>
-              <span style={{ background: '#faf5ff', color: '#6b21a8', border: '1px solid #e9d5ff', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>Finance</span>
-              <span style={{ background: '#fdf2f8', color: '#be185d', border: '1px solid #fbcfe8', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '20px' }}>Team Workspace</span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
+              <span style={{ background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', fontSize: '12.5px', fontWeight: 700, padding: '5px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>💼 HR & Payroll</span>
+              <span style={{ background: 'var(--green-tint)', color: 'var(--green-dark)', border: '1px solid var(--green-tint-2)', fontSize: '12.5px', fontWeight: 700, padding: '5px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>📈 CRM & Pipeline</span>
+              <span style={{ background: '#fffbeb', color: '#b45309', border: '1px solid #fef3c7', fontSize: '12.5px', fontWeight: 700, padding: '5px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>🚀 Projects & Tasks</span>
+              <span style={{ background: '#faf5ff', color: '#6b21a8', border: '1px solid #e9d5ff', fontSize: '12.5px', fontWeight: 700, padding: '5px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>💳 Finance & Invoicing</span>
+              <span style={{ background: '#fdf2f8', color: '#be185d', border: '1px solid #fbcfe8', fontSize: '12.5px', fontWeight: 700, padding: '5px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>💬 Team Workspace</span>
             </div>
 
-            <p style={{ fontSize: '17px', color: '#475569', lineHeight: 1.6, maxWidth: '520px', marginBottom: '26px' }}>
-              Replace your scattered subscriptions with one platform. HR, CRM, projects, finance, and payroll — all in one place. Starting at <strong style={{ color: '#0f172a' }}>$39/mo</strong>. No setup fees. Cancel anytime.
+            <p style={{ fontSize: '18px', color: '#475569', lineHeight: 1.6, maxWidth: '540px', marginBottom: '28px' }}>
+              Replace fragmented app subscriptions with a single powerful suite designed by operators for operators. Starting at <strong style={{ color: '#0f172a' }}>₹2,999/mo</strong>.
             </p>
 
             {/* Price Anchor Strip */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '28px' }}>
-              <span style={{ fontSize: '24px', textDecoration: 'line-through', color: '#94a3b8', fontWeight: 600 }}>$677/mo</span>
-              <ArrowRight size={18} color="#94a3b8" />
-              <span style={{ fontSize: '42px', fontWeight: 800, color: 'var(--green)', lineHeight: 1 }}>$39</span>
-              <span style={{ color: '#64748b', fontSize: '15px' }}>/mo</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '14px', marginBottom: '34px' }}>
+              <span style={{ fontSize: '24px', textDecoration: 'line-through', color: '#94a3b8', fontWeight: 600 }}>₹45,000/mo</span>
+              <span style={{ fontSize: '46px', fontWeight: 800, color: 'var(--green-dark)', lineHeight: 1 }}>₹2,999</span>
+              <span style={{ fontSize: '18px', color: '#64748b', fontWeight: 600 }}>/month</span>
+              <span style={{ background: '#dcf3e2', color: 'var(--green-dark)', fontSize: '11px', fontWeight: 800, padding: '2px 10px', borderRadius: '12px', textTransform: 'uppercase' }}>Save 90%+</span>
             </div>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', marginBottom: '32px' }}>
-              <button onClick={() => router.push('/signup')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '12px', fontSize: '16px', fontWeight: 700 }}>
-                Start Free Trial <ArrowRight size={18} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', marginBottom: '36px' }}>
+              <button onClick={() => router.push('/signup')} className="btn btn-brass btn-lg vt-pulse-cta" style={{ borderRadius: '14px', fontSize: '16px', fontWeight: 800, padding: '14px 28px' }}>
+                Start 7-Day Free Trial <ArrowRight size={18} />
               </button>
-              <Link href="/features" className="btn btn-secondary btn-lg" style={{ borderRadius: '12px', fontSize: '15px', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                Explore 200+ Features →
-              </Link>
+              <button onClick={() => setVideoOpen(true)} className="btn btn-secondary btn-lg" style={{ borderRadius: '14px', fontSize: '15px', fontWeight: 700, padding: '14px 24px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                <Play size={16} fill="var(--green-dark)" color="var(--green-dark)" /> Watch 2-Min Demo
+              </button>
             </div>
 
             {/* Social Proof */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '13px', color: '#64748b', marginBottom: '28px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '13.5px', color: '#64748b', marginBottom: '28px' }}>
               <div style={{ display: 'flex' }}>
-                <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--green-dark)', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '11px', fontWeight: 700 }}>A</span>
-                <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#2563eb', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '11px', fontWeight: 700, marginLeft: '-8px' }}>S</span>
-                <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#d97706', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '11px', fontWeight: 700, marginLeft: '-8px' }}>J</span>
-                <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#7c3aed', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '11px', fontWeight: 700, marginLeft: '-8px' }}>F</span>
+                <span style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'var(--green-dark)', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '12px', fontWeight: 700 }}>A</span>
+                <span style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#2563eb', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '12px', fontWeight: 700, marginLeft: '-8px' }}>S</span>
+                <span style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#d97706', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '12px', fontWeight: 700, marginLeft: '-8px' }}>J</span>
+                <span style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#7c3aed', border: '2px solid #ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '12px', fontWeight: 700, marginLeft: '-8px' }}>F</span>
               </div>
-              <span>Trusted by <strong style={{ color: '#0f172a' }}>4,500+</strong> growing businesses across <strong style={{ color: '#0f172a' }}>8 industries</strong> • 30-day money-back guarantee</span>
+              <span>Trusted by <strong style={{ color: '#0f172a' }}>4,500+</strong> growing companies • 30-day money-back guarantee</span>
             </div>
 
             {/* 4 Security Badges Grid */}
@@ -1090,7 +1092,7 @@ export default function Home() {
               <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>Starter</h3>
               <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '24px' }}>For small teams getting started</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '24px' }}>
-                <span style={{ fontSize: '48px', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{isAnnual ? '$39' : '$49'}</span>
+                <span style={{ fontSize: '48px', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{isAnnual ? '₹2,999' : '₹3,999'}</span>
                 <span style={{ color: '#64748b', fontSize: '15px' }}>/month</span>
               </div>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', listStyle: 'none', padding: 0, marginBottom: '32px', fontSize: '14px', color: '#334155' }}>
@@ -1115,7 +1117,7 @@ export default function Home() {
               <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>Professional</h3>
               <p style={{ fontSize: '14px', color: 'var(--green-dark)', fontWeight: 600, marginBottom: '24px' }}>For growing businesses</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '24px' }}>
-                <span style={{ fontSize: '48px', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{isAnnual ? '$99' : '$119'}</span>
+                <span style={{ fontSize: '48px', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{isAnnual ? '₹7,999' : '₹9,999'}</span>
                 <span style={{ color: '#64748b', fontSize: '15px' }}>/month</span>
               </div>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', listStyle: 'none', padding: 0, marginBottom: '32px', fontSize: '14px', color: '#334155' }}>

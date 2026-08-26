@@ -169,14 +169,16 @@
 }
 
 .btn-brass {
-  background: var(--green);
+  background: linear-gradient(135deg, var(--green-2) 0%, var(--green-dark) 100%);
   color: #fff;
-  box-shadow: 0 8px 20px -8px rgba(29,168,81,0.5);
+  box-shadow: 0 8px 24px -6px rgba(29, 168, 81, 0.45), 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-brass:hover {
-  background: var(--green-dark);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-deep) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -6px rgba(29, 168, 81, 0.55), 0 4px 8px rgba(0,0,0,0.12);
 }
 
 .btn-ghost {

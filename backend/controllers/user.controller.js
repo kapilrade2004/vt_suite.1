@@ -8,7 +8,7 @@ function isValidEmail(email) {
 // POST /api/users - Create User with 7-Day Free Trial
 async function createUser(req, res) {
   try {
-    const { user_name, mobile_number, email, company_name } = req.body;
+    const { user_name, mobile_number, email, company_name, service_needed } = req.body;
 
     if (!user_name || String(user_name).trim().length < 2) {
       return res.status(400).json({
@@ -42,6 +42,7 @@ async function createUser(req, res) {
     const trimmedMobile = String(mobile_number).trim();
     const trimmedName = String(user_name).trim();
     const trimmedCompany = String(company_name).trim();
+    const trimmedService = service_needed ? String(service_needed).trim() : 'full_suite';
 
     const existingEmail = await UserModel.findByEmail(trimmedEmail);
     if (existingEmail) {
@@ -63,7 +64,8 @@ async function createUser(req, res) {
       user_name: trimmedName,
       mobile_number: trimmedMobile,
       email: trimmedEmail,
-      company_name: trimmedCompany
+      company_name: trimmedCompany,
+      service_needed: trimmedService
     });
 
     console.log(`📧 [WELCOME EMAIL SENT] Sent 7-Day Free Trial welcome email to ${user.email}. Trial ends on ${user.trial_ends_at}.`);

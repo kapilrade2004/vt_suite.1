@@ -132,7 +132,7 @@ export default function PricingPage() {
               </div>
 
               <div style={{ marginBottom: '6px' }}>
-                <span style={{ fontSize: '44px', fontWeight: 800, color: '#0f172a' }}>$0</span>
+                <span style={{ fontSize: '44px', fontWeight: 800, color: '#0f172a' }}>₹0</span>
                 <span style={{ fontSize: '15px', color: '#64748b' }}>/month</span>
               </div>
               <p style={{ fontSize: '12.5px', color: '#94a3b8', marginBottom: '28px' }}>Free forever. No credit card needed.</p>
@@ -198,7 +198,7 @@ export default function PricingPage() {
               </div>
 
               <div style={{ marginBottom: '6px' }}>
-                <span style={{ fontSize: '44px', fontWeight: 800, color: 'var(--green-dark)' }}>$39</span>
+                <span style={{ fontSize: '44px', fontWeight: 800, color: 'var(--green-dark)' }}>₹2,999</span>
                 <span style={{ fontSize: '15px', color: '#64748b' }}>/month</span>
               </div>
               <p style={{ fontSize: '12.5px', color: '#94a3b8', marginBottom: '28px' }}>Billed monthly. Cancel anytime.</p>
@@ -245,7 +245,7 @@ export default function PricingPage() {
               </div>
 
               <div style={{ marginBottom: '6px' }}>
-                <span style={{ fontSize: '44px', fontWeight: 800, color: '#0f172a' }}>$99</span>
+                <span style={{ fontSize: '44px', fontWeight: 800, color: '#0f172a' }}>₹7,999</span>
                 <span style={{ fontSize: '15px', color: '#64748b' }}>/month</span>
               </div>
               <p style={{ fontSize: '12.5px', color: '#94a3b8', marginBottom: '28px' }}>Billed monthly. Cancel anytime.</p>
