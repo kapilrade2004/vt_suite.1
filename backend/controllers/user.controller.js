@@ -44,7 +44,15 @@ async function createUser(req, res) {
     const trimmedCompany = String(company_name).trim();
     const trimmedService = service_needed ? String(service_needed).trim() : 'full_suite';
 
-    const existingEmail = await UserModel.findByEmail(trimmedEmail);
+    let existingEmail = null;
+    let existingMobile = null;
+    try {
+      existingEmail = await UserModel.findByEmail(trimmedEmail);
+      existingMobile = await UserModel.findByMobile(trimmedMobile);
+    } catch (dbErr) {
+      console.warn('⚠️ Database query error (using session fallback):', dbErr.message);
+    }
+
     if (existingEmail) {
       return res.status(400).json({
         success: false,
@@ -52,7 +60,6 @@ async function createUser(req, res) {
       });
     }
 
-    const existingMobile = await UserModel.findByMobile(trimmedMobile);
     if (existingMobile) {
       return res.status(400).json({
         success: false,
