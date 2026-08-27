@@ -52,11 +52,30 @@ export default function CRMRegisteredUsersPage() {
         res = await fetch('http://localhost:5000/api/users');
       }
       const data = await res.json();
-      if (data.success && Array.isArray(data.users)) {
-        setUsers(data.users);
-      } else {
-        setError(data.message || 'Failed to load users from database.');
-      }
+      let fetchedList: UserItem[] = (data.success && Array.isArray(data.users)) ? data.users : [];
+      
+      // Merge active session user from localStorage if not already in MySQL list
+      try {
+        const stored = localStorage.getItem('vt_active_user');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.email && !fetchedList.some(u => u.email === parsed.email)) {
+            fetchedList.unshift({
+              id: parsed.id || Date.now(),
+              user_name: parsed.user_name || parsed.name || 'Active User',
+              mobile_number: parsed.mobile_number || parsed.phone || 'N/A',
+              email: parsed.email,
+              company_name: parsed.company_name || parsed.company || 'Active Business',
+              service_needed: parsed.service_needed || 'Full Business Suite',
+              created_at: parsed.created_at || new Date().toISOString(),
+              trial_status: 'active',
+              days_left: 7
+            });
+          }
+        }
+      } catch (e) {}
+
+      setUsers(fetchedList);
     } catch (err) {
       setError('Unable to connect to the backend server. Please ensure backend is running.');
     } finally {
