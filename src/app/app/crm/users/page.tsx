@@ -47,9 +47,9 @@ export default function CRMRegisteredUsersPage() {
     try {
       let res;
       try {
-        res = await fetch('/api/users');
-      } catch (e) {
         res = await fetch('http://localhost:5000/api/users');
+      } catch (e) {
+        res = await fetch('/api/users');
       }
       const data = await res.json();
       let fetchedList: UserItem[] = (data.success && Array.isArray(data.users)) ? data.users : [];
