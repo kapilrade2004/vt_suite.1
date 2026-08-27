@@ -464,14 +464,12 @@ export default function SignUpPage() {
                         overflowY: 'auto'
                       }}>
                         {[
-                          { title: 'Full Business Suite', desc: '🚀 All 5 Modules Included' },
-                          { title: 'CRM & Sales', desc: '📈 Sales Pipeline & Leads' },
-                          { title: 'HR & Payroll', desc: '💼 Attendance & Payroll' },
-                          { title: 'Project Management', desc: '📊 Tasks & Project Gantt' },
+                          { title: 'Full Business Suite', desc: '🚀 All 5 Essential Modules Included' },
+                          { title: 'CRM & Sales', desc: '📈 Sales Pipeline & Lead Management' },
+                          { title: 'HR & Payroll', desc: '💼 Staff Attendance & Payroll' },
+                          { title: 'Project Management', desc: '📊 Tasks & Project Tracking' },
                           { title: 'Finance & Invoicing', desc: '💳 Invoices & Expense Log' },
-                          { title: 'Team Workspace', desc: '💬 Live Chat & Calendar' },
-                          { title: 'WhatsApp Business API', desc: '📱 Automation & Bot Support' },
-                          { title: 'Custom Software & SaaS', desc: '⚡ Custom Dev Solutions' }
+                          { title: 'Team Workspace', desc: '💬 Live Chat & Calendar' }
                         ].map((item) => {
                           const isChecked = selectedServices.includes(item.title);
                           const isMaxReached = selectedServices.length >= 3 && !isChecked;
