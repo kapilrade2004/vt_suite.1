@@ -76,6 +76,32 @@ async function createUser(req, res) {
       service_needed: trimmedService
     });
 
+    // Send real HTML welcome email to the newly registered email address
+    const endDateStr = user.trial_ends_at ? new Date(user.trial_ends_at).toLocaleDateString() : '7 days from today';
+    const welcomeSubject = `🚀 Welcome to VasifyTech Suite - 7-Day Free Trial Activated!`;
+    const welcomeText = `Hi ${user.user_name}! Welcome to VasifyTech Suite. Your 7-day free trial for ${user.company_name} is active until ${endDateStr}. Access your workspace at http://localhost:3000/signin.`;
+    const welcomeHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background: #ffffff;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h2 style="color: #1DA851; margin: 0;">VasifyTech <span style="color: #0f172a;">Suite</span></h2>
+          <p style="color: #64748b; font-size: 13.5px; margin-top: 4px;">Unified Business Super-Platform</p>
+        </div>
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+          <h3 style="color: #166534; margin-top: 0;">🎉 Welcome, ${user.user_name}!</h3>
+          <p style="color: #15803d; font-size: 14.5px; line-height: 1.5;">
+            Thank you for registering <strong>${user.company_name}</strong> with VasifyTech Suite! Your <strong>7-Day Free Trial</strong> is now active and will run through <strong>${endDateStr}</strong>.
+          </p>
+        </div>
+        <p style="color: #334155; font-size: 14px;"><strong>Your Activated Services:</strong> ${user.service_needed}</p>
+        <p style="color: #475569; font-size: 13.5px;">You can now log in and start streamlining your business operations immediately.</p>
+        <div style="text-align: center; margin-top: 28px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
+          <a href="http://localhost:3000/signin" style="background: #1DA851; color: #ffffff; padding: 12px 28px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">Log In to My Workspace</a>
+        </div>
+      </div>
+    `;
+
+    await sendTrialEmail(user.email, welcomeSubject, welcomeText, welcomeHtml);
+
     console.log(`📧 [WELCOME EMAIL SENT] Sent 7-Day Free Trial welcome email to ${user.email}. Trial ends on ${user.trial_ends_at}.`);
 
     return res.status(201).json({
