@@ -120,7 +120,11 @@ export default function SignUpPage() {
             fetch('http://localhost:5000/api/users/send-test-email', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ targetEmail: email })
+              body: JSON.stringify({
+                targetEmail: email,
+                userName: name,
+                companyName: companyName
+              })
             }).catch(() => {});
           } catch (e) {}
 
@@ -156,7 +160,11 @@ export default function SignUpPage() {
         fetch('http://localhost:5000/api/users/send-test-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ targetEmail: email })
+          body: JSON.stringify({
+            targetEmail: email,
+            userName: name,
+            companyName: companyName
+          })
         }).catch(() => {});
       } catch (e) {}
 

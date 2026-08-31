@@ -386,14 +386,20 @@ async function checkTrials(req, res) {
   }
 }
 
-// POST /api/users/send-test-email - Dispatch Test Email Notification
+// POST /api/users/send-welcome-email - Dispatch Welcome Email to newly registered email address
 async function sendTestEmail(req, res) {
   try {
-    const { targetEmail } = req.body;
-    const emailToUse = targetEmail || 'kapilrade22712@gmail.com';
+    const { targetEmail, userName, companyName } = req.body;
+    if (!targetEmail) {
+      return res.status(400).json({ success: false, message: 'targetEmail is required' });
+    }
+
+    const emailToUse = targetEmail.trim().toLowerCase();
+    const nameStr = userName || 'Valued Partner';
+    const companyStr = companyName || 'VasifyTech Workspace';
 
     const subject = "🚀 Your 7-Day Free Trial is Active - VasifyTech Suite";
-    const text = `Hello! Thank you for choosing VasifyTech Suite. Your 7-Day Free Trial is active. Manage your CRM, HR, Projects, Finance, and Workspace all in one place!`;
+    const text = `Hello ${nameStr}! Thank you for registering ${companyStr} with VasifyTech Suite. Your 7-Day Free Trial is active.`;
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; borderRadius: 16px; background: #ffffff;">
         <div style="text-align: center; margin-bottom: 20px;">
