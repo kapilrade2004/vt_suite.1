@@ -1,4 +1,5 @@
 const UserModel = require('../models/user.model');
+const { sendTrialEmail } = require('../services/email.service');
 
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -322,6 +323,54 @@ async function checkTrials(req, res) {
   }
 }
 
+// POST /api/users/send-test-email - Dispatch Test Email Notification
+async function sendTestEmail(req, res) {
+  try {
+    const { targetEmail } = req.body;
+    const emailToUse = targetEmail || 'kapilrade22712@gmail.com';
+
+    const subject = "🚀 Your 7-Day Free Trial is Active - VasifyTech Suite";
+    const text = `Hello! Thank you for choosing VasifyTech Suite. Your 7-Day Free Trial is active. Manage your CRM, HR, Projects, Finance, and Workspace all in one place!`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; borderRadius: 16px; background: #ffffff;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h2 style="color: #1DA851; margin: 0;">VasifyTech <span style="color: #0f172a;">Suite</span></h2>
+          <p style="color: #64748b; font-size: 14px; margin-top: 4px;">Unified Business Super-Platform</p>
+        </div>
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 18px; borderRadius: 12px; margin-bottom: 20px;">
+          <h3 style="color: #166534; margin-top: 0;">🚀 Welcome to Your 7-Day Free Trial!</h3>
+          <p style="color: #15803d; font-size: 14.5px; line-height: 1.5;">
+            Hi there! Your trial account for <strong>${emailToUse}</strong> has been registered successfully.
+            Your selected module features are unlocked and ready for use.
+          </p>
+        </div>
+        <p style="color: #334155; font-size: 14px;"><strong>Your Trial Highlights:</strong></p>
+        <ul style="color: #475569; font-size: 14px; line-height: 1.6;">
+          <li>📈 CRM & Sales Pipeline Management</li>
+          <li>💼 Staff Attendance & Payroll</li>
+          <li>💳 Finance, Invoicing & Expenses</li>
+          <li>📊 Projects & Task Workspace</li>
+        </ul>
+        <div style="text-align: center; margin-top: 28px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
+          <a href="http://localhost:3000/signin" style="background: #1DA851; color: #ffffff; padding: 12px 24px; borderRadius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">Access My Workspace</a>
+        </div>
+      </div>
+    `;
+
+    console.log(`📧 Dispatching test trial email to: ${emailToUse}`);
+    const result = await sendTrialEmail(emailToUse, subject, text, html);
+
+    return res.status(200).json({
+      success: true,
+      message: `Test email dispatched to ${emailToUse}`,
+      details: result
+    });
+  } catch (error) {
+    console.error('Error sending test email:', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 module.exports = {
   createUser,
   getUsers,
@@ -329,5 +378,6 @@ module.exports = {
   updateUser,
   deleteUser,
   upgradeUser,
-  checkTrials
+  checkTrials,
+  sendTestEmail
 };

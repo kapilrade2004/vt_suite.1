@@ -126,6 +126,32 @@ export default function CRMRegisteredUsersPage() {
     }
   };
 
+  const handleSendTestEmail = async (emailAddr: string) => {
+    try {
+      let res;
+      try {
+        res = await fetch('http://localhost:5000/api/users/send-test-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetEmail: emailAddr })
+        });
+      } catch (e) {
+        res = await fetch('/api/users/send-test-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetEmail: emailAddr })
+        });
+      }
+      const data = await res.json();
+      if (data.success) {
+        setSuccessMsg(`📩 Email dispatched successfully to ${emailAddr}! Check your inbox.`);
+        setTimeout(() => setSuccessMsg(''), 6000);
+      }
+    } catch (e) {
+      alert('Failed to send test email.');
+    }
+  };
+
   const filteredUsers = users.filter((u) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -258,6 +284,9 @@ export default function CRMRegisteredUsersPage() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button onClick={() => handleSendTestEmail('kapilrade22712@gmail.com')} className="btn btn-brass btn-sm" style={{ borderRadius: '20px' }}>
+            ✉️ Send Mail to kapilrade22712@gmail.com
+          </button>
           <button onClick={handleTriggerReminders} className="btn btn-secondary btn-sm" title="Check trial expirations and send 1-2 day email reminders">
             <Sparkles size={14} color="var(--green-dark)" /> Trigger Reminders
           </button>

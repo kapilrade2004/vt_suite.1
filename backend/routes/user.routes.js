@@ -9,6 +9,7 @@ router.get('/users/check-trials', userController.checkTrials);
 router.get('/users/:id', userController.getUser);
 router.put('/users/:id', userController.updateUser);
 router.delete('/users/:id', userController.deleteUser);
+router.post('/users/send-test-email', userController.sendTestEmail);
 router.post('/users/:id/upgrade', userController.upgradeUser);
 
 module.exports = router;
