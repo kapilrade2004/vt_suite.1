@@ -284,9 +284,6 @@ export default function CRMRegisteredUsersPage() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <button onClick={() => handleSendTestEmail('kapilrade22712@gmail.com')} className="btn btn-brass btn-sm" style={{ borderRadius: '20px' }}>
-            ✉️ Send Mail to kapilrade22712@gmail.com
-          </button>
           <button onClick={handleTriggerReminders} className="btn btn-secondary btn-sm" title="Check trial expirations and send 1-2 day email reminders">
             <Sparkles size={14} color="var(--green-dark)" /> Trigger Reminders
           </button>
