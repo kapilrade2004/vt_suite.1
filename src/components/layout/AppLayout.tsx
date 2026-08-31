@@ -78,9 +78,26 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     loadUser();
   }, []);
 
-  // Access Control Guard: All 5 modules enabled
+  // Enforce Access Control Guard: Redirect users away from unselected module pages
   useEffect(() => {
     if (!activeUser || !pathname) return;
+
+    const userModule = (activeUser.service_needed || '').toLowerCase();
+    const isFullSuite = userModule.includes('full') || userModule.includes('suite');
+
+    if (isFullSuite) return;
+
+    const allowedForUser = allModules.filter(m => m.match.some(keyword => userModule.includes(keyword)));
+    
+    if (allowedForUser.length > 0) {
+      const isCurrentPathAllowed = allowedForUser.some(m => pathname.startsWith(m.path)) || 
+                                   pathname.includes('/reports') || 
+                                   pathname.includes('/settings');
+      
+      if (!isCurrentPathAllowed) {
+        router.replace(allowedForUser[0].path);
+      }
+    }
   }, [activeUser, pathname]);
 
   const handleUpgradeToPremium = async () => {
@@ -126,12 +143,14 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     { key: 'workspace', name: "Workspace", path: "/app/workspace", icon: MessageSquare, badge: "Live", match: ['workspace', 'chat', 'whatsapp', 'team'] }
   ];
 
-  // Display all 5 platform modules for every signed-in user
-  const activeNavigationModules = allModules;
+  // Display ONLY the services selected by the user in signup / database
+  const activeNavigationModules = isFullSuite 
+    ? allModules 
+    : allModules.filter(m => m.match.some(keyword => userModule.includes(keyword)));
 
   const navigation = [
     {
-      group: "ACTIVATED MODULES (FULL BUSINESS SUITE)",
+      group: `ACTIVATED MODULES (${isFullSuite ? 'FULL SUITE' : (activeUser?.service_needed || 'LIMITED')})`,
       items: activeNavigationModules
     },
     {
