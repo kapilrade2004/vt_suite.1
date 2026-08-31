@@ -106,6 +106,26 @@ export default function CRMRegisteredUsersPage() {
     }
   };
 
+  const handleTriggerReminders = async () => {
+    try {
+      let res;
+      try {
+        res = await fetch('http://localhost:5000/api/users/check-trials');
+      } catch (e) {
+        res = await fetch('/api/users/check-trials');
+      }
+      const data = await res.json();
+      if (data.success) {
+        const count = data.remindersSent ? data.remindersSent.length : 0;
+        setSuccessMsg(`📧 Trial Reminder Check Complete: Triggered ${count} email notification(s).`);
+        setTimeout(() => setSuccessMsg(''), 5000);
+        fetchUsers();
+      }
+    } catch (e) {
+      alert('Failed to trigger reminder check.');
+    }
+  };
+
   const filteredUsers = users.filter((u) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -238,6 +258,9 @@ export default function CRMRegisteredUsersPage() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button onClick={handleTriggerReminders} className="btn btn-secondary btn-sm" title="Check trial expirations and send 1-2 day email reminders">
+            <Sparkles size={14} color="var(--green-dark)" /> Trigger Reminders
+          </button>
           <button onClick={fetchUsers} className="btn btn-secondary btn-sm" disabled={loading}>
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Refresh DB
           </button>
