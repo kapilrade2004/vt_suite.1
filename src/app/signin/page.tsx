@@ -43,6 +43,12 @@ export default function SignInPage() {
           try {
             localStorage.setItem('vt_active_user', JSON.stringify(matched));
           } catch (e) {}
+
+          // Automatically trigger trial check & warning/expiry email on sign in
+          try {
+            fetch('http://localhost:5000/api/users/check-trials').catch(() => {});
+          } catch (e) {}
+
           router.push('/app/crm');
           return;
         }
