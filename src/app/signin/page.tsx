@@ -20,6 +20,13 @@ export default function SignInPage() {
     setErrorMsg('');
     setCheckingCompany(true);
 
+    const query = inputStr.trim().toLowerCase();
+    if (!query || query.length < 2) {
+      setErrorMsg('Please enter a valid company name or registered email address.');
+      setCheckingCompany(false);
+      return;
+    }
+
     try {
       let res;
       try {
@@ -28,62 +35,56 @@ export default function SignInPage() {
         res = await fetch('http://localhost:5000/api/users');
       }
 
-      const data = await res.json();
-      if (data.success && Array.isArray(data.users)) {
-        const query = inputStr.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-        
-        // Find user by matching company name or email or subdomain
-        const matched = data.users.find((u: any) => {
-          const compClean = (u.company_name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-          const emailClean = (u.email || '').toLowerCase();
-          return compClean.includes(query) || query.includes(compClean) || emailClean === inputStr.trim().toLowerCase();
-        });
-
-        if (matched) {
-          try {
-            localStorage.setItem('vt_active_user', JSON.stringify(matched));
-          } catch (e) {}
-
-          // Automatically trigger trial check & warning/expiry email for the exact user logging in
-          try {
-            fetch(`http://localhost:5000/api/users/check-trials?userId=${matched.id}&force=true`).catch(() => {});
-          } catch (e) {}
-
-          router.push('/app/crm');
-          return;
+      let fetchedList: any[] = [];
+      try {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.users)) {
+          fetchedList = data.users;
         }
+      } catch (e) {}
+
+      // Also check active session stored user
+      try {
+        const stored = localStorage.getItem('vt_active_user');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.email && !fetchedList.some((u: any) => u.email === parsed.email)) {
+            fetchedList.unshift(parsed);
+          }
+        }
+      } catch (e) {}
+
+      const cleanQuery = query.replace(/[^a-z0-9]/g, '');
+
+      // Find user by matching company name or email address strictly
+      const matched = fetchedList.find((u: any) => {
+        const compClean = (u.company_name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const emailClean = (u.email || '').toLowerCase();
+        const userNameClean = (u.user_name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+        return emailClean === query || 
+               (compClean.length >= 2 && (compClean === cleanQuery || compClean.includes(cleanQuery) || cleanQuery.includes(compClean))) ||
+               (userNameClean.length >= 2 && userNameClean === cleanQuery);
+      });
+
+      if (matched) {
+        try {
+          localStorage.setItem('vt_active_user', JSON.stringify(matched));
+        } catch (e) {}
+
+        // Automatically trigger trial check & warning/expiry email for the exact user logging in
+        try {
+          fetch(`http://localhost:5000/api/users/check-trials?userId=${matched.id}&force=true`).catch(() => {});
+        } catch (e) {}
+
+        router.push('/app/crm');
+        return;
       }
 
-      // If no exact database match found, set active user session with Full Business Suite
-      const sessionUser = {
-        id: Date.now(),
-        user_name: 'VasifyTech Member',
-        email: email || `${query}@company.com`,
-        company_name: inputStr,
-        service_needed: 'Full Business Suite',
-        trial_status: 'active',
-        days_left: 7
-      };
-      try {
-        localStorage.setItem('vt_active_user', JSON.stringify(sessionUser));
-      } catch (e) {}
-
-      router.push('/app/crm');
+      // If no valid registered database account found, reject login with error
+      setErrorMsg(`No workspace account found for "${inputStr}". Please enter a valid registered company name or click "Sign up" to create a new workspace.`);
     } catch (e) {
-      const sessionUser = {
-        id: Date.now(),
-        user_name: 'VasifyTech Member',
-        email: 'user@company.com',
-        company_name: inputStr || 'My Business',
-        service_needed: 'Full Business Suite',
-        trial_status: 'active',
-        days_left: 7
-      };
-      try {
-        localStorage.setItem('vt_active_user', JSON.stringify(sessionUser));
-      } catch (e) {}
-
-      router.push('/app/crm');
+      setErrorMsg('Unable to verify workspace credentials. Please check your company name or register a new workspace.');
     } finally {
       setCheckingCompany(false);
     }
