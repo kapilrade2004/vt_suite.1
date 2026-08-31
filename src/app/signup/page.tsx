@@ -115,6 +115,15 @@ export default function SignUpPage() {
             localStorage.setItem('vt_active_user', JSON.stringify(sessionUser));
           } catch (e) {}
 
+          // Trigger Welcome Email dispatch for Cloud/Vercel registrations
+          try {
+            fetch('http://localhost:5000/api/users/send-test-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ targetEmail: email })
+            }).catch(() => {});
+          } catch (e) {}
+
           setFormSubmitted(true);
           setName('');
           setMobileNumber('');
