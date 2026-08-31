@@ -51,8 +51,27 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
       const data = await res.json();
       if (data.success && Array.isArray(data.users) && data.users.length > 0) {
         setActiveUser(data.users[0]);
+      } else {
+        // Fallback default user with Full Business Suite unlocked
+        setActiveUser({
+          user_name: 'VasifyTech Member',
+          email: 'user@company.com',
+          company_name: 'My Business',
+          service_needed: 'Full Business Suite',
+          trial_status: 'active',
+          days_left: 7
+        });
       }
-    } catch (e) {}
+    } catch (e) {
+      setActiveUser({
+        user_name: 'VasifyTech Member',
+        email: 'user@company.com',
+        company_name: 'My Business',
+        service_needed: 'Full Business Suite',
+        trial_status: 'active',
+        days_left: 7
+      });
+    }
   };
 
   useEffect(() => {

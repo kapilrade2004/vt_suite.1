@@ -48,13 +48,35 @@ export default function SignInPage() {
         }
       }
 
-      // If no exact database match found, show error or redirect smoothly
-      if (inputStr.trim().length >= 2) {
-        router.push('/app/crm');
-      } else {
-        setErrorMsg('Company name not found. Please check your company name or register a new workspace.');
-      }
+      // If no exact database match found, set active user session with Full Business Suite
+      const sessionUser = {
+        id: Date.now(),
+        user_name: 'VasifyTech Member',
+        email: email || `${query}@company.com`,
+        company_name: inputStr,
+        service_needed: 'Full Business Suite',
+        trial_status: 'active',
+        days_left: 7
+      };
+      try {
+        localStorage.setItem('vt_active_user', JSON.stringify(sessionUser));
+      } catch (e) {}
+
+      router.push('/app/crm');
     } catch (e) {
+      const sessionUser = {
+        id: Date.now(),
+        user_name: 'VasifyTech Member',
+        email: 'user@company.com',
+        company_name: inputStr || 'My Business',
+        service_needed: 'Full Business Suite',
+        trial_status: 'active',
+        days_left: 7
+      };
+      try {
+        localStorage.setItem('vt_active_user', JSON.stringify(sessionUser));
+      } catch (e) {}
+
       router.push('/app/crm');
     } finally {
       setCheckingCompany(false);
