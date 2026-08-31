@@ -1,20 +1,21 @@
 const nodemailer = require('nodemailer');
-require('dotenv').config();
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER || '',
-    pass: process.env.EMAIL_PASS || ''
-  }
-});
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 async function sendTrialEmail(toEmail, subject, text, html) {
   try {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    const user = process.env.EMAIL_USER;
+    const pass = process.env.EMAIL_PASS;
+
+    if (!user || !pass || pass === 'your_16_digit_app_password') {
       console.log(`ℹ️ SMTP credentials not configured. Simulated sending email to ${toEmail}: "${subject}"`);
       return { success: true, simulated: true };
     }
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user, pass }
+    });
 
     const info = await transporter.sendMail({
       from: `"VasifyTech Suite Support" <${process.env.EMAIL_USER}>`,
