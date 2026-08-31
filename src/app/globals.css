@@ -406,7 +406,7 @@ html, body {
   display: none !important;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .wrap {
     padding: 0 16px;
   }
