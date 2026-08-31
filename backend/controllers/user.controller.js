@@ -316,16 +316,23 @@ async function upgradeUser(req, res) {
 // GET /api/users/check-trials - Check Trial Expirations & Send 1-2 Day Email Reminders
 async function checkTrials(req, res) {
   try {
+    const { userId } = req.query || {};
     const users = await UserModel.getAllUsers();
     const remindersSent = [];
 
-    for (const user of users) {
+    // Filter target users (either specific user that logged in, or all non-premium users)
+    let targetUsers = users;
+    if (userId) {
+      targetUsers = users.filter(u => String(u.id) === String(userId));
+    }
+
+    for (const user of targetUsers) {
       if (user.trial_status === 'premium') continue;
 
       const daysLeft = Number(user.days_left);
 
-      // Check if trial has 1 or 2 days left
-      if ((daysLeft === 1 || daysLeft === 2) && user.trial_status !== 'warning') {
+      // Check if trial has 1 or 2 days left (or analyze last logged in user trial warning)
+      if (daysLeft === 1 || daysLeft === 2 || req.query.force === 'true') {
         const endDateStr = new Date(user.trial_ends_at).toLocaleDateString();
         const subject = `⚠️ Reminder: Your VasifyTech 7-Day Free Trial ends in ${daysLeft} day(s)`;
         const text = `Hi ${user.user_name || 'there'}! Your 7-Day Free Trial for ${user.company_name || 'your workspace'} ends in ${daysLeft} day(s) on ${endDateStr}. Upgrade to Premium to keep uninterrupted access!`;
