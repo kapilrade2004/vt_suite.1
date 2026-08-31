@@ -74,7 +74,9 @@ export default function SignInPage() {
 
         // Automatically trigger trial check & warning/expiry email for the exact user logging in
         try {
-          fetch(`http://localhost:5000/api/users/check-trials?userId=${matched.id}&force=true`).catch(() => {});
+          fetch(`/api/users/check-trials?userId=${matched.id}&force=true`)
+            .catch(() => fetch(`http://localhost:5000/api/users/check-trials?userId=${matched.id}&force=true`))
+            .catch(() => {});
         } catch (e) {}
 
         router.push('/app/crm');
