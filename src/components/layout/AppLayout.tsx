@@ -78,28 +78,9 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     loadUser();
   }, []);
 
-  // Enforce Access Control Guard: Redirect users away from unpurchased module pages
+  // Access Control Guard: All 5 modules enabled
   useEffect(() => {
     if (!activeUser || !pathname) return;
-
-    const userModule = (activeUser.service_needed || '').toLowerCase();
-    const isFullSuite = userModule.includes('full') || userModule.includes('suite');
-
-    if (isFullSuite) return;
-
-    // Check if current page path is allowed for this user
-    const allowedForUser = allModules.filter(m => m.match.some(keyword => userModule.includes(keyword)));
-    
-    if (allowedForUser.length > 0) {
-      const isCurrentPathAllowed = allowedForUser.some(m => pathname.startsWith(m.path)) || 
-                                   pathname.includes('/reports') || 
-                                   pathname.includes('/settings');
-      
-      if (!isCurrentPathAllowed) {
-        // Redirect directly to the user's single authorized module page
-        router.replace(allowedForUser[0].path);
-      }
-    }
   }, [activeUser, pathname]);
 
   const handleUpgradeToPremium = async () => {
@@ -145,13 +126,12 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     { key: 'workspace', name: "Workspace", path: "/app/workspace", icon: MessageSquare, badge: "Live", match: ['workspace', 'chat', 'whatsapp', 'team'] }
   ];
 
-  const activeNavigationModules = isFullSuite 
-    ? allModules 
-    : allModules.filter(m => m.match.some(keyword => userModule.includes(keyword)));
+  // Display all 5 platform modules for every signed-in user
+  const activeNavigationModules = allModules;
 
   const navigation = [
     {
-      group: `ACTIVATED MODULE (${isFullSuite ? 'FULL SUITE' : (activeUser?.service_needed || 'LIMITED')})`,
+      group: "ACTIVATED MODULES (FULL BUSINESS SUITE)",
       items: activeNavigationModules
     },
     {
