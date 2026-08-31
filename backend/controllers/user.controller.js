@@ -301,12 +301,49 @@ async function checkTrials(req, res) {
       // Check if trial has 1 or 2 days left
       if ((daysLeft === 1 || daysLeft === 2) && user.trial_status !== 'warning') {
         const endDateStr = new Date(user.trial_ends_at).toLocaleDateString();
-        console.log(`📧 [TRIAL EXPIRY EMAIL SENT] Sent reminder to ${user.email}: "Your 7-Day Free Trial ends in ${daysLeft} day(s) on ${endDateStr}. Upgrade to Premium to keep uninterrupted access!"`);
+        const subject = `⚠️ Reminder: Your VasifyTech 7-Day Free Trial ends in ${daysLeft} day(s)`;
+        const text = `Hi ${user.user_name || 'there'}! Your 7-Day Free Trial for ${user.company_name || 'your workspace'} ends in ${daysLeft} day(s) on ${endDateStr}. Upgrade to Premium to keep uninterrupted access!`;
+        const html = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background: #ffffff;">
+            <div style="text-align: center; margin-bottom: 20px;">
+              <h2 style="color: #1DA851; margin: 0;">VasifyTech <span style="color: #0f172a;">Suite</span></h2>
+            </div>
+            <div style="background: #fffbeb; border: 1px solid #fef08a; padding: 18px; border-radius: 12px; margin-bottom: 20px;">
+              <h3 style="color: #b45309; margin-top: 0;">⚠️ Your Free Trial is Ending Soon!</h3>
+              <p style="color: #92400e; font-size: 14.5px; line-height: 1.5;">
+                Hi <strong>${user.user_name || 'there'}</strong>, your 7-Day Free Trial for <strong>${user.company_name || 'VasifyTech Workspace'}</strong> ends in <strong>${daysLeft} day(s)</strong> on <strong>${endDateStr}</strong>.
+              </p>
+            </div>
+            <p style="color: #334155; font-size: 14px;">Don't lose access to your active CRM, HR, Projects, and Finance data. Upgrade to keep full access!</p>
+            <div style="text-align: center; margin-top: 24px;">
+              <a href="http://localhost:3000/pricing" style="background: #1DA851; color: #ffffff; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">Upgrade to Premium Plan</a>
+            </div>
+          </div>
+        `;
+
+        await sendTrialEmail(user.email, subject, text, html);
         await UserModel.updateTrialReminder(user.id, 'warning');
         remindersSent.push({ id: user.id, email: user.email, daysLeft, type: 'warning_email' });
       } else if (daysLeft <= 0 && user.trial_status !== 'expired') {
         const endDateStr = new Date(user.trial_ends_at).toLocaleDateString();
-        console.log(`🚨 [TRIAL EXPIRED EMAIL SENT] Sent expiration email to ${user.email}: "Your 7-Day Free Trial ended on ${endDateStr}. Take Premium plan now to unlock your workspace!"`);
+        const subject = `🚨 Notice: Your VasifyTech 7-Day Free Trial has Ended`;
+        const text = `Hi ${user.user_name || 'there'}! Your 7-Day Free Trial for ${user.company_name || 'your workspace'} ended on ${endDateStr}. Upgrade to Premium to reactivate full access!`;
+        const html = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #fecaca; border-radius: 16px; background: #ffffff;">
+            <div style="background: #fef2f2; border: 1px solid #fca5a5; padding: 18px; border-radius: 12px; margin-bottom: 20px;">
+              <h3 style="color: #991b1b; margin-top: 0;">🚨 Free Trial Expired</h3>
+              <p style="color: #991b1b; font-size: 14.5px; line-height: 1.5;">
+                Your 7-Day Free Trial for <strong>${user.company_name || 'VasifyTech Workspace'}</strong> ended on <strong>${endDateStr}</strong>.
+              </p>
+            </div>
+            <p style="color: #334155; font-size: 14px;">Upgrade to Premium now to reactivate your workspace and unlock all features.</p>
+            <div style="text-align: center; margin-top: 24px;">
+              <a href="http://localhost:3000/pricing" style="background: #dc2626; color: #ffffff; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">Reactivate Workspace</a>
+            </div>
+          </div>
+        `;
+
+        await sendTrialEmail(user.email, subject, text, html);
         await UserModel.updateTrialReminder(user.id, 'expired');
         remindersSent.push({ id: user.id, email: user.email, daysLeft, type: 'expired_email' });
       }
