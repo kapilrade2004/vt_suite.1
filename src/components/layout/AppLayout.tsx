@@ -157,7 +157,8 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
       group: "ANALYTICS & CONTROL",
       items: [
         { name: "Reports", path: "/app/reports", icon: BarChart3 },
-        { name: "Settings", path: "/app/settings", icon: Settings }
+        { name: "Settings", path: "/app/settings", icon: Settings },
+        { name: "Admin Console", path: "/admin/users", icon: Database }
       ]
     }
   ];
