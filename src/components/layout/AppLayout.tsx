@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { 
   Layers, Users, UserCheck, Briefcase, DollarSign, 
   MessageSquare, BarChart3, Settings, LogOut,
-  Search, Bell, Plus, ExternalLink, ShieldAlert, Sparkles, Clock, CheckCircle2
+  Search, Bell, Plus, ExternalLink, ShieldAlert, Sparkles, Clock, CheckCircle2, Database
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
