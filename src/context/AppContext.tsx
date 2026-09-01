@@ -30,7 +30,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('vasifytech_next_data_v2');
+      const saved = localStorage.getItem('vasifytech_next_data_v3');
       if (saved) {
         try {
           setData(JSON.parse(saved));
@@ -42,7 +42,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     if (isHydrated && typeof window !== 'undefined') {
-      localStorage.setItem('vasifytech_next_data_v2', JSON.stringify(data));
+      localStorage.setItem('vasifytech_next_data_v3', JSON.stringify(data));
     }
   }, [data, isHydrated]);
 
