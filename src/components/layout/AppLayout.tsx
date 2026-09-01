@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { 
   Layers, Users, UserCheck, Briefcase, DollarSign, 
   MessageSquare, BarChart3, Settings, LogOut,
-  Search, Bell, Plus, ExternalLink, ShieldAlert, Sparkles, Clock, CheckCircle2, Database
+  Search, Bell, Plus, ExternalLink, ShieldAlert, Sparkles, Clock, CheckCircle2, Database, Menu, X
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
@@ -23,6 +23,7 @@ interface ActiveUserInfo {
 
 export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeUser, setActiveUser] = useState<ActiveUserInfo | null>(null);
   const [upgrading, setUpgrading] = useState(false);
   const pathname = usePathname();
@@ -206,26 +207,45 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-app)' }}>
-      {/* Sidebar Desktop */}
-      <aside style={{
-        width: '260px',
-        background: 'var(--white)',
-        borderRight: '1px solid var(--border)',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'fixed',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        zIndex: 40
-      }}>
+      {/* Mobile Drawer Overlay Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="vt-app-mobile-backdrop"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.5)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 99
+          }}
+        />
+      )}
+
+      {/* Sidebar Navigation */}
+      <aside
+        className={`vt-app-sidebar ${mobileMenuOpen ? 'open' : ''}`}
+        style={{
+          width: '260px',
+          background: 'var(--white)',
+          borderRight: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'fixed',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          zIndex: 100,
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+        }}
+      >
         {/* Brand Header */}
         <div style={{
           height: '70px',
           padding: '0 22px',
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
+          justifyContent: 'space-between',
           borderBottom: '1px solid var(--border)'
         }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
@@ -245,6 +265,21 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               </div>
             </div>
           </Link>
+
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="vt-app-mobile-close-btn"
+            style={{
+              display: 'none',
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-dim)',
+              padding: '6px',
+              cursor: 'pointer'
+            }}
+          >
+            <X size={20} />
+          </button>
         </div>
 
         {/* Sidebar Nav */}
@@ -269,6 +304,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                     <Link
                       key={item.path}
                       href={item.path}
+                      onClick={() => setMobileMenuOpen(false)}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -341,9 +377,9 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
       </aside>
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, marginLeft: '260px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      <div className="vt-app-main-content" style={{ flex: 1, marginLeft: '260px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Header Bar */}
-        <header style={{
+        <header className="vt-app-header" style={{
           height: '70px',
           background: 'var(--white)',
           borderBottom: '1px solid var(--border)',
@@ -356,7 +392,23 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
           zIndex: 30
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <h1 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)' }}>
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="vt-app-mobile-menu-toggle"
+              style={{
+                display: 'none',
+                background: 'var(--bg-soft)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                padding: '8px',
+                color: 'var(--ink)',
+                cursor: 'pointer'
+              }}
+            >
+              <Menu size={20} />
+            </button>
+
+            <h1 className="vt-app-page-title" style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)' }}>
               {getPageTitle()}
             </h1>
           </div>

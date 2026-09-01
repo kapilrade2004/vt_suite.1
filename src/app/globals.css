@@ -443,3 +443,45 @@ html, body {
   }
 }
 
+/* AppLayout Dashboard Mobile Responsiveness */
+@media (max-width: 992px) {
+  .vt-app-sidebar {
+    transform: translateX(-100%) !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+
+  .vt-app-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .vt-app-mobile-close-btn {
+    display: inline-flex !important;
+  }
+
+  .vt-app-main-content {
+    margin-left: 0 !important;
+  }
+
+  .vt-app-header {
+    padding: 0 16px !important;
+  }
+
+  .vt-app-mobile-menu-toggle {
+    display: inline-flex !important;
+  }
+
+  .vt-app-page-title {
+    font-size: 15px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 640px) {
+  .vt-app-header input[placeholder*="Search"] {
+    display: none !important;
+  }
+}
+
