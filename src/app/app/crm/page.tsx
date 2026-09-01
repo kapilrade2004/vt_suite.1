@@ -59,7 +59,7 @@ export default function CRMDashboardPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', overflowX: 'auto' }}>
+      <div className="vt-crm-subnav">
         <Link href="/app/crm" className="btn btn-sm btn-brass">Dashboard</Link>
         <Link href="/app/crm/leads" className="btn btn-sm btn-ghost">Leads Directory</Link>
         <Link href="/app/crm/clients" className="btn btn-sm btn-ghost">Clients</Link>

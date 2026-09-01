@@ -443,6 +443,37 @@ html, body {
   }
 }
 
+/* CRM Sub-Navigation Mobile Scrollbar */
+.vt-crm-subnav {
+  display: flex !important;
+  gap: 8px !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding-bottom: 12px !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  white-space: nowrap !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--green) var(--bg-soft) !important;
+}
+
+.vt-crm-subnav::-webkit-scrollbar {
+  height: 6px !important;
+}
+
+.vt-crm-subnav::-webkit-scrollbar-track {
+  background: var(--bg-soft) !important;
+  border-radius: 4px !important;
+}
+
+.vt-crm-subnav::-webkit-scrollbar-thumb {
+  background: var(--green) !important;
+  border-radius: 4px !important;
+}
+
+.vt-crm-subnav .btn {
+  flex-shrink: 0 !important;
+}
+
 /* AppLayout Dashboard Mobile Responsiveness */
 @media (max-width: 992px) {
   .vt-app-sidebar {
