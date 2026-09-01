@@ -10,7 +10,7 @@ export default function HRDashboardPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', overflowX: 'auto' }}>
+      <div className="vt-crm-subnav">
         <Link href="/app/hr" className="btn btn-sm btn-brass">Dashboard</Link>
         <Link href="/app/hr/employees" className="btn btn-sm btn-ghost">Employees</Link>
         <Link href="/app/hr/attendance" className="btn btn-sm btn-ghost">Attendance</Link>

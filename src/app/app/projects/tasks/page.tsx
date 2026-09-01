@@ -29,7 +29,7 @@ export default function TasksPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
+      <div className="vt-crm-subnav">
         <Link href="/app/projects" className="btn btn-sm btn-ghost">Projects Overview</Link>
         <Link href="/app/projects/tasks" className="btn btn-sm btn-brass">Tasks & Gantt Timeline</Link>
       </div>

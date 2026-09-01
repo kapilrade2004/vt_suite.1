@@ -21,9 +21,10 @@ export default function FinanceDashboardPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', overflowX: 'auto' }}>
+      <div className="vt-crm-subnav">
         <Link href="/app/finance" className="btn btn-sm btn-brass">Dashboard</Link>
-        <Link href="/app/finance/invoices/create" className="btn btn-sm btn-ghost">Create Invoice</Link>
+        <Link href="/app/finance/invoices" className="btn btn-sm btn-ghost">Invoices</Link>
+        <Link href="/app/finance/expenses" className="btn btn-sm btn-ghost">Expense Log</Link>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>

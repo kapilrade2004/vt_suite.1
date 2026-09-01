@@ -12,9 +12,9 @@ export default function ProjectsPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
-        <Link href="/app/projects" className="btn btn-sm btn-brass">Projects Overview</Link>
-        <Link href="/app/projects/tasks" className="btn btn-sm btn-ghost">Tasks & Gantt Timeline</Link>
+      <div className="vt-crm-subnav">
+        <Link href="/app/projects" className="btn btn-sm btn-brass">Overview</Link>
+        <Link href="/app/projects/tasks" className="btn btn-sm btn-ghost">Tasks & Board</Link>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
