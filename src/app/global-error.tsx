@@ -10,8 +10,8 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <html>
-      <body style={{ padding: '40px', textAlign: 'center', fontFamily: 'sans-serif' }}>
+    <html suppressHydrationWarning>
+      <body style={{ padding: '40px', textAlign: 'center', fontFamily: 'sans-serif' }} suppressHydrationWarning>
         <h2 style={{ fontSize: '20px', color: '#0f172a', marginBottom: '12px' }}>Global Application Error</h2>
         <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '20px' }}>
           {error?.message || 'An unexpected error occurred.'}
