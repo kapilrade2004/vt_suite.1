@@ -103,7 +103,65 @@ export default function InvoicesPage() {
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <button className="btn btn-ghost btn-sm" onClick={() => alert(`Showing PDF Invoice Document Preview for ${inv.id}`)}>
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        onClick={() => {
+                          const printWindow = window.open('', '_blank');
+                          if (printWindow) {
+                            printWindow.document.write(`
+                              <html>
+                                <head>
+                                  <title>Invoice ${inv.id} - Vasify Technologies</title>
+                                  <style>
+                                    body { font-family: Arial, sans-serif; padding: 40px; color: #0f172a; }
+                                    .header { display: flex; justify-content: space-between; border-bottom: 2px solid #1DA851; padding-bottom: 20px; }
+                                    .logo { font-size: 24px; font-weight: 800; color: #1DA851; }
+                                    .inv-title { font-size: 28px; font-weight: 800; text-align: right; }
+                                    .meta { margin-top: 30px; display: flex; justify-content: space-between; }
+                                    .box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; width: 45%; }
+                                    table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+                                    th, td { padding: 12px; border: 1px solid #cbd5e1; text-align: left; }
+                                    th { background: #f1f5f9; }
+                                    .total-box { margin-top: 20px; text-align: right; font-size: 18px; font-weight: 800; color: #1DA851; }
+                                  </style>
+                                </head>
+                                <body>
+                                  <div class="header">
+                                    <div>
+                                      <div class="logo">Vasify Technologies Pvt. Ltd.</div>
+                                      <p style="font-size: 12px; color: #64748b;">Axiom Milan CHS, Kandivali West, Mumbai 400067<br/>GSTIN: 27AAKCV0353N1ZW</p>
+                                    </div>
+                                    <div class="inv-title">INVOICE<br/><span style="font-size: 14px; color: #64748b;">#${inv.id}</span></div>
+                                  </div>
+                                  <div class="meta">
+                                    <div class="box">
+                                      <strong>Bill To:</strong><br/>
+                                      ${inv.client}<br/>
+                                      Issue Date: ${inv.issueDate}<br/>
+                                      Due Date: ${inv.dueDate}
+                                    </div>
+                                    <div class="box">
+                                      <strong>Payment Status:</strong> ${inv.status}<br/>
+                                      <strong>Payment Terms:</strong> Net 15<br/>
+                                      <strong>Place of Supply:</strong> Maharashtra (27)
+                                    </div>
+                                  </div>
+                                  <table>
+                                    <thead>
+                                      <tr><th>#</th><th>Description</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr><td>1</td><td>VasifyTech Core SaaS License & Services</td><td>1</td><td>${inv.amount}</td><td>${inv.amount}</td></tr>
+                                    </tbody>
+                                  </table>
+                                  <div class="total-box">Total Amount: ${inv.amount}</div>
+                                  <script>window.print();</script>
+                                </body>
+                              </html>
+                            `);
+                          }
+                        }}
+                      >
                         <FileText size={13} /> View PDF
                       </button>
                       <button
