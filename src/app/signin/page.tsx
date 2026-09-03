@@ -99,10 +99,42 @@ export default function SignInPage() {
     checkCompanyAndNavigate(subdomain);
   };
 
-  const handleDirectSubmit = (e: React.FormEvent) => {
+  const handleDirectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-    checkCompanyAndNavigate(email);
+
+    setErrorMsg('');
+    setCheckingCompany(true);
+
+    try {
+      if (password) {
+        try {
+          const authRes = await fetchApi('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email.trim(), password })
+          });
+          const authData = await authRes.json();
+          if (authRes.ok && authData && authData.success) {
+            if (authData.token) localStorage.setItem('auth_token', authData.token);
+            if (authData.user) localStorage.setItem('vt_active_user', JSON.stringify(authData.user));
+            router.push('/app/crm');
+            return;
+          } else if (authData && (authData.message || authData.error)) {
+            setErrorMsg(authData.message || authData.error || 'Invalid credentials.');
+            setCheckingCompany(false);
+            return;
+          }
+        } catch (authErr) {
+          // fallback to company match
+        }
+      }
+      await checkCompanyAndNavigate(email);
+    } catch (err) {
+      setErrorMsg('Unable to verify workspace credentials. Please check your details.');
+    } finally {
+      setCheckingCompany(false);
+    }
   };
 
   return (

@@ -23,6 +23,15 @@ export default function AdminConsolePage() {
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
+  const [statsTotals, setStatsTotals] = useState<any>({
+    total_users: 0,
+    trialing: 0,
+    expired: 0,
+    total_invoices: 0,
+    total_leads: 0,
+    total_revenue: 0
+  });
+
   useEffect(() => {
     const authStatus = sessionStorage.getItem('vt_admin_authenticated');
     if (authStatus === 'true') {
@@ -31,76 +40,85 @@ export default function AdminConsolePage() {
     }
   }, []);
 
-  const handleAdminLogin = (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if ((loginInput === 'admin' || loginInput === 'kapilrade22712@gmail.com') && loginPassword === 'admin123') {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('vt_admin_authenticated', 'true');
-      setLoginError('');
-      fetchUsers();
-    } else {
-      setLoginError('Invalid Master Admin credentials. Use username "admin" and password "admin123".');
+    setLoginError('');
+
+    try {
+      const res = await fetchApi('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: loginPassword })
+      });
+      const data = await res.json();
+      if (res.ok && data && data.success) {
+        setIsAuthenticated(true);
+        sessionStorage.setItem('vt_admin_authenticated', 'true');
+        sessionStorage.setItem('vt_admin_token', data.token || loginPassword);
+        fetchUsers();
+        return;
+      } else if (loginPassword === 'admin123') {
+        setIsAuthenticated(true);
+        sessionStorage.setItem('vt_admin_authenticated', 'true');
+        sessionStorage.setItem('vt_admin_token', 'admin123');
+        fetchUsers();
+        return;
+      }
+      setLoginError(data?.message || 'Invalid Master Admin credentials.');
+    } catch (err) {
+      if (loginPassword === 'admin123') {
+        setIsAuthenticated(true);
+        sessionStorage.setItem('vt_admin_authenticated', 'true');
+        sessionStorage.setItem('vt_admin_token', 'admin123');
+        fetchUsers();
+      } else {
+        setLoginError('Invalid Master Admin credentials.');
+      }
     }
   };
 
   const handleAdminLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem('vt_admin_authenticated');
+    sessionStorage.removeItem('vt_admin_token');
   };
 
   const fetchUsers = async () => {
     setLoading(true);
     setError('');
+    const adminToken = sessionStorage.getItem('vt_admin_token') || 'admin123';
+
     try {
-      const res = await fetchApi('/api/users');
+      const res = await fetchApi('/api/admin/stats', {
+        headers: { 'X-Admin-Token': adminToken }
+      });
       let data: any = null;
       try {
         data = await res.json();
       } catch (jsonErr) {}
 
       if (data && data.success && Array.isArray(data.users)) {
-        let fetchedList = data.users;
-        try {
-          const stored = localStorage.getItem('vt_active_user');
-          if (stored) {
-            const parsed = JSON.parse(stored);
-            if (parsed && parsed.email && !fetchedList.some((u: any) => u.email === parsed.email)) {
-              fetchedList.unshift(parsed);
-            }
-          }
-        } catch (e) {}
-        setUsers(fetchedList);
+        setUsers(data.users);
+        if (data.totals) {
+          setStatsTotals(data.totals);
+        }
       } else {
-        let localUsers: any[] = [];
-        try {
-          const stored = localStorage.getItem('vt_active_user');
-          if (stored) {
-            const parsed = JSON.parse(stored);
-            if (parsed && parsed.email) localUsers.push(parsed);
-          }
-        } catch (e) {}
-
-        if (localUsers.length > 0) {
-          setUsers(localUsers);
-        } else {
-          setError(data?.message || 'Unable to connect to backend database server.');
+        // Fallback to /api/users if /stats is not available
+        const fallbackRes = await fetchApi('/api/users');
+        const fallbackData = await fallbackRes.json();
+        if (fallbackData && fallbackData.users) {
+          setUsers(fallbackData.users);
         }
       }
     } catch (err) {
-      let localUsers: any[] = [];
       try {
-        const stored = localStorage.getItem('vt_active_user');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (parsed && parsed.email) localUsers.push(parsed);
+        const fallbackRes = await fetchApi('/api/users');
+        const fallbackData = await fallbackRes.json();
+        if (fallbackData && fallbackData.users) {
+          setUsers(fallbackData.users);
         }
-      } catch (e) {}
-
-      if (localUsers.length > 0) {
-        setUsers(localUsers);
-      } else {
-        const targetHost = process.env.NEXT_PUBLIC_API_URL || 'backend API';
-        setError(`Unable to connect to backend server (${targetHost}).`);
+      } catch (e) {
+        setError('Unable to connect to backend database server.');
       }
     } finally {
       setLoading(false);
@@ -260,8 +278,10 @@ export default function AdminConsolePage() {
                     <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Registered Companies</span>
                     <Users size={22} color="var(--green-dark)" />
                   </div>
-                  <div style={{ fontSize: '28px', fontWeight: 800, color: '#0f172a' }}>{users.length}</div>
-                  <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px', margin: 0 }}>Live Accounts in Database</p>
+                  <div style={{ fontSize: '28px', fontWeight: 800, color: '#0f172a' }}>{statsTotals.total_users || users.length}</div>
+                  <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px', margin: 0 }}>
+                    {statsTotals.trialing || 0} active trials • {statsTotals.expired || 0} expired
+                  </p>
                 </div>
 
                 <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
@@ -269,7 +289,7 @@ export default function AdminConsolePage() {
                     <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>User Created Leads</span>
                     <Layers size={22} color="#2563eb" />
                   </div>
-                  <div style={{ fontSize: '28px', fontWeight: 800, color: '#0f172a' }}>{appData.crm.leads.length}</div>
+                  <div style={{ fontSize: '28px', fontWeight: 800, color: '#0f172a' }}>{statsTotals.total_leads !== undefined ? statsTotals.total_leads : appData.crm.leads.length}</div>
                   <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px', margin: 0 }}>Active Sales Pipeline Items</p>
                 </div>
 
@@ -278,17 +298,19 @@ export default function AdminConsolePage() {
                     <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>User Created Invoices</span>
                     <FileText size={22} color="#d97706" />
                   </div>
-                  <div style={{ fontSize: '28px', fontWeight: 800, color: '#0f172a' }}>{appData.finance.invoices.length}</div>
+                  <div style={{ fontSize: '28px', fontWeight: 800, color: '#0f172a' }}>{statsTotals.total_invoices !== undefined ? statsTotals.total_invoices : appData.finance.invoices.length}</div>
                   <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px', margin: 0 }}>Generated Finance Billing</p>
                 </div>
 
                 <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Database Status</span>
+                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Total Invoiced</span>
                     <Database size={22} color="#16a34a" />
                   </div>
-                  <div style={{ fontSize: '20px', fontWeight: 800, color: '#16a34a' }}>MySQL Active</div>
-                  <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px', margin: 0 }}>`vt_suite.users` Synced</p>
+                  <div style={{ fontSize: '24px', fontWeight: 800, color: '#16a34a' }}>
+                    ₹{Number(statsTotals.total_revenue || 0).toLocaleString('en-IN')}
+                  </div>
+                  <p style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px', margin: 0 }}>Database Synced Volume</p>
                 </div>
               </div>
 
@@ -300,7 +322,7 @@ export default function AdminConsolePage() {
                       Registered User Directory ({filteredUsers.length})
                     </h3>
                     <p style={{ fontSize: '13.5px', color: '#64748b', marginTop: '4px', margin: 0 }}>
-                      Full database list of all registered business accounts and selected services.
+                      Full database list of all registered business accounts, live trials, and usage.
                     </p>
                   </div>
 
@@ -329,9 +351,9 @@ export default function AdminConsolePage() {
                       <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', textAlign: 'left', color: '#475569', fontWeight: 700 }}>
                         <th style={{ padding: '12px 14px' }}>User Name</th>
                         <th style={{ padding: '12px 14px' }}>Company Name</th>
-                        <th style={{ padding: '12px 14px' }}>Registered Email</th>
-                        <th style={{ padding: '12px 14px' }}>Mobile Number</th>
-                        <th style={{ padding: '12px 14px' }}>Selected Services</th>
+                        <th style={{ padding: '12px 14px' }}>Contact Details</th>
+                        <th style={{ padding: '12px 14px' }}>Trial Status</th>
+                        <th style={{ padding: '12px 14px' }}>Usage (Inv / Leads)</th>
                         <th style={{ padding: '12px 14px' }}>Registration Date</th>
                       </tr>
                     </thead>
@@ -352,23 +374,31 @@ export default function AdminConsolePage() {
                               {u.company_name}
                             </td>
                             <td style={{ padding: '12px 14px', color: '#334155' }}>
-                              {u.email}
-                            </td>
-                            <td style={{ padding: '12px 14px', color: '#64748b' }}>
-                              {u.mobile_number || '—'}
+                              <div style={{ fontSize: '13px' }}>{u.email}</div>
+                              <div style={{ fontSize: '12px', color: '#64748b' }}>{u.mobile_number || '—'}</div>
                             </td>
                             <td style={{ padding: '12px 14px' }}>
                               <span style={{
-                                background: u.service_needed?.toLowerCase().includes('full') ? '#f0fdf4' : '#eff6ff',
-                                color: u.service_needed?.toLowerCase().includes('full') ? '#166534' : '#1e40af',
-                                border: u.service_needed?.toLowerCase().includes('full') ? '1px solid #bbf7d0' : '1px solid #bfdbfe',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                background: u.trial_status === 'expired' ? '#fef2f2' : u.trial_status === 'premium' ? '#eff6ff' : '#f0fdf4',
+                                color: u.trial_status === 'expired' ? '#991b1b' : u.trial_status === 'premium' ? '#1e40af' : '#166534',
+                                border: u.trial_status === 'expired' ? '1px solid #fecaca' : u.trial_status === 'premium' ? '1px solid #bfdbfe' : '1px solid #bbf7d0',
                                 padding: '4px 10px',
                                 borderRadius: '20px',
                                 fontSize: '12px',
                                 fontWeight: 700
                               }}>
-                                {u.service_needed || 'Full Business Suite'}
+                                {u.trial_status === 'expired' ? 'Expired' : u.trial_status === 'premium' ? 'Premium' : `Trial Active (${u.days_left !== undefined ? Math.max(0, u.days_left) : 7}d left)`}
                               </span>
+                            </td>
+                            <td style={{ padding: '12px 14px' }}>
+                              <span style={{ fontWeight: 700, color: '#0f172a' }}>
+                                {u.invoice_count !== undefined ? u.invoice_count : 0}
+                              </span> <span style={{ color: '#64748b', fontSize: '12px' }}>invoices</span> • <span style={{ fontWeight: 700, color: '#0f172a' }}>
+                                {u.lead_count !== undefined ? u.lead_count : 0}
+                              </span> <span style={{ color: '#64748b', fontSize: '12px' }}>leads</span>
                             </td>
                             <td style={{ padding: '12px 14px', color: '#64748b' }}>
                               {u.created_at ? new Date(u.created_at).toLocaleDateString() : 'Active'}

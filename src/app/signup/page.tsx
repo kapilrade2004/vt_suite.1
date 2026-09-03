@@ -57,6 +57,7 @@ export default function SignUpPage() {
             user_name: name,
             mobile_number: mobileNumber,
             email: email,
+            password: password,
             company_name: companyName,
             service_needed: selectedServices.join(', ')
           })
@@ -73,6 +74,11 @@ export default function SignUpPage() {
       }
 
       if (res && res.ok && data && data.success) {
+        if (data.token) {
+          try {
+            localStorage.setItem('auth_token', data.token);
+          } catch (e) {}
+        }
         if (data.user) {
           try {
             localStorage.setItem('vt_active_user', JSON.stringify(data.user));
