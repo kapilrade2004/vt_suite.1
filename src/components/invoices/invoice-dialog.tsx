@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { X, Plus, Trash2, Search, ChevronDown } from "lucide-react"
+import { X, Plus, Trash2, Search, ChevronDown, FileText } from "lucide-react"
 import { useCRM } from "@/contexts/crm-context"
 import type { Invoice } from "@/types/crm"
 
@@ -448,40 +448,47 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[94vh] flex flex-col">
 
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between shrink-0">
-          <div>
-            <h2 className="text-lg font-bold text-gray-900">
-              {isEdit ? "Edit Invoice" : "New Invoice"}
-            </h2>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {isEdit
-                ? `Editing ${(invoice as any).invoiceNumber || "invoice"}`
-                : "Create a new invoice linked to a customer"}
-            </p>
+        <div style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)', color: '#fff' }} className="px-6 py-4 rounded-t-2xl flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-white shrink-0">
+              <FileText size={20} />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-white leading-tight">
+                {isEdit ? "Edit Invoice Manually" : "Create Invoice Manually"}
+              </h2>
+              <p className="text-xs text-blue-100 mt-0.5 opacity-90">
+                {isEdit
+                  ? `Editing ${(invoice as any).invoiceNumber || "invoice"}`
+                  : "Issue a standalone tax invoice with full customer info and line items"}
+              </p>
+            </div>
           </div>
           <button
+            type="button"
             onClick={() => onOpenChange(false)}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500"
+            className="p-2 hover:bg-white/20 rounded-xl transition-colors text-white/90 bg-white/10"
           >
             <X size={18} />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="px-6 flex gap-0 border-b border-gray-100 shrink-0">
-          {(["details", "items", "settings"] as const).map((t) => (
+        <div className="px-6 flex gap-2 border-b border-gray-100 shrink-0 bg-white">
+          {(["details", "items", "review", "settings"] as const).map((t) => (
             <button
               key={t}
               type="button"
-              onClick={() => setTab(t)}
-              className={`px-4 py-3 text-sm font-medium border-b-2 capitalize transition-colors ${
-                tab === t
-                  ? "border-[#3A7AFE] text-[#3A7AFE]"
+              onClick={() => setTab(t as any)}
+              className={`px-4 py-3 text-sm font-semibold border-b-2 capitalize transition-colors ${
+                tab === (t === "review" ? "items" : t)
+                  ? "border-[#2563EB] text-[#2563EB]"
                   : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >
               {t === "details" ? "Customer & Details"
                : t === "items" ? `Line Items (${items.length})`
+               : t === "review" ? "Review & Save"
                : "Settings"}
             </button>
           ))}
@@ -501,59 +508,149 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
             {/* ── Tab: Customer & Details ── */}
             {tab === "details" && (
               <div className="space-y-5">
-
-                {/* Customer picker */}
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Customer <span className="text-red-500">*</span>
-                    </label>
-                    {!isEdit && (
-                      <button
-                        type="button"
-                        onClick={() => setQuickAddOpen(true)}
-                        className="text-xs font-semibold text-[#3A7AFE] hover:underline flex items-center gap-1"
-                      >
-                        <Plus size={12} />
-                        Quick Add Customer
-                      </button>
-                    )}
+                <div className="bg-gray-50/50 p-4 rounded-xl border border-gray-100 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1 h-4 bg-[#2563EB] rounded-full"></span>
+                    <h3 className="text-sm font-bold text-gray-900">Customer Information</h3>
                   </div>
-                  <CustomerPicker
-                    customers={customers}
-                    value={form.customerId}
-                    onChange={handleCustomerChange}
-                    onQuickAdd={() => setQuickAddOpen(true)}
-                    disabled={isEdit}   // can't re-assign customer on edit
-                  />
-                  {isEdit && (
-                    <p className="text-xs text-gray-400 mt-1">Customer cannot be changed after invoice is created.</p>
-                  )}
+
+                  {/* Customer picker */}
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">
+                      Select Existing Customer <span className="font-normal">(optional)</span>
+                    </label>
+                    <CustomerPicker
+                      customers={customers}
+                      value={form.customerId}
+                      onChange={handleCustomerChange}
+                      onQuickAdd={() => setQuickAddOpen(true)}
+                      disabled={isEdit}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1">
+                        Customer / Business Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Rahul Sharma"
+                        className={inputCls}
+                        value={form.customerId ? (customers.find(c => c.id === form.customerId)?.name || '') : ''}
+                        onChange={(e) => {
+                          if (form.customerId) {
+                            const c = customers.find(x => x.id === form.customerId);
+                            if (c) c.name = e.target.value;
+                          }
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1">Phone Number</label>
+                      <input
+                        type="tel"
+                        placeholder="10-digit mobile number"
+                        className={inputCls}
+                        value={form.customerId ? (customers.find(c => c.id === form.customerId)?.phone || '') : ''}
+                        onChange={(e) => {
+                          if (form.customerId) {
+                            const c = customers.find(x => x.id === form.customerId);
+                            if (c) c.phone = e.target.value;
+                          }
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1">
+                        Email Address <span className="font-normal text-gray-400">(Optional - for email delivery)</span>
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="customer@email.com (leave blank if none)"
+                        className={inputCls}
+                        value={form.customerId ? (customers.find(c => c.id === form.customerId)?.email || '') : ''}
+                        onChange={(e) => {
+                          if (form.customerId) {
+                            const c = customers.find(x => x.id === form.customerId);
+                            if (c) c.email = e.target.value;
+                          }
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1">
+                        GST Number (GSTIN) <span className="font-normal text-gray-400">(Optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="E.G. 27AAAAA0000A1Z5"
+                        className={inputCls}
+                        value={form.customerId ? (customers.find(c => c.id === form.customerId)?.gstin || '') : ''}
+                        onChange={(e) => {
+                          if (form.customerId) {
+                            const c = customers.find(x => x.id === form.customerId);
+                            if (c) c.gstin = e.target.value;
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Street / Flat Address</label>
+                    <input
+                      type="text"
+                      placeholder="Flat 102, Building, Street"
+                      className={inputCls}
+                      value={form.customerId ? (customers.find(c => c.id === form.customerId)?.address || '') : ''}
+                      onChange={(e) => {
+                        if (form.customerId) {
+                          const c = customers.find(x => x.id === form.customerId);
+                          if (c) c.address = e.target.value;
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1">City</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Mumbai"
+                        className={inputCls}
+                        value={form.customerId ? (customers.find(c => c.id === form.customerId)?.city || '') : ''}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1">State (GST type)</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Maharashtra"
+                        className={inputCls}
+                        value={form.customerId ? (customers.find(c => c.id === form.customerId)?.state || '') : ''}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1">Pincode</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 400001"
+                        className={inputCls}
+                        value={form.customerId ? (customers.find(c => c.id === form.customerId)?.pincode || '') : ''}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                {/* Customer preview card */}
-                {form.customerId && (() => {
-                  const c = customers.find((x) => x.id === form.customerId)
-                  if (!c) return null
-                  return (
-                    <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
-                      <p className="text-sm font-semibold text-gray-900">{c.name}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">
-                        {[c.company, c.phone, c.email].filter(Boolean).join(" · ")}
-                      </p>
-                      {(c.city || c.state) && (
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          {[c.city, c.state, c.country].filter(Boolean).join(", ")}
-                        </p>
-                      )}
-                    </div>
-                  )
-                })()}
-
+                {/* Invoice Dates & Tax */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Status */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Status</label>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Status</label>
                     <select
                       value={form.status}
                       onChange={(e) => setForm((p) => ({ ...p, status: e.target.value }))}
@@ -565,9 +662,8 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
                     </select>
                   </div>
 
-                  {/* Invoice date */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Invoice Date</label>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Invoice Date</label>
                     <input
                       type="date"
                       value={form.issueDate}
@@ -576,9 +672,8 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
                     />
                   </div>
 
-                  {/* Due date */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Due Date</label>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Due Date</label>
                     <input
                       type="date"
                       value={form.dueDate}
@@ -587,11 +682,9 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
                     />
                   </div>
 
-                  {/* GST rate */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
                       GST Rate (%)
-                      <span className="ml-1.5 text-xs text-gray-400 font-normal">Split as CGST + SGST</span>
                     </label>
                     <input
                       type="number"
@@ -605,16 +698,14 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
                   </div>
                 </div>
 
-                {/* Notes / subject */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
                     Notes / Subject
-                    <span className="ml-1.5 text-xs text-gray-400 font-normal">Shown on the PDF as subject line</span>
                   </label>
                   <textarea
                     value={form.notes}
                     onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
-                    rows={3}
+                    rows={2}
                     placeholder="e.g. WhatsApp Platform and Marketing Monthly Advance"
                     className="rounded-xl border border-gray-200 focus:border-[#3A7AFE] focus:outline-none text-sm px-3 py-2 w-full bg-white resize-none"
                   />
@@ -775,21 +866,19 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between gap-3 shrink-0 bg-gray-50 rounded-b-2xl">
+          <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between gap-3 shrink-0 bg-white rounded-b-2xl">
             {/* Total preview in footer */}
-            <div className="text-sm">
-              <span className="text-gray-400">Total: </span>
-              <span className="font-bold text-gray-900">₹{total.toFixed(2)}</span>
-              {items.length > 0 && (
-                <span className="text-gray-400 ml-2 text-xs">{items.length} item{items.length !== 1 ? "s" : ""}</span>
-              )}
+            <div className="text-sm font-medium text-gray-600">
+              <span>Total: </span>
+              <span className="font-bold text-gray-900">Rs.{total.toFixed(2)}</span>
+              <span className="text-gray-400 ml-1 text-xs">({items.length} item{items.length !== 1 ? "s" : ""})</span>
             </div>
 
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                className="px-5 py-2 border border-gray-200 rounded-xl text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                className="px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
@@ -799,7 +888,7 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
                 <button
                   type="button"
                   onClick={() => setTab("items")}
-                  className="px-5 py-2 bg-[#3A7AFE] hover:bg-[#2563EB] text-white text-sm font-semibold rounded-xl transition-colors"
+                  className="px-5 py-2.5 bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
                 >
                   Next: Line Items →
                 </button>
@@ -808,7 +897,7 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2 bg-[#3A7AFE] hover:bg-[#2563EB] text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50"
+                  className="px-5 py-2.5 bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-sm font-semibold rounded-xl transition-colors shadow-sm disabled:opacity-50"
                 >
                   {saving ? "Saving…" : isEdit ? "Update Invoice" : "Create Invoice"}
                 </button>
@@ -817,7 +906,7 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2 bg-[#3A7AFE] hover:bg-[#2563EB] text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50"
+                  className="px-5 py-2.5 bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-sm font-semibold rounded-xl transition-colors shadow-sm disabled:opacity-50"
                 >
                   {saving ? "Saving…" : isEdit ? "Update Invoice" : "Create Invoice"}
                 </button>

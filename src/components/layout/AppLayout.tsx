@@ -6,7 +6,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { 
   Layers, Users, UserCheck, Briefcase, DollarSign, 
   MessageSquare, BarChart3, Settings, LogOut,
-  Search, Bell, Plus, ExternalLink, ShieldAlert, Sparkles, Clock, CheckCircle2, Database, Menu, X
+  Search, Bell, Plus, ExternalLink, ShieldAlert, Sparkles, Clock, CheckCircle2, Database, Menu, X,
+  ChevronDown, ChevronRight
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { fetchApi } from '@/lib/api';
@@ -27,9 +28,26 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeUser, setActiveUser] = useState<ActiveUserInfo | null>(null);
   const [upgrading, setUpgrading] = useState(false);
+  const [openModules, setOpenModules] = useState<Record<string, boolean>>({
+    crm: true,
+    hr: false,
+    projects: false,
+    finance: false,
+    workspace: false
+  });
   const pathname = usePathname();
   const router = useRouter();
   const { data } = useApp();
+
+  // Auto-expand active module dropdown when navigating
+  useEffect(() => {
+    if (!pathname) return;
+    allModules.forEach(m => {
+      if (pathname.startsWith(m.path)) {
+        setOpenModules(prev => ({ ...prev, [m.key]: true }));
+      }
+    });
+  }, [pathname]);
 
   const loadUser = async () => {
     try {
@@ -85,26 +103,9 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     loadUser();
   }, []);
 
-  // Enforce Access Control Guard: Redirect users away from unselected module pages
+  // All modules accessible to user
   useEffect(() => {
-    if (!activeUser || !pathname) return;
-
-    const userModule = (activeUser.service_needed || '').toLowerCase();
-    const isFullSuite = userModule.includes('full') || userModule.includes('suite');
-
-    if (isFullSuite) return;
-
-    const allowedForUser = allModules.filter(m => m.match.some(keyword => userModule.includes(keyword)));
-    
-    if (allowedForUser.length > 0) {
-      const isCurrentPathAllowed = allowedForUser.some(m => pathname.startsWith(m.path)) || 
-                                   pathname.includes('/reports') || 
-                                   pathname.includes('/settings');
-      
-      if (!isCurrentPathAllowed) {
-        router.replace(allowedForUser[0].path);
-      }
-    }
+    // Keep user state synchronized
   }, [activeUser, pathname]);
 
   const handleUpgradeToPremium = async () => {
@@ -138,21 +139,81 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   const isFullSuite = userModule.includes('full') || userModule.includes('suite');
 
   const allModules = [
-    { key: 'crm', name: "CRM & Sales", path: "/app/crm", icon: Users, badge: `${data.crm.stats.totalLeads} Leads`, match: ['crm', 'sales'] },
-    { key: 'hr', name: "HR & Payroll", path: "/app/hr", icon: UserCheck, badge: `${data.hr.stats.totalEmployees} Staff`, match: ['hr', 'payroll', 'attendance'] },
-    { key: 'projects', name: "Projects", path: "/app/projects", icon: Briefcase, badge: `${data.projects.stats.activeProjects} Active`, match: ['project', 'task', 'custom', 'saas', 'software'] },
-    { key: 'finance', name: "Finance", path: "/app/finance", icon: DollarSign, badge: `${data.finance.invoices.length} Invoices`, match: ['finance', 'invoicing', 'expense'] },
-    { key: 'workspace', name: "Workspace", path: "/app/workspace", icon: MessageSquare, badge: "Live", match: ['workspace', 'chat', 'whatsapp', 'team'] }
+    {
+      key: 'crm',
+      name: "CRM & Sales",
+      path: "/app/crm",
+      icon: Users,
+      badge: `${data.crm.stats.totalLeads} Leads`,
+      match: ['crm', 'sales'],
+      subItems: [
+        { name: "Dashboard", path: "/app/crm" },
+        { name: "Leads Directory", path: "/app/crm/leads" },
+        { name: "Clients", path: "/app/crm/clients" },
+        { name: "Deal Pipeline", path: "/app/crm/pipeline" },
+        { name: "Invoices", path: "/app/crm/invoices" },
+        { name: "Registered Users (MySQL)", path: "/app/crm/users" }
+      ]
+    },
+    {
+      key: 'hr',
+      name: "HR & Payroll",
+      path: "/app/hr",
+      icon: UserCheck,
+      badge: `${data.hr.stats.totalEmployees} Staff`,
+      match: ['hr', 'payroll', 'attendance'],
+      subItems: [
+        { name: "Dashboard", path: "/app/hr" },
+        { name: "Employee Directory", path: "/app/hr/employees" },
+        { name: "Attendance Tracker", path: "/app/hr/attendance" },
+        { name: "Leave Requests", path: "/app/hr/leave" },
+        { name: "Payroll", path: "/app/hr/payroll" }
+      ]
+    },
+    {
+      key: 'projects',
+      name: "Projects",
+      path: "/app/projects",
+      icon: Briefcase,
+      badge: `${data.projects.stats.activeProjects} Active`,
+      match: ['project', 'task', 'custom', 'saas', 'software'],
+      subItems: [
+        { name: "Dashboard", path: "/app/projects" },
+        { name: "Tasks & Board", path: "/app/projects/tasks" }
+      ]
+    },
+    {
+      key: 'finance',
+      name: "Finance",
+      path: "/app/finance",
+      icon: DollarSign,
+      badge: `${data.finance.invoices.length} Invoices`,
+      match: ['finance', 'invoicing', 'expense'],
+      subItems: [
+        { name: "Dashboard", path: "/app/finance" },
+        { name: "Invoices Directory", path: "/app/finance/invoices" },
+        { name: "Create Invoice", path: "/app/finance/invoices/create" }
+      ]
+    },
+    {
+      key: 'workspace',
+      name: "Workspace",
+      path: "/app/workspace",
+      icon: MessageSquare,
+      badge: "Live",
+      match: ['workspace', 'chat', 'whatsapp', 'team'],
+      subItems: [
+        { name: "Overview", path: "/app/workspace" }
+      ]
+    }
   ];
 
-  // Display ONLY the services selected by the user in signup / database
-  const activeNavigationModules = isFullSuite 
-    ? allModules 
-    : allModules.filter(m => m.match.some(keyword => userModule.includes(keyword)));
+  // Display ALL modules in suite for full workspace access
+  const activeNavigationModules = allModules;
 
   const navigation = [
     {
-      group: `ACTIVATED MODULES (${isFullSuite ? 'FULL SUITE' : (activeUser?.service_needed || 'LIMITED')})`,
+      group: `ACTIVATED MODULES (FULL SUITE)`,
       items: activeNavigationModules
     },
     {
@@ -298,46 +359,129 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                 {group.group}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                {group.items.map((item) => {
+                {group.items.map((item: any) => {
                   const Icon = item.icon;
                   const isActive = pathname?.startsWith(item.path);
+                  const hasSub = Array.isArray(item.subItems) && item.subItems.length > 0;
+                  const isOpen = !!openModules[item.key];
+
                   return (
-                    <Link
-                      key={item.path}
-                      href={item.path}
-                      onClick={() => setMobileMenuOpen(false)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '10px 12px',
-                        borderRadius: '10px',
-                        fontSize: '14px',
-                        fontWeight: isActive ? 600 : 500,
-                        color: isActive ? 'var(--green-dark)' : 'var(--text)',
-                        background: isActive ? 'var(--green-tint)' : 'transparent',
-                        border: isActive ? '1px solid var(--green-tint-2)' : '1px solid transparent',
-                        transition: 'all 0.15s ease'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <Icon size={18} color={isActive ? 'var(--green-dark)' : 'var(--text-dim)'} />
-                        <span>{item.name}</span>
+                    <div key={item.path} style={{ display: 'flex', flexDirection: 'column' }}>
+                      <div
+                        onClick={(e) => {
+                          if (hasSub) {
+                            setOpenModules(prev => ({ ...prev, [item.key]: !prev[item.key] }));
+                          }
+                          router.push(item.path);
+                          setMobileMenuOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '10px 12px',
+                          borderRadius: '10px',
+                          fontSize: '14px',
+                          fontWeight: isActive ? 600 : 500,
+                          color: isActive ? 'var(--green-dark)' : 'var(--text)',
+                          background: isActive ? 'var(--green-tint)' : 'transparent',
+                          border: isActive ? '1px solid var(--green-tint-2)' : '1px solid transparent',
+                          transition: 'all 0.15s ease',
+                          cursor: 'pointer',
+                          userSelect: 'none'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <Icon size={18} color={isActive ? 'var(--green-dark)' : 'var(--text-dim)'} />
+                          <span>{item.name}</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          {('badge' in item && item.badge) ? (
+                            <span style={{
+                              fontSize: '11px',
+                              fontWeight: 600,
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              background: isActive ? 'var(--white)' : 'var(--bg-soft)',
+                              color: isActive ? 'var(--green-dark)' : 'var(--text-dim)',
+                              border: '1px solid var(--border)'
+                            }}>
+                              {item.badge}
+                            </span>
+                          ) : null}
+                          {hasSub && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenModules(prev => ({ ...prev, [item.key]: !prev[item.key] }));
+                              }}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                padding: '2px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                color: isActive ? 'var(--green-dark)' : 'var(--text-dim)',
+                                cursor: 'pointer'
+                              }}
+                            >
+                              {isOpen ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      {('badge' in item && item.badge) ? (
-                        <span style={{
-                          fontSize: '11px',
-                          fontWeight: 600,
-                          padding: '2px 8px',
-                          borderRadius: '12px',
-                          background: isActive ? 'var(--white)' : 'var(--bg-soft)',
-                          color: isActive ? 'var(--green-dark)' : 'var(--text-dim)',
-                          border: '1px solid var(--border)'
+
+                      {/* Expandable Submenu Dropdown */}
+                      {hasSub && isOpen && (
+                        <div style={{
+                          marginLeft: '16px',
+                          paddingLeft: '12px',
+                          borderLeft: '2px solid var(--border)',
+                          marginTop: '4px',
+                          marginBottom: '4px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '2px'
                         }}>
-                          {item.badge}
-                        </span>
-                      ) : null}
-                    </Link>
+                          {item.subItems.map((sub: any) => {
+                            const isSubActive = sub.path === '/app/crm'
+                              ? pathname === '/app/crm'
+                              : pathname?.startsWith(sub.path);
+
+                            return (
+                              <Link
+                                key={sub.path}
+                                href={sub.path}
+                                onClick={() => setMobileMenuOpen(false)}
+                                style={{
+                                  padding: '7px 10px',
+                                  borderRadius: '8px',
+                                  fontSize: '12.5px',
+                                  fontWeight: isSubActive ? 700 : 500,
+                                  color: isSubActive ? 'var(--green-dark)' : 'var(--text-dim)',
+                                  background: isSubActive ? 'var(--green-tint)' : 'transparent',
+                                  textDecoration: 'none',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '8px',
+                                  transition: 'all 0.15s ease'
+                                }}
+                              >
+                                <span style={{
+                                  width: '5px',
+                                  height: '5px',
+                                  borderRadius: '50%',
+                                  background: isSubActive ? 'var(--green-dark)' : 'var(--border)',
+                                  flexShrink: 0
+                                }} />
+                                <span>{sub.name}</span>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>

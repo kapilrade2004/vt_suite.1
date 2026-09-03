@@ -27,13 +27,26 @@ export default function CRMRegisteredUsersPage() {
   const [successMsg, setSuccessMsg] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Add Modal State
+  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [addForm, setAddForm] = useState({
+    user_name: '',
+    mobile_number: '',
+    email: '',
+    company_name: '',
+    service_needed: 'Full Business Suite'
+  });
+  const [addError, setAddError] = useState('');
+  const [savingAdd, setSavingAdd] = useState(false);
+
   // Edit Modal State
   const [editingUser, setEditingUser] = useState<UserItem | null>(null);
   const [editForm, setEditForm] = useState({
     user_name: '',
     mobile_number: '',
     email: '',
-    company_name: ''
+    company_name: '',
+    service_needed: 'Full Business Suite'
   });
   const [editError, setEditError] = useState('');
   const [savingEdit, setSavingEdit] = useState(false);
@@ -151,13 +164,49 @@ export default function CRMRegisteredUsersPage() {
     );
   });
 
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAddError('');
+    setSavingAdd(true);
+
+    try {
+      const res = await fetchApi('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(addForm)
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSuccessMsg(`✅ User "${addForm.user_name}" created successfully in MySQL database!`);
+        setTimeout(() => setSuccessMsg(''), 5000);
+        setIsAddUserModalOpen(false);
+        setAddForm({
+          user_name: '',
+          mobile_number: '',
+          email: '',
+          company_name: '',
+          service_needed: 'Full Business Suite'
+        });
+        fetchUsers();
+      } else {
+        setAddError(data.message || 'Failed to create user.');
+      }
+    } catch (err: any) {
+      setAddError(err?.message || 'Unable to create user. Please check your connection.');
+    } finally {
+      setSavingAdd(false);
+    }
+  };
+
   const handleOpenEdit = (u: UserItem) => {
     setEditingUser(u);
     setEditForm({
       user_name: u.user_name,
       mobile_number: u.mobile_number,
       email: u.email,
-      company_name: u.company_name
+      company_name: u.company_name,
+      service_needed: u.service_needed || 'Full Business Suite'
     });
     setEditError('');
   };
@@ -264,9 +313,9 @@ export default function CRMRegisteredUsersPage() {
           <button onClick={fetchUsers} className="btn btn-secondary btn-sm" disabled={loading}>
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Refresh DB
           </button>
-          <Link href="/signup" className="btn btn-brass btn-sm">
+          <button onClick={() => setIsAddUserModalOpen(true)} className="btn btn-brass btn-sm">
             <Plus size={15} /> Add User
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -379,6 +428,101 @@ export default function CRMRegisteredUsersPage() {
         </table>
       </div>
 
+      {/* ADD USER MODAL */}
+      {isAddUserModalOpen && (
+        <div className="vt-modal-overlay">
+          <div className="vt-modal" style={{ padding: '24px', maxWidth: '480px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 800 }}>Add New Registered User (MySQL)</h3>
+              <button onClick={() => setIsAddUserModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                <X size={18} />
+              </button>
+            </div>
+
+            {addError && (
+              <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '10px 14px', color: '#991b1b', fontSize: '13.5px', marginBottom: '16px' }}>
+                {addError}
+              </div>
+            )}
+
+            <form onSubmit={handleCreateUser} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label className="vt-label">User Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Rahul Sharma"
+                  className="vt-input"
+                  value={addForm.user_name}
+                  onChange={(e) => setAddForm({ ...addForm, user_name: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label className="vt-label">Mobile Number *</label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="e.g. 9876543210"
+                  className="vt-input"
+                  value={addForm.mobile_number}
+                  onChange={(e) => setAddForm({ ...addForm, mobile_number: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label className="vt-label">Email Address *</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="rahul@company.com"
+                  className="vt-input"
+                  value={addForm.email}
+                  onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label className="vt-label">Company Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Sharma Tech Innovations"
+                  className="vt-input"
+                  value={addForm.company_name}
+                  onChange={(e) => setAddForm({ ...addForm, company_name: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label className="vt-label">Service Needed / Module</label>
+                <select
+                  className="vt-input"
+                  value={addForm.service_needed}
+                  onChange={(e) => setAddForm({ ...addForm, service_needed: e.target.value })}
+                >
+                  <option value="Full Business Suite">Full Business Suite (All Modules)</option>
+                  <option value="CRM & Sales">CRM & Sales</option>
+                  <option value="HR & Payroll">HR & Payroll</option>
+                  <option value="Projects">Projects</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Workspace">Workspace</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '12px' }}>
+                <button type="button" className="btn btn-ghost" onClick={() => setIsAddUserModalOpen(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-brass" disabled={savingAdd}>
+                  {savingAdd ? 'Creating...' : 'Create User'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* EDIT USER MODAL */}
       {editingUser && (
         <div className="vt-modal-overlay">
@@ -439,6 +583,22 @@ export default function CRMRegisteredUsersPage() {
                   value={editForm.company_name}
                   onChange={(e) => setEditForm({ ...editForm, company_name: e.target.value })}
                 />
+              </div>
+
+              <div>
+                <label className="vt-label">Service Needed / Module</label>
+                <select
+                  className="vt-input"
+                  value={editForm.service_needed}
+                  onChange={(e) => setEditForm({ ...editForm, service_needed: e.target.value })}
+                >
+                  <option value="Full Business Suite">Full Business Suite (All Modules)</option>
+                  <option value="CRM & Sales">CRM & Sales</option>
+                  <option value="HR & Payroll">HR & Payroll</option>
+                  <option value="Projects">Projects</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Workspace">Workspace</option>
+                </select>
               </div>
 
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '12px' }}>
