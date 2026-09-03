@@ -162,7 +162,7 @@ export default function Home() {
         borderBottom: '1px solid #e2e8f0',
         overflow: 'hidden'
       }}>
-        <div className="wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '52px', alignItems: 'center' }}>
+        <div className="wrap-wide" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 460px), 1fr))', gap: 'clamp(28px, 4vw, 56px)', alignItems: 'center' }}>
           <div>
             <span style={{
               display: 'inline-flex',
@@ -208,7 +208,7 @@ export default function Home() {
               <span style={{ background: '#fdf2f8', color: '#be185d', border: '1px solid #fbcfe8', fontSize: '12.5px', fontWeight: 700, padding: '5px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>💬 Team Workspace</span>
             </div>
 
-            <p style={{ fontSize: '18px', color: '#475569', lineHeight: 1.6, maxWidth: '540px', marginBottom: '28px' }}>
+            <p style={{ fontSize: '18px', color: '#475569', lineHeight: 1.6, maxWidth: '640px', marginBottom: '28px' }}>
               Replace fragmented app subscriptions with a single powerful suite designed by operators for operators. Starting at <strong style={{ color: '#0f172a' }}>₹2,999/mo</strong>.
             </p>
 
@@ -242,7 +242,7 @@ export default function Home() {
             </div>
 
             {/* 4 Security Badges Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', maxWidth: '480px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', maxWidth: '540px' }}>
               <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
                 <Lock size={15} color="var(--green)" /> 256-bit Encryption
               </div>
@@ -351,7 +351,7 @@ export default function Home() {
 
       {/* ===== SEE IT IN ACTION SECTION ===== */}
       <section id="see-it" style={{ background: '#0b1329', padding: '88px 0', color: '#ffffff', borderBottom: '1px solid #1e293b' }}>
-        <div className="wrap" style={{ maxWidth: '1240px' }}>
+        <div className="wrap-wide">
           <div style={{ textAlign: 'center', marginBottom: '36px' }}>
             <h2 style={{ fontSize: 'clamp(30px, 4vw, 44px)', fontWeight: 800, color: '#ffffff', marginBottom: '10px' }}>
               See VasifyTech Suite in Action
@@ -545,7 +545,7 @@ export default function Home() {
 
       {/* ===== ONE PLATFORM REPLACES THEM ALL (WHITE & GREEN) ===== */}
       <section style={{ background: '#ffffff', padding: '80px 0', borderBottom: '1px solid #e2e8f0' }}>
-        <div className="wrap" style={{ maxWidth: '980px' }}>
+        <div className="wrap">
           <div style={{ textAlign: 'center', marginBottom: '44px' }}>
             <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
               One Platform Replaces Them All
@@ -642,7 +642,7 @@ export default function Home() {
           </div>
 
           {/* Module Grid Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto 36px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '24px', width: '100%', margin: '0 auto 36px' }}>
             {/* CRM Module */}
             <div style={{
               background: '#ffffff',
@@ -771,7 +771,7 @@ export default function Home() {
 
           {/* Built-in Superpowers Strip */}
           <div style={{
-            maxWidth: '1100px',
+            width: '100%',
             margin: '0 auto',
             background: '#ffffff',
             border: '1px solid #e2e8f0',
@@ -809,7 +809,7 @@ export default function Home() {
         color: '#ffffff',
         textAlign: 'center'
       }}>
-        <div className="wrap" style={{ maxWidth: '800px' }}>
+        <div className="wrap-content" style={{ maxWidth: '1100px' }}>
           <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 40px)', fontWeight: 800, color: '#ffffff', marginBottom: '12px' }}>
             One Login. Five Modules. Starting at $39/mo.
           </h2>
@@ -864,11 +864,11 @@ export default function Home() {
             border: '1px solid #e2e8f0',
             borderRadius: '16px',
             padding: '32px',
-            maxWidth: '1100px',
+            width: '100%',
             margin: '0 auto',
             boxShadow: 'var(--shadow-lg)'
           }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', alignItems: 'center' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 460px), 1fr))', gap: '32px', alignItems: 'center' }}>
               <div>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--green-dark)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                   {screenshotTabs.find(t => t.id === activeTab)?.tag} MODULE VIEW
@@ -947,7 +947,7 @@ export default function Home() {
 
       {/* ===== REAL COST COMPARISON ===== */}
       <section id="compare" style={{ background: '#f8fafc', padding: '88px 0', borderBottom: '1px solid #e2e8f0' }}>
-        <div className="wrap" style={{ maxWidth: '940px' }}>
+        <div className="wrap-content" style={{ maxWidth: '1240px' }}>
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
             <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--green-dark)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>THE NUMBERS DON'T LIE</span>
             <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', margin: '10px 0 8px' }}>
@@ -1006,7 +1006,7 @@ export default function Home() {
             Set Up in 3 Minutes. Seriously.
           </h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '32px', maxWidth: '960px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '32px', maxWidth: '1240px', width: '100%', margin: '0 auto' }}>
             <div style={{ textAlign: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '32px 24px' }}>
               <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: 'var(--green)', color: '#ffffff', fontSize: '22px', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>1</div>
               <h3 style={{ fontSize: '19px', fontWeight: 700, color: '#0f172a', marginBottom: '10px' }}>Start Free Trial</h3>
@@ -1030,7 +1030,7 @@ export default function Home() {
 
       {/* ===== ROADMAP STRIP ===== */}
       <section id="roadmap" style={{ background: '#f8fdf9', padding: '80px 0', borderBottom: '1px solid #e2e8f0' }}>
-        <div className="wrap" style={{ maxWidth: '720px', textAlign: 'center' }}>
+        <div className="wrap-content" style={{ maxWidth: '1080px', textAlign: 'center' }}>
           <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--green-dark)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>BUILT IN PUBLIC</span>
           <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 38px)', fontWeight: 800, color: '#0f172a', margin: '10px 0 12px' }}>
             Product Road Map
@@ -1086,7 +1086,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', maxWidth: '900px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '30px', maxWidth: '1160px', width: '100%', margin: '0 auto' }}>
             {/* Starter Plan */}
             <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '20px', padding: '36px' }}>
               <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>Starter</h3>
@@ -1140,13 +1140,13 @@ export default function Home() {
 
       {/* ===== 30-DAY MONEY BACK GUARANTEE ===== */}
       <section style={{ background: '#f8fafc', padding: '64px 0', borderBottom: '1px solid #e2e8f0' }}>
-        <div className="wrap" style={{ maxWidth: '760px', textAlign: 'center' }}>
+        <div className="wrap-content" style={{ maxWidth: '1080px', textAlign: 'center' }}>
           <div style={{ background: 'var(--green-tint)', border: '1px solid var(--green-tint-2)', borderRadius: '20px', padding: '36px', marginBottom: '24px' }}>
             <ShieldCheck size={48} color="var(--green)" style={{ margin: '0 auto 16px' }} />
             <h3 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
               30-Day Money-Back Guarantee
             </h3>
-            <p style={{ fontSize: '15px', color: '#475569', maxWidth: '520px', margin: '0 auto', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '15px', color: '#475569', maxWidth: '680px', margin: '0 auto', lineHeight: 1.6 }}>
               Zero risk. Try every feature for 30 days — if VasifyTech Suite is not for you, get a full refund. No questions asked.
             </p>
           </div>
@@ -1155,7 +1155,7 @@ export default function Home() {
 
       {/* ===== FAQ ===== */}
       <section id="faq" style={{ background: '#ffffff', padding: '88px 0' }}>
-        <div className="wrap" style={{ maxWidth: '780px' }}>
+        <div className="wrap-content" style={{ maxWidth: '1040px' }}>
           <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', textAlign: 'center', marginBottom: '44px' }}>
             Got Questions? We've Got Answers
           </h2>

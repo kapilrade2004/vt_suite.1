@@ -64,7 +64,7 @@ export default function PricingPage() {
         textAlign: 'center',
         borderBottom: '1px solid #e2e8f0'
       }}>
-        <div className="wrap" style={{ maxWidth: '840px' }}>
+        <div className="wrap-content" style={{ maxWidth: '1080px' }}>
           <p style={{
             color: 'var(--green-dark)',
             fontSize: '13px',
@@ -113,7 +113,7 @@ export default function PricingPage() {
 
       {/* ===== 3 PRICING CARDS SECTION ===== */}
       <section style={{ padding: '72px 0 88px', borderBottom: '1px solid #e2e8f0' }}>
-        <div className="wrap" style={{ maxWidth: '1100px' }}>
+        <div className="wrap-wide">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '28px', alignItems: 'stretch' }}>
             
             {/* FREE PLAN */}
@@ -282,7 +282,7 @@ export default function PricingPage() {
 
       {/* ===== COMPARE PLANS FEATURE MATRIX TABLE ===== */}
       <section style={{ background: '#f8fdf9', padding: '88px 0', borderBottom: '1px solid #e2e8f0' }}>
-        <div className="wrap" style={{ maxWidth: '1000px' }}>
+        <div className="wrap-wide">
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
             <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', marginBottom: '12px' }}>
               Compare Plans
@@ -397,7 +397,7 @@ export default function PricingPage() {
 
       {/* ===== FAQ ACCORDION SECTION ===== */}
       <section style={{ padding: '88px 0', borderBottom: '1px solid #e2e8f0' }}>
-        <div className="wrap" style={{ maxWidth: '780px' }}>
+        <div className="wrap-content" style={{ maxWidth: '1040px' }}>
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
             <h2 style={{ fontSize: 'clamp(28px, 3.6vw, 42px)', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
               Frequently Asked Questions
@@ -470,7 +470,7 @@ export default function PricingPage() {
         color: '#ffffff',
         textAlign: 'center'
       }}>
-        <div className="wrap" style={{ maxWidth: '760px' }}>
+        <div className="wrap-content" style={{ maxWidth: '1080px' }}>
           <h2 style={{ fontSize: 'clamp(30px, 4vw, 44px)', fontWeight: 800, color: '#ffffff', marginBottom: '16px' }}>
             Ready to Streamline Your Business?
           </h2>

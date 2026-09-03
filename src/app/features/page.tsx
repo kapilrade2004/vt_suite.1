@@ -128,7 +128,7 @@ export default function FeaturesPage() {
         textAlign: 'center',
         borderBottom: '1px solid #e2e8f0'
       }}>
-        <div className="wrap" style={{ maxWidth: '840px' }}>
+        <div className="wrap-content" style={{ maxWidth: '1080px' }}>
           <p style={{
             color: 'var(--green-dark)',
             fontSize: '13px',
@@ -170,7 +170,7 @@ export default function FeaturesPage() {
           </div>
 
           {/* Stats Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', maxWidth: '780px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', maxWidth: '960px', width: '100%', margin: '0 auto' }}>
             <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '14px', padding: '20px 16px' }}>
               <div style={{ fontSize: '32px', fontWeight: 800, color: 'var(--green-dark)' }}>200+</div>
               <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 600 }}>Features</div>
@@ -633,7 +633,7 @@ export default function FeaturesPage() {
         color: '#ffffff',
         textAlign: 'center'
       }}>
-        <div className="wrap" style={{ maxWidth: '760px' }}>
+        <div className="wrap-content" style={{ maxWidth: '1080px' }}>
           <h2 style={{ fontSize: 'clamp(30px, 4vw, 44px)', fontWeight: 800, color: '#ffffff', marginBottom: '16px' }}>
             Ready to Replace 5 Tools With 1?
           </h2>

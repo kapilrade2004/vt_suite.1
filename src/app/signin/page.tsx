@@ -116,7 +116,7 @@ export default function SignInPage() {
         display: 'flex',
         alignItems: 'center'
       }}>
-        <div className="wrap" style={{ maxWidth: '1140px', width: '100%' }}>
+        <div className="wrap-content" style={{ maxWidth: '1240px', width: '100%' }}>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',

@@ -185,7 +185,7 @@ export default function SignUpPage() {
         display: 'flex',
         alignItems: 'center'
       }}>
-        <div className="wrap" style={{ maxWidth: '1140px', width: '100%' }}>
+        <div className="wrap-content" style={{ maxWidth: '1240px', width: '100%' }}>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
