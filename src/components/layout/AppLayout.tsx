@@ -9,6 +9,7 @@ import {
   Search, Bell, Plus, ExternalLink, ShieldAlert, Sparkles, Clock, CheckCircle2, Database, Menu, X
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { fetchApi } from '@/lib/api';
 
 interface ActiveUserInfo {
   id?: number;
@@ -45,12 +46,17 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
       // 2. Fallback to API user database
       let res;
       try {
-        res = await fetch('/api/users');
+        res = await fetchApi('/api/users');
       } catch (e) {
-        res = await fetch('http://localhost:5000/api/users');
+        res = null;
       }
-      const data = await res.json();
-      if (data.success && Array.isArray(data.users) && data.users.length > 0) {
+      let data: any = null;
+      if (res) {
+        try {
+          data = await res.json();
+        } catch (e) {}
+      }
+      if (data && data.success && Array.isArray(data.users) && data.users.length > 0) {
         setActiveUser(data.users[0]);
       } else {
         // Fallback default user with Full Business Suite unlocked
@@ -108,12 +114,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     }
     setUpgrading(true);
     try {
-      let res;
-      try {
-        res = await fetch(`/api/users/${activeUser.id}/upgrade`, { method: 'POST' });
-      } catch (err) {
-        res = await fetch(`http://localhost:5000/api/users/${activeUser.id}/upgrade`, { method: 'POST' });
-      }
+      const res = await fetchApi(`/api/users/${activeUser.id}/upgrade`, { method: 'POST' });
       const result = await res.json();
       if (result.success && result.user) {
         setActiveUser(result.user);

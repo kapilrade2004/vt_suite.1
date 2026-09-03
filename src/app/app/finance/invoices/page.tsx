@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
 import { Plus, FileText, Send, CheckCircle2, MessageSquare } from 'lucide-react';
+import { fetchApi } from '@/lib/api';
 
 export default function InvoicesPage() {
   const { data } = useApp();
@@ -14,20 +15,11 @@ export default function InvoicesPage() {
     setSendingId(invId);
     setSuccessMsg(null);
     try {
-      let res;
-      try {
-        res = await fetch(`/api/invoices/${invId}/send-whatsapp`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ customerName: clientName })
-        });
-      } catch (e) {
-        res = await fetch(`http://localhost:5000/api/invoices/${invId}/send-whatsapp`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ customerName: clientName })
-        });
-      }
+      const res = await fetchApi(`/api/invoices/${invId}/send-whatsapp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customerName: clientName })
+      });
 
       const result = await res.json();
       if (result.success) {

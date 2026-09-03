@@ -9,6 +9,7 @@ import {
   Users, Activity, FileText, Layers, Search, Mail, Phone, Calendar, ArrowRight, Eye, Check, Clock
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { fetchApi } from '@/lib/api';
 
 export default function AdminConsolePage() {
   const { data: appData } = useApp();
@@ -23,8 +24,8 @@ export default function AdminConsolePage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    const sessionAuth = sessionStorage.getItem('vt_admin_authenticated');
-    if (sessionAuth === 'true') {
+    const authStatus = sessionStorage.getItem('vt_admin_authenticated');
+    if (authStatus === 'true') {
       setIsAuthenticated(true);
       fetchUsers();
     }
@@ -32,20 +33,14 @@ export default function AdminConsolePage() {
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoginError('');
-
-    if (!loginInput.trim()) {
-      setLoginError('Please enter your admin username or email.');
-      return;
+    if ((loginInput === 'admin' || loginInput === 'kapilrade22712@gmail.com') && loginPassword === 'admin123') {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('vt_admin_authenticated', 'true');
+      setLoginError('');
+      fetchUsers();
+    } else {
+      setLoginError('Invalid Master Admin credentials. Use username "admin" and password "admin123".');
     }
-    if (!loginPassword.trim()) {
-      setLoginError('Please enter your password.');
-      return;
-    }
-
-    setIsAuthenticated(true);
-    sessionStorage.setItem('vt_admin_authenticated', 'true');
-    fetchUsers();
   };
 
   const handleAdminLogout = () => {
@@ -57,20 +52,56 @@ export default function AdminConsolePage() {
     setLoading(true);
     setError('');
     try {
-      let res;
+      const res = await fetchApi('/api/users');
+      let data: any = null;
       try {
-        res = await fetch('/api/users');
-      } catch (e) {
-        res = await fetch('http://localhost:5000/api/users');
-      }
-      const data = await res.json();
-      if (data.success && Array.isArray(data.users)) {
-        setUsers(data.users);
+        data = await res.json();
+      } catch (jsonErr) {}
+
+      if (data && data.success && Array.isArray(data.users)) {
+        let fetchedList = data.users;
+        try {
+          const stored = localStorage.getItem('vt_active_user');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed && parsed.email && !fetchedList.some((u: any) => u.email === parsed.email)) {
+              fetchedList.unshift(parsed);
+            }
+          }
+        } catch (e) {}
+        setUsers(fetchedList);
       } else {
-        setError(data.message || 'Failed to fetch registered users from database.');
+        let localUsers: any[] = [];
+        try {
+          const stored = localStorage.getItem('vt_active_user');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed && parsed.email) localUsers.push(parsed);
+          }
+        } catch (e) {}
+
+        if (localUsers.length > 0) {
+          setUsers(localUsers);
+        } else {
+          setError(data?.message || 'Unable to connect to backend database server.');
+        }
       }
     } catch (err) {
-      setError('Unable to connect to backend server (http://localhost:5000).');
+      let localUsers: any[] = [];
+      try {
+        const stored = localStorage.getItem('vt_active_user');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.email) localUsers.push(parsed);
+        }
+      } catch (e) {}
+
+      if (localUsers.length > 0) {
+        setUsers(localUsers);
+      } else {
+        const targetHost = process.env.NEXT_PUBLIC_API_URL || 'backend API';
+        setError(`Unable to connect to backend server (${targetHost}).`);
+      }
     } finally {
       setLoading(false);
     }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
 import { Plus, Search, Download, X, Building, RefreshCw } from 'lucide-react';
+import { fetchApi } from '@/lib/api';
 
 interface DbUser {
   id: number;
@@ -37,13 +38,17 @@ export default function LeadsDirectoryPage() {
     try {
       let res;
       try {
-        res = await fetch('/api/users');
+        res = await fetchApi('/api/users');
       } catch (e) {
-        res = await fetch('http://localhost:5000/api/users');
+        res = null;
       }
-      const result = await res.json();
-      if (result.success && Array.isArray(result.users)) {
-        setDbUsers(result.users);
+      if (res) {
+        try {
+          const result = await res.json();
+          if (result && result.success && Array.isArray(result.users)) {
+            setDbUsers(result.users);
+          }
+        } catch (e) {}
       }
     } catch (err) {
       console.error('Error fetching database users for leads:', err);

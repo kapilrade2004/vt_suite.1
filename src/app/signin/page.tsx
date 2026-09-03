@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { LandingHeader } from '@/components/layout/LandingHeader';
 import { LandingFooter } from '@/components/layout/LandingFooter';
 import { ShieldCheck, Zap, HeartHandshake, ArrowRight, Lock, Building, Mail } from 'lucide-react';
+import { fetchApi } from '@/lib/api';
 
 export default function SignInPage() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function SignInPage() {
     setCheckingCompany(true);
 
     const query = inputStr.trim().toLowerCase();
-    if (!query || query.length < 2) {
+    if (!query) {
       setErrorMsg('Please enter a valid company name or registered email address.');
       setCheckingCompany(false);
       return;
@@ -30,18 +31,20 @@ export default function SignInPage() {
     try {
       let res;
       try {
-        res = await fetch('/api/users');
+        res = await fetchApi('/api/users');
       } catch (err) {
-        res = await fetch('http://localhost:5000/api/users');
+        res = null;
       }
 
       let fetchedList: any[] = [];
-      try {
-        const data = await res.json();
-        if (data.success && Array.isArray(data.users)) {
-          fetchedList = data.users;
-        }
-      } catch (e) {}
+      if (res) {
+        try {
+          const data = await res.json();
+          if (data && data.success && Array.isArray(data.users)) {
+            fetchedList = data.users;
+          }
+        } catch (e) {}
+      }
 
       // Also check active session stored user
       try {
@@ -74,9 +77,7 @@ export default function SignInPage() {
 
         // Automatically trigger trial check & warning/expiry email for the exact user logging in
         try {
-          fetch(`/api/users/check-trials?userId=${matched.id}&force=true`)
-            .catch(() => fetch(`http://localhost:5000/api/users/check-trials?userId=${matched.id}&force=true`))
-            .catch(() => {});
+          fetchApi(`/api/users/check-trials?userId=${matched.id}&force=true`).catch(() => {});
         } catch (e) {}
 
         router.push('/app/crm');

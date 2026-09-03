@@ -9,6 +9,7 @@ import {
   Check, Users, HeartHandshake, Shield, Lock, 
   Sparkles, ArrowRight, CheckCircle2, Building, Mail
 } from 'lucide-react';
+import { fetchApi } from '@/lib/api';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function SignUpPage() {
     try {
       let res;
       try {
-        res = await fetch('/api/users', {
+        res = await fetchApi('/api/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -61,23 +62,15 @@ export default function SignUpPage() {
           })
         });
       } catch (err) {
-        res = await fetch('http://localhost:5000/api/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user_name: name,
-            mobile_number: mobileNumber,
-            email: email,
-            company_name: companyName,
-            service_needed: selectedServices.join(', ')
-          })
-        });
+        res = null;
       }
 
       let data: any = {};
-      try {
-        data = await res.json();
-      } catch (jsonErr) {}
+      if (res) {
+        try {
+          data = await res.json();
+        } catch (jsonErr) {}
+      }
 
       if (res && res.ok && data && data.success) {
         if (data.user) {
@@ -117,7 +110,7 @@ export default function SignUpPage() {
 
           // Trigger Welcome Email dispatch for Cloud/Vercel registrations
           try {
-            fetch('http://localhost:5000/api/users/send-test-email', {
+            fetchApi('/api/users/send-test-email', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -157,7 +150,7 @@ export default function SignUpPage() {
 
       // Trigger Welcome Email dispatch for Cloud/Vercel registrations
       try {
-        fetch('http://localhost:5000/api/users/send-test-email', {
+        fetchApi('/api/users/send-test-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

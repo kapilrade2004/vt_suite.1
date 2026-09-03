@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { 
   Users, Search, Edit3, Trash2, X, RefreshCw, CheckCircle2, AlertCircle, Plus, Sparkles
 } from 'lucide-react';
+import { fetchApi } from '@/lib/api';
 
 interface UserItem {
   id: number;
@@ -47,12 +48,19 @@ export default function CRMRegisteredUsersPage() {
     try {
       let res;
       try {
-        res = await fetch('http://localhost:5000/api/users');
+        res = await fetchApi('/api/users');
       } catch (e) {
-        res = await fetch('/api/users');
+        res = null;
       }
-      const data = await res.json();
-      let fetchedList: UserItem[] = (data.success && Array.isArray(data.users)) ? data.users : [];
+      let fetchedList: UserItem[] = [];
+      if (res) {
+        try {
+          const data = await res.json();
+          if (data && data.success && Array.isArray(data.users)) {
+            fetchedList = data.users;
+          }
+        } catch (e) {}
+      }
       
       // Merge active session user from localStorage if not already in MySQL list
       try {
@@ -77,7 +85,7 @@ export default function CRMRegisteredUsersPage() {
 
       setUsers(fetchedList);
     } catch (err) {
-      setError('Unable to connect to the backend server. Please ensure backend is running.');
+      setError('Unable to connect to the backend server.');
     } finally {
       setLoading(false);
     }
@@ -89,12 +97,7 @@ export default function CRMRegisteredUsersPage() {
 
   const handleUpgradeUser = async (u: UserItem) => {
     try {
-      let res;
-      try {
-        res = await fetch(`/api/users/${u.id}/upgrade`, { method: 'POST' });
-      } catch (e) {
-        res = await fetch(`http://localhost:5000/api/users/${u.id}/upgrade`, { method: 'POST' });
-      }
+      const res = await fetchApi(`/api/users/${u.id}/upgrade`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         setSuccessMsg(`User ${u.user_name} upgraded to Premium successfully!`);
@@ -108,12 +111,7 @@ export default function CRMRegisteredUsersPage() {
 
   const handleTriggerReminders = async () => {
     try {
-      let res;
-      try {
-        res = await fetch('http://localhost:5000/api/users/check-trials');
-      } catch (e) {
-        res = await fetch('/api/users/check-trials');
-      }
+      const res = await fetchApi('/api/users/check-trials');
       const data = await res.json();
       if (data.success) {
         const count = data.remindersSent ? data.remindersSent.length : 0;
@@ -128,20 +126,11 @@ export default function CRMRegisteredUsersPage() {
 
   const handleSendTestEmail = async (emailAddr: string) => {
     try {
-      let res;
-      try {
-        res = await fetch('http://localhost:5000/api/users/send-test-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ targetEmail: emailAddr })
-        });
-      } catch (e) {
-        res = await fetch('/api/users/send-test-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ targetEmail: emailAddr })
-        });
-      }
+      const res = await fetchApi('/api/users/send-test-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetEmail: emailAddr })
+      });
       const data = await res.json();
       if (data.success) {
         setSuccessMsg(`📩 Email dispatched successfully to ${emailAddr}! Check your inbox.`);
@@ -180,20 +169,11 @@ export default function CRMRegisteredUsersPage() {
     setSavingEdit(true);
 
     try {
-      let res;
-      try {
-        res = await fetch(`/api/users/${editingUser.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(editForm)
-        });
-      } catch (err) {
-        res = await fetch(`http://localhost:5000/api/users/${editingUser.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(editForm)
-        });
-      }
+      const res = await fetchApi(`/api/users/${editingUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm)
+      });
 
       const data = await res.json();
       if (res.ok && data.success) {
@@ -216,16 +196,9 @@ export default function CRMRegisteredUsersPage() {
     setDeleting(true);
 
     try {
-      let res;
-      try {
-        res = await fetch(`/api/users/${deletingUser.id}`, {
-          method: 'DELETE'
-        });
-      } catch (err) {
-        res = await fetch(`http://localhost:5000/api/users/${deletingUser.id}`, {
-          method: 'DELETE'
-        });
-      }
+      const res = await fetchApi(`/api/users/${deletingUser.id}`, {
+        method: 'DELETE'
+      });
 
       const data = await res.json();
       if (res.ok && data.success) {
