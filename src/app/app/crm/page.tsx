@@ -69,6 +69,7 @@ export default function CRMDashboardPage() {
         <Link href="/app/crm/leads" className="btn btn-sm btn-ghost">Leads Directory</Link>
         <Link href="/app/crm/clients" className="btn btn-sm btn-ghost">Clients</Link>
         <Link href="/app/crm/pipeline" className="btn btn-sm btn-ghost">Deal Pipeline</Link>
+        <Link href="/app/crm/invoices" className="btn btn-sm btn-ghost">Invoices</Link>
         <Link href="/app/crm/users" className="btn btn-sm btn-ghost">Registered Users (MySQL)</Link>
       </div>
 

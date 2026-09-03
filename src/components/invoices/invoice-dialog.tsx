@@ -51,11 +51,13 @@ function CustomerPicker({
   customers,
   value,
   onChange,
+  onQuickAdd,
   disabled,
 }: {
   customers: any[]
   value:     string
   onChange:  (id: string, customer: any) => void
+  onQuickAdd?: () => void
   disabled?: boolean
 }) {
   const [search, setSearch]   = useState("")
@@ -96,8 +98,8 @@ function CustomerPicker({
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
           <div className="absolute left-0 top-11 z-20 w-full bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden">
-            <div className="p-2 border-b border-gray-100">
-              <div className="relative">
+            <div className="p-2 border-b border-gray-100 flex items-center gap-2">
+              <div className="relative flex-1">
                 <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   autoFocus
@@ -108,10 +110,32 @@ function CustomerPicker({
                   className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:border-[#3A7AFE] focus:outline-none"
                 />
               </div>
+              {onQuickAdd && (
+                <button
+                  type="button"
+                  onClick={() => { setOpen(false); onQuickAdd() }}
+                  className="px-2.5 py-1.5 bg-blue-50 text-[#3A7AFE] hover:bg-blue-100 rounded-lg text-xs font-semibold flex items-center gap-1 shrink-0"
+                >
+                  <Plus size={13} />
+                  Add New
+                </button>
+              )}
             </div>
             <div className="max-h-52 overflow-y-auto">
               {filtered.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-6">No customers found</p>
+                <div className="text-center py-6 px-4">
+                  <p className="text-sm text-gray-500 mb-2">No customers found</p>
+                  {onQuickAdd && (
+                    <button
+                      type="button"
+                      onClick={() => { setOpen(false); onQuickAdd() }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#3A7AFE] text-white rounded-lg text-xs font-semibold hover:bg-blue-600 transition-colors"
+                    >
+                      <Plus size={13} />
+                      Create New Customer
+                    </button>
+                  )}
+                </div>
               ) : (
                 filtered.map((c) => (
                   <button
@@ -229,7 +253,7 @@ function ItemRow({
 // ─── Main Dialog ──────────────────────────────────────────────────────────────
 
 export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
-  const { customers, addInvoice, updateInvoice } = useCRM()
+  const { customers, addCustomer, addInvoice, updateInvoice } = useCRM()
   const isEdit = !!invoice
 
   const [form,    setForm]    = useState(EMPTY_FORM)
@@ -237,6 +261,48 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
   const [saving,  setSaving]  = useState(false)
   const [error,   setError]   = useState<string | null>(null)
   const [tab,     setTab]     = useState<"details" | "items" | "settings">("details")
+
+  // Quick Add Customer modal state
+  const [quickAddOpen, setQuickAddOpen] = useState(false)
+  const [quickCust, setQuickCust] = useState({ name: "", company: "", phone: "", email: "" })
+  const [quickSaving, setQuickSaving] = useState(false)
+  const [quickError, setQuickError] = useState<string | null>(null)
+
+  const handleQuickAddSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!quickCust.name.trim()) {
+      setQuickError("Customer name is required.")
+      return
+    }
+    setQuickSaving(true)
+    setQuickError(null)
+    try {
+      const payload: any = {
+        name: quickCust.name.trim(),
+        company: quickCust.company.trim() || undefined,
+        phone: quickCust.phone.trim() || undefined,
+        email: quickCust.email.trim() || undefined,
+        status: "active",
+      }
+      const ok = await addCustomer(payload)
+      if (ok) {
+        // Find newly added customer or pick matching
+        const updated = customers.find((c) => c.name.toLowerCase() === quickCust.name.trim().toLowerCase())
+        if (updated) {
+          handleCustomerChange(updated.id, updated)
+        }
+        setQuickAddOpen(false)
+        setQuickCust({ name: "", company: "", phone: "", email: "" })
+        setError(null)
+      } else {
+        setQuickError("Failed to add customer. Please try again.")
+      }
+    } catch (err: any) {
+      setQuickError(err?.message || "Error creating customer.")
+    } finally {
+      setQuickSaving(false)
+    }
+  }
 
   // ── Populate form when editing ────────────────────────────────────────────
 
@@ -438,13 +504,26 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
 
                 {/* Customer picker */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Customer <span className="text-red-500">*</span>
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Customer <span className="text-red-500">*</span>
+                    </label>
+                    {!isEdit && (
+                      <button
+                        type="button"
+                        onClick={() => setQuickAddOpen(true)}
+                        className="text-xs font-semibold text-[#3A7AFE] hover:underline flex items-center gap-1"
+                      >
+                        <Plus size={12} />
+                        Quick Add Customer
+                      </button>
+                    )}
+                  </div>
                   <CustomerPicker
                     customers={customers}
                     value={form.customerId}
                     onChange={handleCustomerChange}
+                    onQuickAdd={() => setQuickAddOpen(true)}
                     disabled={isEdit}   // can't re-assign customer on edit
                   />
                   {isEdit && (
@@ -747,6 +826,101 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
           </div>
         </form>
       </div>
+
+      {/* ── Quick Add Customer Modal ── */}
+      {quickAddOpen && (
+        <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+              <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                <Plus size={16} className="text-[#3A7AFE]" />
+                Quick Add New Customer
+              </h3>
+              <button
+                type="button"
+                onClick={() => setQuickAddOpen(false)}
+                className="p-1 text-gray-400 hover:text-gray-600 rounded-lg"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {quickError && (
+              <div className="mb-3 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-xs text-red-600">
+                {quickError}
+              </div>
+            )}
+
+            <form onSubmit={handleQuickAddSubmit} className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Customer / Business Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  placeholder="e.g. Acme Corporation"
+                  value={quickCust.name}
+                  onChange={(e) => setQuickCust((p) => ({ ...p, name: e.target.value }))}
+                  className="w-full text-sm px-3 py-2 border border-gray-200 rounded-xl focus:border-[#3A7AFE] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Company Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Acme Technologies Ltd"
+                  value={quickCust.company}
+                  onChange={(e) => setQuickCust((p) => ({ ...p, company: e.target.value }))}
+                  className="w-full text-sm px-3 py-2 border border-gray-200 rounded-xl focus:border-[#3A7AFE] focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Phone Number</label>
+                  <input
+                    type="tel"
+                    placeholder="9876543210"
+                    value={quickCust.phone}
+                    onChange={(e) => setQuickCust((p) => ({ ...p, phone: e.target.value }))}
+                    className="w-full text-sm px-3 py-2 border border-gray-200 rounded-xl focus:border-[#3A7AFE] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    placeholder="client@acme.com"
+                    value={quickCust.email}
+                    onChange={(e) => setQuickCust((p) => ({ ...p, email: e.target.value }))}
+                    className="w-full text-sm px-3 py-2 border border-gray-200 rounded-xl focus:border-[#3A7AFE] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setQuickAddOpen(false)}
+                  className="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={quickSaving}
+                  className="px-4 py-2 bg-[#3A7AFE] hover:bg-blue-600 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50"
+                >
+                  {quickSaving ? "Saving..." : "Save Customer"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
