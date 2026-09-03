@@ -88,7 +88,7 @@ interface CRMContextType {
   refreshCustomerPayments: () => Promise<void>
 
   addLead: (l: Omit<Lead, "id" | "createdAt" | "updatedAt">) => Promise<boolean>
-  updateLead: (id: string, l: Partial<Lead> & { sales_form_data?: any }) => Promise<boolean>
+  updateLead: (id: string, l: any) => Promise<boolean>
   deleteLead: (id: string) => Promise<boolean>
   // convertLead: (id: string, customerData?: any) => Promise<boolean>
   convertLead: (id: string, customerData?: any) => Promise<Customer | null>
@@ -291,7 +291,7 @@ const normalizeLead = (raw: any): Lead => {
     referredBy: raw.referred_by ?? raw.referredBy ?? null,
     assignedTo: raw.assigned_to ?? raw.assignedTo ?? "",
     createdBy: raw.created_by ?? raw.createdBy ?? null,
-    isConverted: !!(raw.is_converted ?? raw.isConverted ?? (raw.status === "installation") ?? !!raw.converted_customer_id),
+    isConverted: !!(raw.is_converted ?? raw.isConverted ?? (raw.status === "installation" || !!raw.converted_customer_id)),
     convertedCustomerId: raw.converted_customer_id ?? raw.convertedCustomerId ?? null,
     notes: raw.notes ?? "",
     createdAt: toDate(raw.created_at ?? raw.createdAt) ?? (raw.created_at ?? raw.createdAt),
