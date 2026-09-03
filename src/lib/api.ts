@@ -83,8 +83,12 @@ async function apiRequest<T>(
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
 
-      console.error("API Error Status:", response.status);
-      console.error("API Error Data:", JSON.stringify(errorData, null, 2));
+      if (response.status === 401) {
+        console.warn(`[API] 401 Unauthorized for ${endpoint}`);
+      } else {
+        console.error("API Error Status:", response.status);
+        console.error("API Error Data:", JSON.stringify(errorData, null, 2));
+      }
 
       if (errorData.errors && Array.isArray(errorData.errors)) {
         const validationErrors = errorData.errors

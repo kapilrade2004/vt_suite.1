@@ -569,8 +569,8 @@ export function CRMProvider({ children }: { children: React.ReactNode }) {
       const res = await leadsApi.getAll(params)
       setLeads((res.leads || []).map(normalizeLead))
     } catch (err) {
-      console.error("Failed to fetch leads:", err)
-      throw err
+      console.warn("Failed to fetch leads (user may be unauthenticated):", err)
+      setLeads([])
     }
   }, [])
 
@@ -579,8 +579,8 @@ export function CRMProvider({ children }: { children: React.ReactNode }) {
       const res = await invoicesApi.getAll({ limit: 100 })
       setInvoices((res.invoices || []).map((inv) => normalizeInvoice(inv)))
     } catch (err) {
-      console.error("Failed to fetch invoices:", err)
-      throw err
+      console.warn("Failed to fetch invoices (user may be unauthenticated):", err)
+      setInvoices([])
     }
   }
 
