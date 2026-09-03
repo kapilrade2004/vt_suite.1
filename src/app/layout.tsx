@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/context/AppContext";
+import { AuthProvider } from "@/contexts/auth-context";
+import { CRMProvider } from "@/contexts/crm-context";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -37,9 +39,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
-        <AppProvider>
-          {children}
-        </AppProvider>
+        <AuthProvider>
+          <CRMProvider>
+            <AppProvider>
+              {children}
+            </AppProvider>
+          </CRMProvider>
+        </AuthProvider>
       </body>
     </html>
   );
