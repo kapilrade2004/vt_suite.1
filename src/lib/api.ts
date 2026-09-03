@@ -84,11 +84,12 @@ async function apiRequest<T>(
       const errorData = await response.json().catch(() => ({}));
 
       if (response.status === 401) {
-        console.warn(`[API] 401 Unauthorized for ${endpoint}`);
-      } else {
-        console.error("API Error Status:", response.status);
-        console.error("API Error Data:", JSON.stringify(errorData, null, 2));
+        console.warn(`[API] 401 Unauthorized for ${endpoint} — returning fallback data`);
+        return { leads: [], customers: [], invoices: [], renewals: [], reminders: [], retainers: [], payments: [], pagination: {} } as unknown as T;
       }
+
+      console.error("API Error Status:", response.status);
+      console.error("API Error Data:", JSON.stringify(errorData, null, 2));
 
       if (errorData.errors && Array.isArray(errorData.errors)) {
         const validationErrors = errorData.errors
