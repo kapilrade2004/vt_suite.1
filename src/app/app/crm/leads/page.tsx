@@ -78,8 +78,8 @@ export default function LeadsDirectoryPage() {
     referred_by: '',
     service: 'Website',
     source: 'Manual / Direct',
-    stage: 'Lead' as const,
-    priority: 'Medium' as const,
+    stage: 'Lead' as LeadItem['stage'],
+    priority: 'Medium' as LeadItem['priority'],
     totalAmount: '0',
     expectedAmount: '0',
     expectedClosure: '',
@@ -706,9 +706,9 @@ export default function LeadsDirectoryPage() {
                         {/* Bottom Actions Row */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid #f1f5f9' }}>
                           <div style={{ display: 'flex', gap: '8px', color: '#94a3b8' }}>
-                            <Phone size={13} style={{ cursor: 'pointer' }} title={`Call ${l.phone}`} />
-                            <Mail size={13} style={{ cursor: 'pointer' }} title={`Email ${l.email || 'client'}`} />
-                            <Bell size={13} style={{ cursor: 'pointer' }} title="Set reminder" />
+                            <span title={`Call ${l.phone}`}><Phone size={13} style={{ cursor: 'pointer' }} /></span>
+                            <span title={`Email ${l.email || 'client'}`}><Mail size={13} style={{ cursor: 'pointer' }} /></span>
+                            <span title="Set reminder"><Bell size={13} style={{ cursor: 'pointer' }} /></span>
                           </div>
                           <span style={{ 
                             fontSize: '10.5px', fontWeight: 700, padding: '2px 8px', borderRadius: '10px',

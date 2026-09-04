@@ -51,6 +51,8 @@ export interface Customer {
   city?:            string
   state?:           string
   zipCode?:         string
+  pincode?:         string
+  gstin?:           string
   country?:         string
   status:           "active" | "inactive" | "prospect"
   source?:          LeadSource | string

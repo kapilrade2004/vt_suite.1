@@ -128,7 +128,7 @@ export default function CRMDashboardPage() {
             Live
           </span>
 
-          <button onClick={fetchDbUsers} className="btn btn-secondary btn-sm" style={{ height: '36px', width: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyCenter: 'center' }}>
+          <button onClick={fetchDbUsers} className="btn btn-secondary btn-sm" style={{ height: '36px', width: '36px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <RefreshCw size={15} className={loadingUsers ? 'animate-spin' : ''} />
           </button>
         </div>
@@ -384,7 +384,7 @@ export default function CRMDashboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
           
           <div className="vt-card" style={{ padding: '20px', borderRadius: '18px', background: '#fff', border: '1px solid var(--border)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyBetween: 'space-between', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <div style={{ fontSize: '32px', fontWeight: 800, color: '#94a3b8' }}>0</div>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
                 <PhoneCall size={18} />
@@ -398,7 +398,7 @@ export default function CRMDashboardPage() {
           </div>
 
           <div className="vt-card" style={{ padding: '20px', borderRadius: '18px', background: '#fff', border: '1px solid var(--border)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyBetween: 'space-between', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <div style={{ fontSize: '32px', fontWeight: 800, color: '#94a3b8' }}>0</div>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
                 <FileText size={18} />
@@ -412,7 +412,7 @@ export default function CRMDashboardPage() {
           </div>
 
           <div className="vt-card" style={{ padding: '20px', borderRadius: '18px', background: '#fff', border: '1px solid var(--border)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyBetween: 'space-between', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <div style={{ fontSize: '32px', fontWeight: 800, color: '#94a3b8' }}>0</div>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
                 <Bell size={18} />
