@@ -221,7 +221,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
       items: [
         { name: "Reports", path: "/app/reports", icon: BarChart3 },
         { name: "Settings", path: "/app/settings", icon: Settings },
-        { name: "Admin Console", path: "/admin/users", icon: Database }
+        { name: "Admin Console", path: "/admin/login", icon: Database }
       ]
     }
   ];

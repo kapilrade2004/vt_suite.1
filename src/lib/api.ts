@@ -1,26 +1,14 @@
 
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://crm-api.vasifytech.com/api";
-
-interface ApiResponse<T> {
-  data?: T;
-  message?: string;
-  error?: string;
-  errors?: Array<{ msg: string; param: string }>;
-}
-
-interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
-}
+export const getApiBaseUrl = (): string => {
+  if (typeof window !== "undefined") {
+    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    if (isLocal) {
+      return "http://localhost:5000/api";
+    }
+  }
+  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+};
 
 // ─── Auth token management ────────────────────────────────────────────────────
 
@@ -48,9 +36,23 @@ export const getAuthToken = (): string | null => {
 
 export const isAuthenticated = () => !!getAuthToken();
 
+export const resolveFullUrl = (endpoint: string): string => {
+  let base = getApiBaseUrl().replace(/\/+$/, '');
+  let path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+
+  if (base.endsWith('/api') && path.startsWith('/api/')) {
+    path = path.replace(/^\/api/, '');
+  } else if (!base.endsWith('/api') && !path.startsWith('/api')) {
+    path = `/api${path}`;
+  }
+
+  return `${base}${path}`;
+};
+
 export const fetchApi = (endpoint: string, options: RequestInit = {}) => {
   const token = getAuthToken();
-  return fetch(`${API_BASE_URL}${endpoint}`, {
+  const targetUrl = resolveFullUrl(endpoint);
+  return fetch(targetUrl, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -78,7 +80,8 @@ async function apiRequest<T>(
   };
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    const targetUrl = resolveFullUrl(endpoint);
+    const response = await fetch(targetUrl, config);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));

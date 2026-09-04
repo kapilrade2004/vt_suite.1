@@ -75,8 +75,13 @@ export default function SignInPage() {
           localStorage.setItem('vt_active_user', JSON.stringify(matched));
         } catch (e) {}
 
-        // Automatically trigger trial check & warning/expiry email for the exact user logging in
+        // Automatically trigger login notification email & trial status check for the exact user logging in
         try {
+          fetchApi('/api/users/login-notification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: matched.id, email: matched.email })
+          }).catch(() => {});
           fetchApi(`/api/users/check-trials?userId=${matched.id}&force=true`).catch(() => {});
         } catch (e) {}
 

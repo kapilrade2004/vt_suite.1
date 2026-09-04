@@ -290,6 +290,14 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
         const updated = customers.find((c) => c.name.toLowerCase() === quickCust.name.trim().toLowerCase())
         if (updated) {
           handleCustomerChange(updated.id, updated)
+        } else {
+          handleCustomerChange(quickCust.name.trim(), {
+            id: quickCust.name.trim(),
+            name: quickCust.name.trim(),
+            company: quickCust.company.trim(),
+            phone: quickCust.phone.trim(),
+            email: quickCust.email.trim(),
+          })
         }
         setQuickAddOpen(false)
         setQuickCust({ name: "", company: "", phone: "", email: "" })
@@ -445,7 +453,7 @@ export function InvoiceDialog({ invoice, open, onOpenChange }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[94vh] flex flex-col">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[94vh] flex flex-col" style={{ transform: 'translateX(-35px)' }}>
 
         {/* Header */}
         <div style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)', color: '#fff' }} className="px-6 py-4 rounded-t-2xl flex items-center justify-between shrink-0">

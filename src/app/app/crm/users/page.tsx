@@ -176,7 +176,13 @@ export default function CRMRegisteredUsersPage() {
         body: JSON.stringify(addForm)
       });
 
-      const data = await res.json();
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch (jsonErr) {
+        data = { message: 'Server returned non-JSON response.' };
+      }
+
       if (res.ok && data.success) {
         setSuccessMsg(`✅ User "${addForm.user_name}" created successfully in MySQL database!`);
         setTimeout(() => setSuccessMsg(''), 5000);
